@@ -1,7 +1,11 @@
 import * as React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { ParamListBase } from "@react-navigation/native";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
 
-import { Onboarding, Login } from "./src/Authentication";
+import { SignIn, Splash, DrawerMenu } from "./src/Pages";
 import { LoadAssets } from "./src/components";
 
 const fonts = {
@@ -10,18 +14,33 @@ const fonts = {
   "SFProText-Regular": require("./assets/fonts/SF-Pro-Text-Regular.otf"),
 };
 
-const AuthenticationStack = createStackNavigator();
-const AuthenticationNavigator = () => {
+const AppStack = createStackNavigator();
+const AuthStack = createStackNavigator();
+
+type Props = {
+  navigation: StackNavigationProp<ParamListBase>;
+};
+
+const AuthStackComponent = ({ navigation }: Props) => {
+  navigation.setOptions({
+    headerShown: false,
+  });
+
   return (
-    <AuthenticationStack.Navigator headerMode="none">
-      <AuthenticationStack.Screen name="Onboarding" component={Onboarding} />
-    </AuthenticationStack.Navigator>
+    <AuthStack.Navigator initialRouteName="Splash">
+      <AuthStack.Screen name="Splash" component={Splash} />
+      <AuthStack.Screen name="SignIn" component={SignIn} />
+      <AuthStack.Screen name="Home" component={DrawerMenu} />
+    </AuthStack.Navigator>
   );
 };
+
 export default function App() {
   return (
     <LoadAssets {...{ fonts }}>
-      <AuthenticationNavigator />
+      <AppStack.Navigator>
+        <AppStack.Screen name="AuthStack" component={AuthStackComponent} />
+      </AppStack.Navigator>
     </LoadAssets>
   );
 }

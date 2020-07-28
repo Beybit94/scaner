@@ -1,9 +1,12 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Animated } from "react-native";
-import { useValue } from "react-native-redash";
+import { useValue, onScrollEvent, interpolateColor } from "react-native-redash";
+import { multiply } from "react-native-reanimated";
 
 import Slide, { SLIDE_HEIGHT } from "./Slide";
+import Subslide from "./Subslide";
 
+const BORDER_RADIUS = 75;
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
@@ -12,39 +15,72 @@ const styles = StyleSheet.create({
   },
   slider: {
     height: SLIDE_HEIGHT,
-    backgroundColor: "cyan",
-    borderBottomRightRadius: 75,
+    borderBottomRightRadius: BORDER_RADIUS,
   },
   footer: {
     flex: 1,
   },
+  footerContent: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "white",
+    borderTopLeftRadius: BORDER_RADIUS,
+  },
 });
+const slides = [
+  { label: "Test1", color: "#bfeaf5", title: "title1", desc: "desc1" },
+  { label: "Test2", color: "#beecc4", title: "title2", desc: "desc2" },
+  { label: "Test3", color: "#ffe4d9", title: "title3", desc: "desc3" },
+  { label: "Test4", color: "#ffdddd", title: "title4", desc: "desc4" },
+];
 
 const Onboarding = () => {
   const x = useValue(0);
+  const onScroll = onScrollEvent({ x: x });
+  const backgroundColor = interpolateColor(x, {
+    inputRange: slides.map((_, i) => i * width),
+    outputRange: slides.map((slide) => slide.color),
+  });
+
   return (
     <View style={styles.container}>
-      <View style={styles.slider}>
+      <Animated.View style={[styles.slider, { backgroundColor }]}>
         <Animated.ScrollView
           horizontal
           snapToInterval={width}
           decelerationRate="fast"
           showsHorizontalScrollIndicator={false}
           bounces={false}
+          scrollEventThrottle={1}
+          {...{ onScroll }}
         >
-          <Slide label="test1" />
-          <Slide label="test2" right />
-          <Slide label="test3" />
-          <Slide label="test4" right />
+          {slides.map(({ label }, index) => (
+            <Slide key={index} right={!!(index % 2)} {...{ label }} />
+          ))}
         </Animated.ScrollView>
-      </View>
+      </Animated.View>
       <View style={styles.footer}>
-        <View
-          style={{ ...StyleSheet.absoluteFillObject, backgroundColor: "cyan" }}
+        <Animated.View
+          style={{ ...StyleSheet.absoluteFillObject, backgroundColor }}
         />
-        <View
-          style={{ flex: 1, backgroundColor: "white", borderTopLeftRadius: 75 }}
-        />
+        <Animated.View
+          style={[
+            styles.footerContent,
+            {
+              width: width * slides.length,
+              flex: 1,
+              //transform: [{ translateX: multiply(x, -1) }],
+            },
+          ]}
+        >
+          {slides.map(({ title, desc }, index) => (
+            <Subslide
+              key={index}
+              last={index === slides.length - 1}
+              {...{ title, desc }}
+            />
+          ))}
+        </Animated.View>
       </View>
     </View>
   );
