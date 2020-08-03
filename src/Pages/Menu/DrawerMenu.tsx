@@ -11,11 +11,13 @@ import {
 import { NavigationContext } from "@react-navigation/native";
 
 import Home from "../Home/Home";
+import { AuthManager } from "../../Managers/AuthManager";
 
 const styles = StyleSheet.create({
   profileView: {
     alignItems: "center",
     padding: 10,
+    //backgroundColor: "black",
   },
   profileUserName: {
     fontWeight: "700",
@@ -48,7 +50,7 @@ export default class DrawerMenuContent extends React.Component {
 
   async componentDidMount() {
     try {
-      const user = { name: "" };
+      const user = { name: "Test" };
       this.setState({ userName: user.name });
     } catch (error) {
       Alert.alert(
@@ -71,7 +73,7 @@ export default class DrawerMenuContent extends React.Component {
   _signOut = async () => {
     const navigation = this.context;
 
-    //await AuthManager.signOutAsync();
+    await AuthManager.signOutAsync();
 
     navigation.reset({
       index: 0,

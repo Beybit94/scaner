@@ -5,6 +5,8 @@ import { Button } from "react-native-paper";
 import CheckBox from "@react-native-community/checkbox";
 import { NavigationContext } from "@react-navigation/native";
 
+import { AuthManager } from "../../Managers/AuthManager";
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -71,7 +73,7 @@ export default class SignIn extends React.Component {
     const navigation = this.context;
 
     try {
-      //await AuthManager.signInAsync();
+      await AuthManager.signInAsync();
 
       navigation.reset({
         index: 0,

@@ -35,7 +35,7 @@ const HomeComponent = () => {
 export default class Home extends React.Component {
   async componentDidMount() {
     try {
-      const user = { name: "" };
+      const user = { name: "Test" };
       this.setState({ userName: user.name, userLoading: false });
     } catch (error) {
       Alert.alert(
