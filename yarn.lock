@@ -1380,20 +1380,28 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@~0.62.13":
-  version "0.62.18"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.62.18.tgz#ad63691e7c44edef2beeb6af52b2eb942c3ed8a1"
-  integrity sha512-7QfU8EzIYxYqeXpPf8QNv2xi8hrePlgTbRATRo+plRSdVfJu7N6sAXqrFxKJp6bGLvp82GV1gczl93gqiAfXPA==
+"@types/react-native@0.63.4":
+  version "0.63.4"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.4.tgz#4610b0df0e5f0db4c68d495754ad9f8bc3b8893f"
+  integrity sha512-IkQax0q5z5P4ttScELhrfrXtnFuADs/SP9kNwx2rfEuVjwF5xqhGjcY/YkiH2mSx+9QjI5S4zhxXOi3+kcnOkw==
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@~16.9.41":
+"@types/react@*":
   version "16.9.43"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.43.tgz#c287f23f6189666ee3bebc2eb8d0f84bcb6cdb6b"
   integrity sha512-PxshAFcnJqIWYpJbLPriClH53Z2WlJcVZE+NP2etUtWQs2s7yIMj3/LDKZT/5CHJ/F62iyjVCDu2H3jHEXIxSg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
+
+"@types/react@16.9.44":
+  version "16.9.44"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.44.tgz#da84b179c031aef67dc92c33bd3401f1da2fa3bc"
+  integrity sha512-BtLoJrXdW8DVZauKP+bY4Kmiq7ubcJq+H/aCpRfvPF7RAT3RwR73Sg8szdc2YasbAlWBDrQ6Q+AFM0KwtQY+WQ==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^3.0.2"
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -2396,6 +2404,11 @@ csstype@^2.2.0:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.11.tgz#452f4d024149ecf260a852b025e36562a253ffc5"
   integrity sha512-l8YyEC9NBkSm783PFTvh0FmJy7s5pFKrDp49ZL7zBGX3fWkO+N4EEyan1qqp8cwPLDcD0OSdyY6hAMoxp34JFw==
 
+csstype@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.2.tgz#ee5ff8f208c8cd613b389f7b222c9801ca62b3f7"
+  integrity sha512-ofovWglpqoqbfLNOTBNZLSbMuGrblAf1efvvArGKOZMBrIoJeu5UsAipQolkijtyQx5MtAzT/J9IHj/CEY1mJw==
+
 dayjs@^1.8.15:
   version "1.8.29"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.29.tgz#5d23e341de6bfbd206c01136d2fb0f01877820f5"
@@ -2945,6 +2958,14 @@ expo-asset@~8.1.7:
     md5-file "^3.2.3"
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
+
+expo-barcode-scanner@~8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-8.2.1.tgz#b2797bbf5be511256750def9eecceeb720b65b21"
+  integrity sha512-cmsXLoWThqYtfWpsFOg7KCLgJsYOHbj9LG1wpFG86xSdJlQrfZRQ1GzrA4eT06rp8FdGs9nLJPh8/10AH9EZoA==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
 
 expo-constants@~9.1.1:
   version "9.1.1"

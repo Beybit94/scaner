@@ -4,8 +4,9 @@ import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Title, Button } from "react-native-paper";
 
-import { AuthContext } from "../../components";
-import { headerOptions, DrawerToggle } from "../Menu/Header";
+import { AuthContext } from "../components";
+
+import { headerOptions, DrawerToggle } from "./Menu/Header";
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +65,7 @@ export default class Home extends React.Component {
             name="Home"
             component={HomeComponent}
             options={{
-              title: "Home",
+              title: "Прием товара",
               headerLeft: () => <DrawerToggle />,
             }}
           />

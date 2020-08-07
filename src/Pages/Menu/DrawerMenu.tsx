@@ -10,8 +10,10 @@ import {
 } from "@react-navigation/drawer";
 import { NavigationContext } from "@react-navigation/native";
 
-import Home from "../Home/Home";
+import Home from "../Home";
 import { AuthManager } from "../../Managers/AuthManager";
+import { LocalStorgae } from "../../components";
+import { UserModel } from "../../components/Models";
 
 const styles = StyleSheet.create({
   profileView: {
@@ -50,8 +52,8 @@ export default class DrawerMenuContent extends React.Component {
 
   async componentDidMount() {
     try {
-      const user = { name: "Test" };
-      this.setState({ userName: user.name });
+      const user = await LocalStorgae.getItem<UserModel>("user");
+      this.setState({ userName: user?.UserFirstName });
     } catch (error) {
       Alert.alert(
         "Error getting user",
@@ -67,7 +69,7 @@ export default class DrawerMenuContent extends React.Component {
   }
 
   state: DrawerMenuState = {
-    userName: "Adele Vance",
+    userName: "",
   };
 
   _signOut = async () => {
@@ -101,7 +103,7 @@ export default class DrawerMenuContent extends React.Component {
         <Drawer.Screen
           name="Home"
           component={Home}
-          options={{ drawerLabel: "Home" }}
+          options={{ drawerLabel: "Прием товара" }}
         />
       </Drawer.Navigator>
     );

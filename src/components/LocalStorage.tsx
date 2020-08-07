@@ -6,14 +6,14 @@ class LocalStorage {
     return AsyncStorage.setItem(key, JSON.stringify(value));
   }
 
-  async getItem<T>(key: string, defaultValue: T): Promise<T | null> {
+  async getItem<T>(key: string): Promise<T | null> {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem(key)
         .then((value) => {
           if (value !== null) {
             resolve(JSON.parse(value));
           } else {
-            resolve(defaultValue);
+            resolve(null);
           }
         })
         .catch((error) => {

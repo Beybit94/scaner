@@ -1,8 +1,9 @@
 import React from "react";
-import { ActivityIndicator, View } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 
-import { LocalStorgae } from "../../components";
+import { LocalStorgae } from "../components";
+
+import Loading from "./Shared/ActivityIndicator";
 
 export default class Splash extends React.Component {
   static contextType = NavigationContext;
@@ -12,8 +13,13 @@ export default class Splash extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    const userToken = await LocalStorgae.getItem<string>("userToken", "");
+    const userToken = await LocalStorgae.getItem<string>("userToken");
     const navigation = this.context;
+
+    navigation.setOptions({
+      headerTitleStyle: { alignSelf: "center" },
+      title: "Загрузка",
+    });
 
     navigation.reset({
       index: 0,
@@ -22,10 +28,6 @@ export default class Splash extends React.Component {
   };
 
   render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <Loading isLoading={true} />;
   }
 }
