@@ -12,7 +12,7 @@ import { NavigationContext } from "@react-navigation/native";
 
 import Reception from "../Reception/Reception";
 import { AuthManager } from "../../Managers";
-import { LocalStorage, UserModel } from "../../components";
+import { LocalStorage, UserModel, StorageKeys } from "../../components";
 
 const styles = StyleSheet.create({
   profileView: {
@@ -51,7 +51,7 @@ export default class DrawerMenuContent extends React.Component {
 
   async componentDidMount() {
     try {
-      const user = await LocalStorage.getItem<UserModel>("user");
+      const user = await LocalStorage.getItem<UserModel>(StorageKeys.USER);
       this.setState({ userName: user?.UserFullName });
     } catch (error) {
       Alert.alert(

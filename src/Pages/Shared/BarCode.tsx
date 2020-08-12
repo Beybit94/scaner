@@ -1,15 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
-import { Dimensions, View, Text } from "react-native";
+import { Dimensions, View, Text, StyleSheet } from "react-native";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 const { width, height } = Dimensions.get("window");
+const opacity = "rgba(0, 0, 0, .6)";
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  layerTop: {
+    flex: 2,
+    backgroundColor: opacity,
+  },
+  layerCenter: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  layerLeft: {
+    flex: 1,
+    backgroundColor: opacity,
+  },
+  focused: {
+    flex: 10,
+  },
+  layerRight: {
+    flex: 1,
+    backgroundColor: opacity,
+  },
+  layerBottom: {
+    flex: 2,
+    backgroundColor: opacity,
+  },
+});
 
 export type BarCodeProps = {
-  label: string;
-  onBarCodeScanned: (data: any) => void;
+  onBarCodeScanned: (data: string) => void;
 };
 
 export default class BarCode extends Component<BarCodeProps> {
@@ -24,14 +53,13 @@ export default class BarCode extends Component<BarCodeProps> {
     });
   }
 
-  _setValue = ({ data }: any) => {
+  _setValue = (data: string) => {
     const { onBarCodeScanned } = this.props;
     onBarCodeScanned(data);
   };
 
   render() {
     const { CameraPermissionGranted } = this.state;
-    const { label } = this.props;
 
     if (CameraPermissionGranted === null) {
       return (
@@ -50,13 +78,18 @@ export default class BarCode extends Component<BarCodeProps> {
     }
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
-        <Text>{label}</Text>
-        <BarCodeScanner
-          style={{ height: height, width: width }}
-          onBarCodeScanned={this._setValue}
-        />
-      </View>
+      <BarCodeScanner
+        style={[StyleSheet.absoluteFill, styles.container]}
+        onBarCodeScanned={(scan) => this._setValue(scan.data)}
+      >
+        <View style={styles.layerTop} />
+        <View style={styles.layerCenter}>
+          <View style={styles.layerLeft} />
+          <View style={styles.focused} />
+          <View style={styles.layerRight} />
+        </View>
+        <View style={styles.layerBottom} />
+      </BarCodeScanner>
     );
   }
 }

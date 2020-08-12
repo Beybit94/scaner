@@ -34,14 +34,14 @@ class ScanDocument extends Component<ScanDocumentProps> {
     //const id = navigation.getParam("id", "");
   }
 
-  _barCodeSacanned = ({ data }: any) => {
+  _barCodeSacanned = (data: string) => {
     const { navigation } = this.props;
     //navigation.push("ScanGood");
     console.warn(data);
   };
 
   render() {
-    return <BarCode label="" onBarCodeScanned={this._barCodeSacanned} />;
+    return <BarCode onBarCodeScanned={this._barCodeSacanned} />;
   }
 }
 

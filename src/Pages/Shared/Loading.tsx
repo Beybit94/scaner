@@ -12,11 +12,8 @@ const styles = StyleSheet.create({
   spinner: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, .8)",
+    backgroundColor: "rgba(0, 0, 0, .4)",
     borderRadius: 5,
-    position: "absolute",
-    left: width / 2 - 40,
-    top: height / 2 - 40,
     width: width,
     height: height,
     zIndex: 1000,

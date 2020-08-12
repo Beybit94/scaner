@@ -5364,6 +5364,12 @@ react-native-appearance@~0.3.3:
     invariant "^2.2.4"
     use-subscription "^1.0.0"
 
+"react-native-camera@git+https://git@github.com/react-native-community/react-native-camera.git":
+  version "3.36.0"
+  resolved "git+https://git@github.com/react-native-community/react-native-camera.git#d7092048ff01cf9cdf7baa9b4314c7bb9810a52d"
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-elements@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-2.0.4.tgz#ea5a6bb34cabd48dcd6c6546e4737d2075e40ee3"
