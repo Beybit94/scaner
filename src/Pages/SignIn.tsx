@@ -2,14 +2,13 @@
 /* eslint-disable react-native/no-unused-styles */
 import React from "react";
 import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
-import { Button } from "react-native-paper";
 import CheckBox from "@react-native-community/checkbox";
 import { NavigationContext } from "@react-navigation/native";
 
-import { AuthManager } from "../Managers/AuthManager";
-import { LocalStorgae } from "../components";
+import { AuthManager } from "../Managers";
+import { LocalStorage, StorageKeys } from "../components";
 
-import Loading from "./Shared/ActivityIndicator";
+import { Loading, CustomButton } from "./Shared";
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +59,7 @@ export default class SignIn extends React.Component {
     this.setState({
       login: login?.login,
       pass: login?.password,
-      save: login?.login !== "",
+      save: login?.login ? true : false,
       isLoading: false,
     });
   }
@@ -103,8 +102,8 @@ export default class SignIn extends React.Component {
         login: this.state.login,
         password: this.state.pass,
       }).then(async (model) => {
-        await LocalStorgae.setItem("user", model);
-        await LocalStorgae.setItem("userToken", "test");
+        await LocalStorage.setItem(StorageKeys.USER, model);
+        await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
 
         navigation.reset({
           index: 0,
@@ -167,13 +166,7 @@ export default class SignIn extends React.Component {
               />
               <Text style={styles.label}>Сохранить логин и пароль</Text>
             </View>
-            <Button
-              mode="contained"
-              onPress={this._signInAsync}
-              style={styles.button}
-            >
-              Войти
-            </Button>
+            <CustomButton onClick={this._signInAsync} label="Войти" />
           </View>
         </View>
       </Loading>

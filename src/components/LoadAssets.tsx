@@ -4,11 +4,8 @@ import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import { InitialState, NavigationContainer } from "@react-navigation/native";
-import Constants from "expo-constants";
 
-import LocalStorage from "./LocalStorage";
-
-const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${Constants.manifest.sdkVersion}`;
+import LocalStorage, { StorageKeys } from "./LocalStorage";
 
 export type FontSource = Parameters<typeof Font.loadAsync>[0];
 const usePromiseAll = (promises: Promise<void | void[]>[], cb: () => void) =>
@@ -41,7 +38,7 @@ const LoadAssets = ({ assets, fonts, children }: LoadAssetsProps) => {
   useEffect(() => {
     const restoreState = async () => {
       try {
-        const savedStateString = await LocalStorage.getItem(NAVIGATION_STATE_KEY,null);
+        const savedStateString = await LocalStorage.getItem<string>(StorageKeys.NAVIGATION_STATE_KEY);
         const state = savedStateString
           ? JSON.parse(savedStateString)
           : undefined;
@@ -57,7 +54,7 @@ const LoadAssets = ({ assets, fonts, children }: LoadAssetsProps) => {
   }, [isNavigationReady]);
   const onStateChange = useCallback(
     (state) =>
-      LocalStorage.setItem(NAVIGATION_STATE_KEY,state),
+      LocalStorage.setItem(StorageKeys.NAVIGATION_STATE_KEY,state),
     []
   );
   if (!ready || !isNavigationReady) {

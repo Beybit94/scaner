@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from "@react-native-community/async-storage";
 
+export enum StorageKeys {
+  NAVIGATION_STATE_KEY = "NAVIGATION_STATE_KEY",
+  USER = "USER",
+  LOGEDIN = "LOGEDIN",
+  SAVEME = "SAVEME",
+}
 class LocalStorage {
-  async setItem(key: string, value: any): Promise<void> {
+  async setItem(key: StorageKeys, value: any): Promise<void> {
     return AsyncStorage.setItem(key, JSON.stringify(value));
   }
 
-  async getItem<T>(key: string): Promise<T | null> {
+  async getItem<T>(key: StorageKeys): Promise<T | null> {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem(key)
         .then((value) => {
@@ -22,7 +28,7 @@ class LocalStorage {
     });
   }
 
-  async deleteItem(key: string): Promise<void> {
+  async deleteItem(key: StorageKeys): Promise<void> {
     return AsyncStorage.removeItem(key);
   }
 }

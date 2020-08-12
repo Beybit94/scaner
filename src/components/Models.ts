@@ -9,5 +9,6 @@ export interface UserModel {
   UserFirstName: string;
   UserSecondName: string;
   UserMiddleName: string;
+  UserFullName: string;
   UserGuid: string;
 }

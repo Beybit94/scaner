@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
 import { Dimensions, View, Text } from "react-native";
@@ -6,11 +7,12 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 
 const { width, height } = Dimensions.get("window");
 
-type Props = {
-  onBarCodeScanned: () => void;
+export type BarCodeProps = {
+  label: string;
+  onBarCodeScanned: (data: any) => void;
 };
 
-export default class BarCode extends Component<Props> {
+export default class BarCode extends Component<BarCodeProps> {
   state = {
     CameraPermissionGranted: null,
   };
@@ -22,9 +24,14 @@ export default class BarCode extends Component<Props> {
     });
   }
 
+  _setValue = ({ data }: any) => {
+    const { onBarCodeScanned } = this.props;
+    onBarCodeScanned(data);
+  };
+
   render() {
     const { CameraPermissionGranted } = this.state;
-    const { onBarCodeScanned } = this.props;
+    const { label } = this.props;
 
     if (CameraPermissionGranted === null) {
       return (
@@ -44,9 +51,10 @@ export default class BarCode extends Component<Props> {
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}>
+        <Text>{label}</Text>
         <BarCodeScanner
-          style={{ height: height / 1.1, width: width }}
-          onBarCodeScanned={onBarCodeScanned}
+          style={{ height: height, width: width }}
+          onBarCodeScanned={this._setValue}
         />
       </View>
     );

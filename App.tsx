@@ -28,7 +28,14 @@ const AuthStackComponent = ({ navigation }: Props) => {
 
   return (
     <AuthStack.Navigator initialRouteName="Splash">
-      <AuthStack.Screen name="Splash" component={Splash} />
+      <AuthStack.Screen
+        name="Splash"
+        component={Splash}
+        options={{
+          headerTitleStyle: { alignSelf: "center" },
+          title: "Загрузка",
+        }}
+      />
       <AuthStack.Screen name="SignIn" component={SignIn} />
       <AuthStack.Screen name="Home" component={DrawerMenu} />
     </AuthStack.Navigator>

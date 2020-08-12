@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
   BASE = "http://192.168.0.169:44341",
-  TEST = "/api/Scaner/TEST",
-  LOGIN = "/api/Scaner/FindUser",
+  TEST = "/api/User/TEST",
+  LOGIN = "/api/User/FindUser",
 }
 
 enum HTTP_METHODS {

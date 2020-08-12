@@ -1,4 +1,4 @@
-import { LocalStorgae } from "../components";
+import { LocalStorage, StorageKeys } from "../components";
 import { LoginModel, UserModel } from "../components/Models";
 import { post, Endpoints } from "../components/Request";
 
@@ -15,23 +15,23 @@ export class AuthManager {
   };
 
   static signOutAsync = async () => {
-    await LocalStorgae.deleteItem("userToken");
+    //await LocalStorgae.deleteItem("userToken");
   };
 
   static rememberUser = async (model: LoginModel) => {
     try {
-      await LocalStorgae.setItem("saveMe", model);
+      await LocalStorage.setItem(StorageKeys.SAVEME, model);
     } catch (error) {}
   };
 
   static forgetUser = async () => {
     try {
-      await LocalStorgae.deleteItem("saveMe");
+      await LocalStorage.deleteItem(StorageKeys.SAVEME);
     } catch (error) {}
   };
 
   static getRemembered = async () => {
-    const login = await LocalStorgae.getItem<LoginModel>("saveMe");
+    const login = await LocalStorage.getItem<LoginModel>(StorageKeys.SAVEME);
     return login;
   };
 }
