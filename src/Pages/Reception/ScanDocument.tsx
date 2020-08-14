@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
 import { View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -7,27 +7,49 @@ import { BarCode, CustomButton } from "../Shared";
 
 import { RootStackParamList } from "./Reception";
 
-type ScanDocumentButtonProps = StackScreenProps<
-  RootStackParamList,
-  "ScanDocumentButton"
->;
-class ScanDocumentButton extends Component<ScanDocumentButtonProps> {
+enum ScanPage {
+  DOCUMENT = 1,
+  GOOD = 2,
+}
+type ScanButtonProps = StackScreenProps<RootStackParamList, "ScanButton">;
+class ScanButton extends Component<ScanButtonProps> {
+  state = {
+    page: ScanPage.DOCUMENT,
+    id: "",
+  };
+
   _onClick = () => {
     const { navigation } = this.props;
-    navigation.push("ScanDocument");
+    navigation.push("Scan", {
+      page: this.state.page,
+      onGoBack: (id: string) => {
+        this.setState({
+          page: ScanPage.GOOD,
+          id: id,
+        });
+        navigation.setOptions({ title: `Прием товара № ${id}` });
+      },
+    });
   };
 
   render() {
     return (
       <View>
-        <CustomButton label="Сканировать документ" onClick={this._onClick} />
+        <CustomButton
+          label={
+            this.state.page === ScanPage.DOCUMENT
+              ? "Сканировать документ"
+              : "Сканировать товар"
+          }
+          onClick={this._onClick}
+        />
       </View>
     );
   }
 }
 
-type ScanDocumentProps = StackScreenProps<RootStackParamList, "ScanDocument">;
-class ScanDocument extends Component<ScanDocumentProps> {
+type ScanProps = StackScreenProps<RootStackParamList, "Scan">;
+class Scan extends Component<ScanProps> {
   state = {
     isScanned: false,
   };
@@ -40,9 +62,24 @@ class ScanDocument extends Component<ScanDocumentProps> {
   }
 
   _barCodeSacanned = (data: string) => {
-    const { navigation } = this.props;
+    const { navigation, route } = this.props;
+    const page = route.params?.page;
+
     this.setState({ isScanned: !this.state.isScanned });
-    navigation.push("ScanGoodButton", { id: data });
+
+    switch (page) {
+      case ScanPage.DOCUMENT:
+        const onGoBack = route.params?.onGoBack;
+        if (onGoBack) {
+          onGoBack(data);
+        }
+
+        break;
+      case ScanPage.GOOD:
+        break;
+    }
+
+    navigation.goBack();
   };
 
   render() {
@@ -56,4 +93,4 @@ class ScanDocument extends Component<ScanDocumentProps> {
   }
 }
 
-export { ScanDocumentButton, ScanDocument };
+export { ScanButton, Scan };
