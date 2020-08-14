@@ -1,21 +1,27 @@
-import { LocalStorage, StorageKeys } from "../components";
-import { LoginModel, UserModel } from "../components/Models";
-import { post, Endpoints } from "../components/Request";
+import {
+  LocalStorage,
+  StorageKeys,
+  LoginModel,
+  UserModel,
+  post,
+  Endpoints,
+  HttpResponse,
+} from "../components";
 
 export class AuthManager {
   static signInAsync = async (
     model: LoginModel
-  ): Promise<UserModel | undefined> => {
+  ): Promise<HttpResponse<UserModel>> => {
     const response = await post<UserModel>(Endpoints.LOGIN, {
       Login: model.login,
       Password: model.password,
     });
 
-    return response.parsedBody;
+    return response;
   };
 
   static signOutAsync = async () => {
-    //await LocalStorgae.deleteItem("userToken");
+    await LocalStorage.setItem(StorageKeys.LOGEDIN, false);
   };
 
   static rememberUser = async (model: LoginModel) => {

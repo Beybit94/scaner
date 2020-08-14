@@ -14,7 +14,7 @@ type ScanDocumentButtonProps = StackScreenProps<
 class ScanDocumentButton extends Component<ScanDocumentButtonProps> {
   _onClick = () => {
     const { navigation } = this.props;
-    navigation.push("ScanDocument", { id: "1" });
+    navigation.push("ScanDocument");
   };
 
   render() {
@@ -28,20 +28,31 @@ class ScanDocumentButton extends Component<ScanDocumentButtonProps> {
 
 type ScanDocumentProps = StackScreenProps<RootStackParamList, "ScanDocument">;
 class ScanDocument extends Component<ScanDocumentProps> {
+  state = {
+    isScanned: false,
+  };
+
   componentDidMount() {
-    const { route } = this.props;
-    const { id } = route.params;
-    //const id = navigation.getParam("id", "");
+    const { navigation } = this.props;
+    navigation.addListener("focus", () => {
+      this.setState({ isScanned: false });
+    });
   }
 
   _barCodeSacanned = (data: string) => {
     const { navigation } = this.props;
-    //navigation.push("ScanGood");
-    console.warn(data);
+    this.setState({ isScanned: !this.state.isScanned });
+    navigation.push("ScanGoodButton", { id: data });
   };
 
   render() {
-    return <BarCode onBarCodeScanned={this._barCodeSacanned} />;
+    return (
+      <BarCode
+        onBarCodeScanned={
+          this.state.isScanned ? undefined : this._barCodeSacanned
+        }
+      />
+    );
   }
 }
 

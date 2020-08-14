@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
-import { Dimensions, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-const { width, height } = Dimensions.get("window");
 const opacity = "rgba(0, 0, 0, .6)";
 const styles = StyleSheet.create({
   container: {
@@ -38,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 export type BarCodeProps = {
-  onBarCodeScanned: (data: string) => void;
+  onBarCodeScanned?: (data: string) => void;
 };
 
 export default class BarCode extends Component<BarCodeProps> {
@@ -55,7 +53,9 @@ export default class BarCode extends Component<BarCodeProps> {
 
   _setValue = (data: string) => {
     const { onBarCodeScanned } = this.props;
-    onBarCodeScanned(data);
+    if (onBarCodeScanned) {
+      onBarCodeScanned(data);
+    }
   };
 
   render() {

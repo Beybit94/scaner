@@ -6,10 +6,13 @@ import { AuthContext } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
 
 import { ScanDocumentButton, ScanDocument } from "./ScanDocument";
+import { ScanGood, ScanGoodButton } from "./ScanGood";
 
 export type RootStackParamList = {
   ScanDocumentButton: undefined;
-  ScanDocument: { id: string };
+  ScanDocument: undefined;
+  ScanGoodButton: { id: string };
+  ScanGood: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -38,9 +41,23 @@ export default class Reception extends React.Component {
           <Stack.Screen
             name="ScanDocument"
             component={ScanDocument}
+            options={{
+              title: "Сканировать документ",
+            }}
+          />
+          <Stack.Screen
+            name="ScanGoodButton"
+            component={ScanGoodButton}
             options={({ route }) => ({
               title: `Прием товара № ${route.params.id}`,
             })}
+          />
+          <Stack.Screen
+            name="ScanGood"
+            component={ScanGood}
+            options={{
+              title: "Сканировать товар",
+            }}
           />
         </Stack.Navigator>
       </AuthContext.Provider>

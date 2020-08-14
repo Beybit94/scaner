@@ -18,7 +18,7 @@ export default class Splash extends React.Component {
 
     navigation.reset({
       index: 0,
-      routes: [{ name: userToken ? "Home" : "SignIn" }],
+      routes: [{ name: userToken === true ? "Home" : "SignIn" }],
     });
   };
 

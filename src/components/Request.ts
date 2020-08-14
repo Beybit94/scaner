@@ -1,9 +1,15 @@
 /* eslint-disable no-undef */
+
+import { HttpResponse } from ".";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
   BASE = "http://192.168.0.169:44341",
+  //BASE = "http://10.20.254.8:44341",
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
+  CREATE_TASK = "/api/Task/CreateTask",
+  GET_ACTIVE_TASKS = "/api/Task/GetActiveTask",
 }
 
 enum HTTP_METHODS {
@@ -11,14 +17,14 @@ enum HTTP_METHODS {
   POST = "POST",
 }
 
-interface HttpResponse<T> extends Response {
-  parsedBody?: T;
-}
-
 async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
   const response: HttpResponse<T> = await fetch(request);
   try {
-    response.parsedBody = await response.json();
+    await response.json().then((r) => {
+      response.data = r.data;
+      response.message = r.message;
+      response.success = r.success;
+    });
   } catch (ex) {
     throw new Error(ex);
   }
