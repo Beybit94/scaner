@@ -34,4 +34,5 @@ export interface GoodModel extends BaseModel {
   GoodArticle: string;
   GoodBarCode: string;
   Favorite: boolean;
+  IsBox: boolean;
 }

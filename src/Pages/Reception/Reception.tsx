@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -5,11 +6,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
 
-import { ScanButton, Scan } from "./ScanDocument";
+import Scan from "./Scan";
+import Good from "./Good";
+import Box from "./Box";
+
+export enum ReceptionPage {
+  DOCUMENT = 1,
+  GOOD = 2,
+  BOX = 3,
+}
 
 export type RootStackParamList = {
-  ScanButton: undefined;
-  Scan: undefined | { page: number; onGoBack?: (id: string) => void };
+  Good: undefined;
+  Scan: undefined | { page?: number; onGoBack?: (id: string) => void };
+  Box: undefined | { model: any; onGoBack?: (id: string) => void };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -28,8 +38,8 @@ export default class Reception extends React.Component {
       <AuthContext.Provider value={this.state}>
         <Stack.Navigator screenOptions={headerOptions}>
           <Stack.Screen
-            name="ScanButton"
-            component={ScanButton}
+            name="Good"
+            component={Good}
             options={{
               title: "Прием товара",
               headerLeft: () => <DrawerToggle />,
@@ -42,20 +52,13 @@ export default class Reception extends React.Component {
               title: "Сканировать",
             }}
           />
-          {/* <Stack.Screen
-            name="ScanGoodButton"
-            component={ScanGoodButton}
-            options={({ route }) => ({
-              title: `Прием товара № ${route.params.id}`,
-            })}
-          />
           <Stack.Screen
-            name="ScanGood"
-            component={ScanGood}
+            name="Box"
+            component={Box}
             options={{
-              title: "Сканировать товар",
+              title: "Прием короба",
             }}
-          /> */}
+          />
         </Stack.Navigator>
       </AuthContext.Provider>
     );
