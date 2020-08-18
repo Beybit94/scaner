@@ -10,12 +10,6 @@ import Scan from "./Scan";
 import Good from "./Good";
 import Box from "./Box";
 
-export enum ReceptionPage {
-  DOCUMENT = 1,
-  GOOD = 2,
-  BOX = 3,
-}
-
 export type RootStackParamList = {
   Good: undefined;
   Scan: undefined | { page?: number; onGoBack?: (id: string) => void };

@@ -3,7 +3,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 
 import { BarCode } from "../Shared";
 
-import { RootStackParamList, ReceptionPage } from "./Reception";
+import { RootStackParamList } from "./Reception";
+import { ReceptionPage } from "./Good";
 
 type ScanProps = StackScreenProps<RootStackParamList, "Scan">;
 export default class Scan extends Component<ScanProps> {

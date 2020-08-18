@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ListItem } from "react-native-elements";
+import { ListItem, Icon } from "react-native-elements";
 
 import { GoodModel } from "../../components";
 
@@ -14,6 +14,10 @@ export default class GoodItem extends Component<GoodItemProps> {
         key={this.props.data.GoodId}
         title={this.props.data.GoodName}
         subtitle={this.props.data.GoodArticle}
+        leftIcon={
+          this.props.data.IsBox &&
+          this.props.onPress && <Icon name="th-large" type="font-awesome" />
+        }
         bottomDivider
         chevron={{
           color:

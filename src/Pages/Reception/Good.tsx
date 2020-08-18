@@ -2,11 +2,18 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 import { GoodModel } from "../../components";
 import { CustomButton, GoodItem } from "../Shared";
 
-import { RootStackParamList, ReceptionPage } from "./Reception";
+import { RootStackParamList } from "./Reception";
+
+export enum ReceptionPage {
+  DOCUMENT = 1,
+  GOOD = 2,
+  BOX = 3,
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -86,13 +93,22 @@ export default class Good extends Component<GoodProps> {
           onClick={this._onButtonClick}
         />
 
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <GoodItem data={item} onPress={this._onItemClick} />
-          )}
-          keyExtractor={(item) => (item as GoodModel).GoodId.toString()}
-        />
+        {this.state.page === ReceptionPage.GOOD && (
+          <SwipeListView
+            data={this.state.data}
+            renderItem={(model, rowMap) => (
+              <GoodItem data={model.item} onPress={this._onItemClick} />
+            )}
+            renderHiddenItem={(model, rowMap) => (
+              <View>
+                <Text>Left</Text>
+                <Text>Right</Text>
+              </View>
+            )}
+            leftOpenValue={75}
+            rightOpenValue={-75}
+          />
+        )}
       </View>
     );
   }

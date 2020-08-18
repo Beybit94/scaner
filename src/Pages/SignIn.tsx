@@ -98,22 +98,28 @@ export default class SignIn extends React.Component {
     this.setState({ isLoading: true });
 
     try {
-      await AuthManager.signInAsync({
-        login: this.state.login,
-        password: this.state.pass,
-      }).then(async (model) => {
-        if (!model.success) {
-          throw new Error(model.message);
-        }
+      await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
 
-        await LocalStorage.setItem(StorageKeys.USER, model.data);
-        await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
-
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Home" }],
-        });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
       });
+      // await AuthManager.signInAsync({
+      //   login: this.state.login,
+      //   password: this.state.pass,
+      // }).then(async (model) => {
+      //   if (!model.success) {
+      //     throw new Error(model.message);
+      //   }
+
+      //   await LocalStorage.setItem(StorageKeys.USER, model.data);
+      //   await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
+
+      //   navigation.reset({
+      //     index: 0,
+      //     routes: [{ name: "Home" }],
+      //   });
+      // });
     } catch (ex) {
       this.setState({ isLoading: false });
       //console.error(ex);
