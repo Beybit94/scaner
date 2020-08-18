@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import { GoodModel } from "../../components";
-import { CustomButton, GoodItem } from "../Shared";
+import { CustomButton, GoodItem, GoodHiddenItem } from "../Shared";
 
 import { RootStackParamList } from "./Reception";
 
@@ -77,6 +78,39 @@ export default class Good extends Component<GoodProps> {
     });
   };
 
+  _onItemEdit = (model: GoodModel) => {
+    console.warn(model);
+  };
+
+  _onItemRemove = (model: GoodModel) => {
+    console.warn(model);
+  };
+
+  _renderItem = (model: GoodModel) => {
+    return <GoodItem data={model} onPress={this._onItemClick} />;
+  };
+
+  _renderHiddenItem = (model: GoodModel) => {
+    return (
+      <GoodHiddenItem
+        data={model}
+        edit={this._onItemEdit}
+        remove={this._onItemRemove}
+      />
+    );
+  };
+
+  _onRowOpen = (rowId: string, rowMap: any) => {
+    const item = (this.state.data.find(
+      (value: GoodModel) => value.GoodId.toString() === rowId
+    ) as unknown) as GoodModel;
+
+    if (item.IsBox) {
+      rowMap[`${rowId}`].closeRow();
+    }
+    //.map((value: GoodModel) => value.IsBox);
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -96,17 +130,13 @@ export default class Good extends Component<GoodProps> {
         {this.state.page === ReceptionPage.GOOD && (
           <SwipeListView
             data={this.state.data}
-            renderItem={(model, rowMap) => (
-              <GoodItem data={model.item} onPress={this._onItemClick} />
-            )}
-            renderHiddenItem={(model, rowMap) => (
-              <View>
-                <Text>Left</Text>
-                <Text>Right</Text>
-              </View>
-            )}
-            leftOpenValue={75}
-            rightOpenValue={-75}
+            keyExtractor={(item) => (item as GoodModel).GoodId.toString()}
+            useFlatList={true}
+            disableRightSwipe={true}
+            rightOpenValue={-150}
+            onRowOpen={(rowId, rowMap) => this._onRowOpen(rowId, rowMap)}
+            renderItem={(model) => this._renderItem(model.item)}
+            renderHiddenItem={(model) => this._renderHiddenItem(model.item)}
           />
         )}
       </View>

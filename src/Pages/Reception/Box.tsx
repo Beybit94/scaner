@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 import { GoodModel } from "../../components";
-import { CustomButton, GoodItem } from "../Shared";
+import { CustomButton, GoodItem, GoodHiddenItem } from "../Shared";
 
 import { RootStackParamList } from "./Reception";
 
@@ -26,7 +28,6 @@ const data = [
     GoodName: "test",
     GoodArticle: "test",
     GoodBarCode: "",
-    IsBox: true,
   },
   {
     GoodId: 2,
@@ -34,7 +35,6 @@ const data = [
     GoodName: "test2",
     GoodArticle: "test2",
     GoodBarCode: "",
-    IsBox: false,
   },
 ];
 
@@ -45,12 +45,47 @@ export default class Box extends Component<BoxButtonProps> {
   };
 
   componentDidMount() {
-    this.setState({ data: data });
+    this.setState({
+      data: data,
+    });
   }
 
   _onButtonClick = () => {
     const { navigation } = this.props;
     navigation.push("Scan");
+  };
+
+  _onItemEdit = (model: GoodModel) => {
+    console.warn(model);
+  };
+
+  _onItemRemove = (model: GoodModel) => {
+    console.warn(model);
+  };
+
+  _renderItem = (model: GoodModel) => {
+    return <GoodItem data={model} />;
+  };
+
+  _renderHiddenItem = (model: GoodModel) => {
+    return (
+      <GoodHiddenItem
+        data={model}
+        edit={this._onItemEdit}
+        remove={this._onItemRemove}
+      />
+    );
+  };
+
+  _onRowOpen = (rowId: string, rowMap: any) => {
+    const item = (this.state.data.find(
+      (value: GoodModel) => value.GoodId.toString() === rowId
+    ) as unknown) as GoodModel;
+
+    if (item.IsBox) {
+      rowMap[`${rowId}`].closeRow();
+    }
+    //.map((value: GoodModel) => value.IsBox);
   };
 
   render() {
@@ -62,10 +97,15 @@ export default class Box extends Component<BoxButtonProps> {
 
         <CustomButton label="Сканировать товар" onClick={this._onButtonClick} />
 
-        <FlatList
+        <SwipeListView
           data={this.state.data}
-          renderItem={({ item }) => <GoodItem data={item} />}
           keyExtractor={(item) => (item as GoodModel).GoodId.toString()}
+          useFlatList={true}
+          disableRightSwipe={true}
+          rightOpenValue={-150}
+          onRowOpen={(rowId, rowMap) => this._onRowOpen(rowId, rowMap)}
+          renderItem={(model) => this._renderItem(model.item)}
+          renderHiddenItem={(model) => this._renderHiddenItem(model.item)}
         />
       </View>
     );
