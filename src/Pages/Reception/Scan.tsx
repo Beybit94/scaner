@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Alert } from "react-native";
 
 import { BarCode } from "../Shared";
 
@@ -19,25 +20,33 @@ export default class Scan extends Component<ScanProps> {
     });
   }
 
-  _barCodeSacanned = (data: string) => {
+  _barCodeSacanned = async (data: string) => {
     const { navigation, route } = this.props;
-    const page = route.params?.page;
 
     this.setState({ isScanned: !this.state.isScanned });
+    try {
+      const page = route.params?.page;
+      switch (page) {
+        case ReceptionPage.DOCUMENT:
+          const onGoBack = route.params?.onGoBack;
+          if (onGoBack) {
+            onGoBack(data);
+          }
 
-    switch (page) {
-      case ReceptionPage.DOCUMENT:
-        const onGoBack = route.params?.onGoBack;
-        if (onGoBack) {
-          onGoBack(data);
-        }
-
-        break;
-      case ReceptionPage.GOOD:
-        break;
+          break;
+        case ReceptionPage.GOOD:
+          break;
+      }
+    } catch (ex) {
+      Alert.alert(
+        "Error signing in",
+        JSON.stringify(ex.message),
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    } finally {
+      navigation.goBack();
     }
-
-    navigation.goBack();
   };
 
   render() {

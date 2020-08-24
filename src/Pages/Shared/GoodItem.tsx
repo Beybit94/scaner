@@ -16,7 +16,7 @@ export default class GoodItem extends Component<GoodItemProps> {
         subtitle={this.props.data.GoodArticle}
         leftIcon={
           this.props.data.IsBox &&
-          this.props.onPress && <Icon name="th-large" type="font-awesome" />
+          this.props.onPress && <Icon name="archive" type="font-awesome" />
         }
         bottomDivider
         chevron={{

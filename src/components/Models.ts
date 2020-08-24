@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface HttpResponse<T> extends Response {
   data?: T;
-  message?: string;
+  error?: string;
   success?: boolean;
 }
 export interface BaseModel {}
@@ -20,11 +20,13 @@ export interface UserModel extends BaseModel {
   UserGuid: string;
 }
 
-export interface TaskQueryModel {
-  PlanNum?: string;
-  UserId?: number;
-  DivisionId?: number;
-  TaskId?: number;
+export interface TaskModel extends BaseModel {
+  Id: number;
+  DivisionId: number;
+  UserId: number;
+  PlanNum: string;
+  BoxNum: string;
+  TaskTypeId: number;
 }
 
 export interface GoodModel extends BaseModel {
@@ -33,6 +35,5 @@ export interface GoodModel extends BaseModel {
   GoodName: string;
   GoodArticle: string;
   GoodBarCode: string;
-  Favorite: boolean;
   IsBox: boolean;
 }

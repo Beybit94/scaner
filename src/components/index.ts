@@ -6,10 +6,10 @@ import {
   BaseModel,
   LoginModel,
   UserModel,
-  TaskQueryModel,
+  TaskModel,
   GoodModel,
 } from "./Models";
-import { Endpoints, get, post } from "./Request";
+import { Endpoints, get, post, OnRequestError } from "./Request";
 
 export {
   LoadAssets,
@@ -20,9 +20,10 @@ export {
   BaseModel,
   LoginModel,
   UserModel,
-  TaskQueryModel,
+  TaskModel,
   GoodModel,
   Endpoints,
+  OnRequestError,
   get,
   post,
 };

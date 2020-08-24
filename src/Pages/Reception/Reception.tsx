@@ -12,7 +12,7 @@ import Box from "./Box";
 
 export type RootStackParamList = {
   Good: undefined;
-  Scan: undefined | { page?: number; onGoBack?: (id: string) => void };
+  Scan: undefined | { page?: number; onGoBack?: (model: any) => void };
   Box: undefined | { model: any; onGoBack?: (id: string) => void };
 };
 

@@ -9,7 +9,23 @@ export enum Endpoints {
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
   CREATE_TASK = "/api/Task/CreateTask",
-  GET_ACTIVE_TASKS = "/api/Task/GetActiveTask",
+  TASK_ACTIVE = "/api/Task/GetActiveTask",
+  GOOD_BY_CODE = "api/Good/GetGoodByCode",
+  GOOD_BY_TASK = "api/Good/GetGoodsByTask",
+  CREATE_GOOD = "/api/Good/Create",
+  UPDATE_GOOD = "/api/Good/Update",
+  DELETE_GOOD = "/api/Good/Delete",
+}
+
+export enum OnRequestError {
+  LOGIN = "/api/User/FindUser",
+  CREATE_TASK = "/api/Task/CreateTask",
+  TASK_ACTIVE = "/api/Task/GetActiveTask",
+  GOOD_BY_CODE = "api/Good/GetGoodByCode",
+  GOOD_BY_TASK = "api/Good/GetGoodsByTask",
+  CREATE_GOOD = "/api/Good/Create",
+  UPDATE_GOOD = "/api/Good/Update",
+  DELETE_GOOD = "/api/Good/Delete",
 }
 
 enum HTTP_METHODS {
@@ -22,7 +38,7 @@ async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
   try {
     await response.json().then((r) => {
       response.data = r.data;
-      response.message = r.message;
+      response.error = r.error;
       response.success = r.success;
     });
   } catch (ex) {

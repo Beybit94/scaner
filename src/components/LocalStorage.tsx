@@ -6,6 +6,7 @@ export enum StorageKeys {
   USER = "USER",
   LOGEDIN = "LOGEDIN",
   SAVEME = "SAVEME",
+  ACTIVE_TASK = "ACTIVE_TASK",
 }
 class LocalStorage {
   async setItem(key: StorageKeys, value: any): Promise<void> {
