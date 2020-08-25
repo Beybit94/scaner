@@ -33,20 +33,36 @@ export class TaskManager {
   };
 
   static getGoodByCode = async (
-    BarCode: string
+    BarCode: string,
+    TaskId?: number
   ): Promise<HttpResponse<GoodModel>> => {
     const response = await post<GoodModel>(Endpoints.GOOD_BY_CODE, {
       BarCode: BarCode,
+      TaskId: TaskId,
     });
 
     return response;
   };
 
   static getGoodByTask = async (
-    TaskId: number
+    TaskId?: number
   ): Promise<HttpResponse<[GoodModel]>> => {
     const response = await post<[GoodModel]>(Endpoints.GOOD_BY_TASK, {
       TaskId: TaskId,
+    });
+
+    return response;
+  };
+
+  static addGood = async (
+    BarCode: string,
+    PlanNum?: string,
+    TaskId?: number
+  ): Promise<HttpResponse<BaseModel>> => {
+    const response = await post<BaseModel>(Endpoints.CREATE_GOOD, {
+      PlanNum: PlanNum,
+      TaskId: TaskId,
+      BarCode: BarCode,
     });
 
     return response;

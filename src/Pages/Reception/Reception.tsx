@@ -3,7 +3,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { AuthContext } from "../../components";
+import { AuthContext, GoodModel } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
 
 import Scan from "./Scan";
@@ -13,7 +13,7 @@ import Box from "./Box";
 export type RootStackParamList = {
   Good: undefined;
   Scan: undefined | { page?: number; onGoBack?: (model: any) => void };
-  Box: undefined | { model: any; onGoBack?: (id: string) => void };
+  Box: undefined | { model: GoodModel; onGoBack?: (id: string) => void };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

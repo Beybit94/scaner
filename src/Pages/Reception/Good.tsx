@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -10,6 +11,8 @@ import {
   StorageKeys,
   UserModel,
   OnRequestError,
+  BaseModel,
+  TaskModel,
 } from "../../components";
 import { CustomButton, GoodItem, GoodHiddenItem, Loading } from "../Shared";
 import { TaskManager } from "../../Managers";
@@ -33,11 +36,13 @@ const styles = StyleSheet.create({
   },
 });
 
+let goods: BaseModel[] = [];
+
 type GoodProps = StackScreenProps<RootStackParamList, "Good">;
 export default class Good extends Component<GoodProps> {
   state = {
     id: "",
-    data: [],
+    data: goods,
     isLoading: false,
     page: ReceptionPage.DOCUMENT,
   };
@@ -56,30 +61,38 @@ export default class Good extends Component<GoodProps> {
           if (!response.success) {
             throw new Error(response.error);
           }
-
-          await LocalStorage.setItem(
-            StorageKeys.ACTIVE_TASK,
-            response.data?.Id
-          );
-
-          this.setState({
-            id: response.data?.Id,
-            page: ReceptionPage.GOOD,
-          });
-
-          await TaskManager.getGoodByTask(response.data?.Id || 0).then(
-            (response2) => {
-              if (!response2.success) {
-                throw new Error(response2.error);
+          if (response.data) {
+            await LocalStorage.setItem(StorageKeys.ACTIVE_TASK, response.data);
+            this.setState({
+              id: response.data.PlanNum,
+              page: ReceptionPage.GOOD,
+            });
+            await TaskManager.getGoodByTask(response.data.Id).then(
+              (response2) => {
+                if (!response2.success) {
+                  throw new Error(response2.error);
+                }
+                if (response2.data) {
+                  goods = response2.data;
+                  this.setState({ data: goods });
+                }
               }
-
-              this.setState({ data: response2.data });
-            }
-          );
+            );
+          }
         }
       );
     } catch (ex) {
-      this.setState({ page: ReceptionPage.DOCUMENT });
+      Alert.alert(
+        OnRequestError.CREATE_TASK,
+        JSON.stringify(ex.message),
+        [
+          {
+            text: "OK",
+            onPress: () => this.setState({ page: ReceptionPage.DOCUMENT }),
+          },
+        ],
+        { cancelable: false }
+      );
     } finally {
       this.setState({ isLoading: false });
     }
@@ -90,30 +103,52 @@ export default class Good extends Component<GoodProps> {
       this.setState({ isLoading: true });
       const user = await LocalStorage.getItem<UserModel>(StorageKeys.USER);
 
-      await TaskManager.createTask(id, user?.UserId).then(async (response) => {
-        if (!response.success) {
-          throw new Error(response.error);
-        }
+      switch (this.state.page) {
+        case ReceptionPage.DOCUMENT:
+          await TaskManager.createTask(id, user?.UserId).then(
+            async (response) => {
+              if (!response.success) {
+                throw new Error(response.error);
+              }
+              await TaskManager.getActiveTask(
+                user?.UserId,
+                user?.UserDivisionId
+              ).then(async (response2) => {
+                if (!response2.success) {
+                  throw new Error(response2.error);
+                }
 
-        await TaskManager.getActiveTask(
-          user?.UserId,
-          user?.UserDivisionId
-        ).then(async (response2) => {
-          if (!response2.success) {
-            throw new Error(response2.error);
-          }
+                await LocalStorage.setItem(
+                  StorageKeys.ACTIVE_TASK,
+                  response2.data
+                );
 
-          await LocalStorage.setItem(
-            StorageKeys.ACTIVE_TASK,
-            response2.data?.Id
+                this.setState({
+                  page: ReceptionPage.GOOD,
+                  id: response2.data?.PlanNum,
+                });
+              });
+            }
           );
 
-          this.setState({
-            page: ReceptionPage.GOOD,
-            id: response2.data?.Id,
-          });
-        });
-      });
+          break;
+        case ReceptionPage.GOOD:
+          const task = await LocalStorage.getItem<TaskModel>(
+            StorageKeys.ACTIVE_TASK
+          );
+          await TaskManager.addGood(id, task?.PlanNum, task?.Id).then(
+            async (response) => {
+              if (!response.success) {
+                throw new Error(response.error);
+              }
+              if (response.data) {
+                goods.push(response.data);
+                this.setState({ data: goods });
+              }
+            }
+          );
+          break;
+      }
     } catch (ex) {
       Alert.alert(
         OnRequestError.CREATE_TASK,
@@ -150,7 +185,9 @@ export default class Good extends Component<GoodProps> {
   };
 
   _renderItem = (model: GoodModel) => {
-    return <GoodItem data={model} onPress={this._onItemClick} />;
+    return goods.length > 0 ? (
+      <GoodItem data={model} onPress={this._onItemClick} />
+    ) : null;
   };
 
   _renderHiddenItem = (model: GoodModel) => {
@@ -175,32 +212,35 @@ export default class Good extends Component<GoodProps> {
   };
 
   render() {
+    const { page, id, data, isLoading } = this.state;
     return (
-      <Loading isLoading={this.state.isLoading}>
+      <Loading isLoading={isLoading}>
         <View style={styles.container}>
-          {this.state.page === ReceptionPage.GOOD && (
-            <Text style={styles.title}>Планирование: {this.state.id}</Text>
+          {page === ReceptionPage.GOOD && (
+            <Text style={styles.title}>Планирование: {id}</Text>
           )}
 
           <CustomButton
             label={
-              this.state.page === ReceptionPage.DOCUMENT
+              page === ReceptionPage.DOCUMENT
                 ? "Сканировать документ"
                 : "Сканировать товар"
             }
             onClick={this._onButtonClick}
           />
 
-          {this.state.page === ReceptionPage.GOOD && (
+          {page === ReceptionPage.GOOD && data && (
             <SwipeListView
-              data={this.state.data}
-              keyExtractor={(item) => (item as GoodModel).GoodId.toString()}
+              data={data}
+              keyExtractor={(item) => (item as GoodModel).StrID}
               useFlatList={true}
               disableRightSwipe={true}
               rightOpenValue={-150}
               onRowOpen={(rowId, rowMap) => this._onRowOpen(rowId, rowMap)}
-              renderItem={(model) => this._renderItem(model.item)}
-              renderHiddenItem={(model) => this._renderHiddenItem(model.item)}
+              renderItem={(model) => this._renderItem(model.item as GoodModel)}
+              renderHiddenItem={(model) =>
+                this._renderHiddenItem(model.item as GoodModel)
+              }
             />
           )}
         </View>

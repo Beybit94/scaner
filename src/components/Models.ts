@@ -30,6 +30,8 @@ export interface TaskModel extends BaseModel {
 }
 
 export interface GoodModel extends BaseModel {
+  ID: number;
+  StrID: string;
   GoodId: number;
   Count: number;
   GoodName: string;

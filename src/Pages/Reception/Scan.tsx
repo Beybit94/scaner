@@ -22,20 +22,13 @@ export default class Scan extends Component<ScanProps> {
 
   _barCodeSacanned = async (data: string) => {
     const { navigation, route } = this.props;
+    const page = route.params?.page;
 
     this.setState({ isScanned: !this.state.isScanned });
     try {
-      const page = route.params?.page;
-      switch (page) {
-        case ReceptionPage.DOCUMENT:
-          const onGoBack = route.params?.onGoBack;
-          if (onGoBack) {
-            onGoBack(data);
-          }
-
-          break;
-        case ReceptionPage.GOOD:
-          break;
+      const onGoBack = route.params?.onGoBack;
+      if (onGoBack) {
+        onGoBack(data);
       }
     } catch (ex) {
       Alert.alert(

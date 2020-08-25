@@ -9,27 +9,20 @@ type GoodItemProps = {
 };
 export default class GoodItem extends Component<GoodItemProps> {
   render() {
+    const { data, onPress } = this.props;
     return (
       <ListItem
-        key={this.props.data.GoodId}
-        title={this.props.data.GoodName}
-        subtitle={this.props.data.GoodArticle}
+        key={data.StrID}
+        title={data.GoodName}
+        subtitle={data.GoodArticle}
         leftIcon={
-          this.props.data.IsBox &&
-          this.props.onPress && <Icon name="archive" type="font-awesome" />
+          data.IsBox && onPress && <Icon name="archive" type="font-awesome" />
         }
         bottomDivider
         chevron={{
-          color:
-            this.props.data.IsBox && this.props.onPress
-              ? "black"
-              : "transparent",
+          color: data.IsBox && onPress ? "black" : "transparent",
         }}
-        onPress={() =>
-          this.props.data.IsBox &&
-          this.props.onPress &&
-          this.props.onPress(this.props.data)
-        }
+        onPress={() => data.IsBox && onPress && onPress(this.props.data)}
       />
     );
   }
