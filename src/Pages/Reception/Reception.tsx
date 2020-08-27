@@ -9,11 +9,13 @@ import { headerOptions, DrawerToggle } from "../Menu/Header";
 import Scan from "./Scan";
 import Good from "./Good";
 import Box from "./Box";
+import PdfFile from "./Pdf";
 
 export type RootStackParamList = {
   Good: undefined;
   Scan: undefined | { page?: number; onGoBack?: (model: any) => void };
   Box: { model: GoodModel; onGoBack?: (id: string) => void };
+  Pdf: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -51,6 +53,13 @@ export default class Reception extends React.Component {
             component={Box}
             options={{
               title: "Прием короба",
+            }}
+          />
+          <Stack.Screen
+            name="Pdf"
+            component={PdfFile}
+            options={{
+              title: "Акт приема",
             }}
           />
         </Stack.Navigator>

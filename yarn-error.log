@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add expo-permissions
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @react-native-community/checkbox
 
 PATH: 
   C:\Python38\Scripts\;C:\Python38\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\Java\jdk1.8.0_211\bin;C:\Program Files (x86)\Yarn\bin\;C:\Users\akabe\AppData\Local\Microsoft\WindowsApps;C:\Users\akabe\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\akabe\AppData\Local\Programs\Azure Data Studio\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2020.1.3\bin;;C:\Users\akabe\AppData\Roaming\npm;C:\Users\akabe\AppData\Local\Android\Sdk\platform-tools;C:\Users\akabe\AppData\Local\Yarn\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\akabe\Documents\react\Scaner\node_modules\expo-barcode-scanner\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\akabe\Documents\react\Scaner\node_modules\dayjs\esm\plugin\pluralGetSet\index.d.ts'
 
 npm manifest: 
   {
@@ -30,6 +30,7 @@ npm manifest:
       "ci": "yarn lint && yarn tsc"
     },
     "dependencies": {
+      "@expo/vector-icons": "^10.0.0",
       "@react-native-community/async-storage": "1.11.0",
       "@react-native-community/checkbox": "0.4.2",
       "@react-native-community/masked-view": "0.1.10",
@@ -48,13 +49,16 @@ npm manifest:
       "react": "~16.11.0",
       "react-dom": "~16.11.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
-      "react-native-elements": "2.0.4",
+      "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
+      "react-native-elements": "2.2.1",
       "react-native-gesture-handler": "1.6.1",
       "react-native-paper": "4.0.1",
       "react-native-reanimated": "1.9.0",
       "react-native-redash": "14.2.3",
       "react-native-safe-area-context": "3.1.1",
       "react-native-screens": "2.9.0",
+      "react-native-swipe-list-view": "3.2.3",
+      "react-native-vector-icons": "7.0.0",
       "react-native-web": "~0.11.7",
       "react-navigation": "4.4.0",
       "react-navigation-drawer": "react-navigation/drawer"
@@ -1046,7 +1050,7 @@ Lockfile:
       xcode "^3.0.0"
       xml-js "^1.6.11"
   
-  "@expo/vector-icons@^10.0.2":
+  "@expo/vector-icons@^10.0.0", "@expo/vector-icons@^10.0.2":
     version "10.2.0"
     resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.2.0.tgz#3c70656683a6a873e18efc00bc61fc160a80dc55"
     integrity sha512-dYe0SW/xbzWRtWG7i1pc3QPMGMbdReVgP02XlwMkS4srAAjF0cZQVa3ZgZ6qzxI+OzKudpDXZRmENNth/b263g==
@@ -5438,10 +5442,16 @@ Lockfile:
       invariant "^2.2.4"
       use-subscription "^1.0.0"
   
-  react-native-elements@2.0.4:
-    version "2.0.4"
-    resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-2.0.4.tgz#ea5a6bb34cabd48dcd6c6546e4737d2075e40ee3"
-    integrity sha512-nIFz47Sk/urOxZX+sqgWF2k7IVL0t9NGsVLg4HC7pN70bsjXMr4VUmS72zioxag3Du8xK1g7lw4vrRX3JQeVYg==
+  "react-native-camera@git+https://git@github.com/react-native-community/react-native-camera.git":
+    version "3.36.0"
+    resolved "git+https://git@github.com/react-native-community/react-native-camera.git#d7092048ff01cf9cdf7baa9b4314c7bb9810a52d"
+    dependencies:
+      prop-types "^15.6.2"
+  
+  react-native-elements@2.2.1:
+    version "2.2.1"
+    resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-2.2.1.tgz#1d95aa7ee2020f72e0bc779d574fefcf072b7086"
+    integrity sha512-JhveP4ZQzZrMef9sBJfjfgfdbKafGnqZGosVr4hb3At8c1wJ3QFgOGUsKxhpjpF2wr/RgLbP2UV3rS1cD+t7IA==
     dependencies:
       "@types/react-native-vector-icons" "^6.4.5"
       color "^3.1.0"
@@ -5527,6 +5537,20 @@ Lockfile:
     version "2.5.0"
     resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
     integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
+  
+  react-native-swipe-list-view@3.2.3:
+    version "3.2.3"
+    resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-3.2.3.tgz#2b4aa361f26b6e55efe38a829ce122dff6c00292"
+    integrity sha512-f0B92eZiO0mCk7ZFtn8tbLz4lb+mR8xzcfjFqCVSDeXnuNw7GenUMsccGnclIOhnxnip5BHvUHavlD41peGqig==
+  
+  react-native-vector-icons@7.0.0:
+    version "7.0.0"
+    resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-7.0.0.tgz#5b92ed363c867645daad48c559e1f99efcfbb813"
+    integrity sha512-Ku8+dTUAnR9pexRPQqsUcQEZlxEpFZsIy8iOFqVL/3mrUyncZJHtqJyx2cUOmltZIC6W2GI4IkD3EYzPerXV5g==
+    dependencies:
+      lodash "^4.17.15"
+      prop-types "^15.7.2"
+      yargs "^15.0.2"
   
   react-native-web@~0.11.7:
     version "0.11.7"
@@ -6950,7 +6974,7 @@ Lockfile:
       y18n "^4.0.0"
       yargs-parser "^15.0.1"
   
-  yargs@^15.1.0:
+  yargs@^15.0.2, yargs@^15.1.0:
     version "15.4.1"
     resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.4.1.tgz#0d87a16de01aee9d8bec2bfbf74f67851730f4f8"
     integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==

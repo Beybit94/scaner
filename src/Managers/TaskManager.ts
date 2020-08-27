@@ -24,7 +24,7 @@ export class TaskManager {
     UserId?: number,
     DivisionId?: number
   ): Promise<HttpResponse<TaskModel>> => {
-    const response = await post<TaskModel>(Endpoints.TASK_ACTIVE, {
+    const response = await post<TaskModel>(Endpoints.ACTIVE_TASK, {
       UserId: UserId,
       DivisionId: DivisionId,
     });
@@ -98,6 +98,27 @@ export class TaskManager {
     const response = await post<BaseModel>(Endpoints.DELETE_GOOD, {
       Id: Id,
     });
+
+    return response;
+  };
+
+  static endTask = async (
+    TaskId: number
+  ): Promise<HttpResponse<[GoodModel]>> => {
+    const response = await post<[GoodModel]>(Endpoints.END_TASK, {
+      TaskId: TaskId,
+    });
+
+    return response;
+  };
+
+  static pdf = async (
+    TaskId: number,
+    PlanNum: string
+  ): Promise<HttpResponse<BaseModel>> => {
+    const response = await get<BaseModel>(
+      `${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${TaskId}`
+    );
 
     return response;
   };

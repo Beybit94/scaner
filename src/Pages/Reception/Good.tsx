@@ -330,6 +330,33 @@ export default class Good extends Component<GoodProps> {
     //.map((value: GoodModel) => value.IsBox);
   };
 
+  _onEndTask = async () => {
+    const { navigation } = this.props;
+    navigation.push("Pdf");
+    // try {
+    //   this.setState({ isLoading: true });
+    //   const task = await LocalStorage.getItem<TaskModel>(
+    //     StorageKeys.ACTIVE_TASK
+    //   );
+    //   if (task) {
+    //     await TaskManager.endTask(task.Id).then((response) => {
+    //       if (!response.success) {
+    //         throw new Error(response.error);
+    //       }
+    //     });
+    //   }
+    // } catch (ex) {
+    //   Alert.alert(
+    //     OnRequestError.CREATE_TASK,
+    //     JSON.stringify(ex.message),
+    //     [{ text: "OK" }],
+    //     { cancelable: false }
+    //   );
+    // } finally {
+    //   this.setState({ isLoading: false });
+    // }
+  };
+
   render() {
     const { page, id, data, isLoading, isShowModal, currentCount } = this.state;
     const buttons = ["Изменить", "Закрыть"];
@@ -388,6 +415,8 @@ export default class Good extends Component<GoodProps> {
               renderHiddenItem={(model) => this._renderHiddenItem(model)}
             />
           )}
+
+          <CustomButton label={"Завершить задачу"} onClick={this._onEndTask} />
         </View>
       </Loading>
     );
