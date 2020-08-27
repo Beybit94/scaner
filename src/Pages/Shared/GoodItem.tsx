@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Text } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 
 import { GoodModel } from "../../components";
@@ -14,7 +15,8 @@ export default class GoodItem extends Component<GoodItemProps> {
       <ListItem
         key={data.StrID}
         title={data.GoodName}
-        subtitle={data.GoodArticle}
+        subtitle={data.IsBox ? "" : data.GoodArticle}
+        rightIcon={<Text>{data.IsBox ? "" : "Кол-во:" + data.Count}</Text>}
         leftIcon={
           data.IsBox && onPress && <Icon name="archive" type="font-awesome" />
         }

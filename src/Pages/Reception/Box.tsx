@@ -13,7 +13,7 @@ import {
   BaseModel,
   TaskModel,
 } from "../../components";
-import { CustomButton, GoodItem, GoodHiddenItem } from "../Shared";
+import { CustomButton, GoodItem, GoodHiddenItem, Loading } from "../Shared";
 import { TaskManager } from "../../Managers";
 
 import { RootStackParamList } from "./Reception";
@@ -29,31 +29,71 @@ const styles = StyleSheet.create({
   },
 });
 
-const goods: BaseModel[] = [];
+let goods: BaseModel[] = [];
 
 type BoxButtonProps = StackScreenProps<RootStackParamList, "Box">;
 export default class Box extends Component<BoxButtonProps> {
   state = {
+    isLoading: false,
     data: goods,
+  };
+
+  async componentDidMount() {
+    this._onGetActiveTask();
+  }
+
+  _onGetActiveTask = async () => {
+    try {
+      this.setState({ isLoading: true });
+      const { model } = this.props.route.params;
+      const task = await LocalStorage.getItem<TaskModel>(
+        StorageKeys.ACTIVE_TASK
+      );
+
+      if (task) {
+        await TaskManager.getGoodByBox(model.ID, task?.Id).then((response) => {
+          if (!response.success) {
+            throw new Error(response.error);
+          }
+          if (response.data) {
+            goods = response.data;
+            this.setState({ data: goods });
+          }
+        });
+      }
+    } catch (ex) {
+      Alert.alert(
+        OnRequestError.CREATE_TASK,
+        JSON.stringify(ex.message),
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   _onScanned = async (id: string) => {
     try {
       this.setState({ isLoading: true });
+      const { model } = this.props.route.params;
       const task = await LocalStorage.getItem<TaskModel>(
         StorageKeys.ACTIVE_TASK
       );
-      await TaskManager.addGood(id, task?.PlanNum, task?.Id).then(
-        async (response) => {
-          if (!response.success) {
-            throw new Error(response.error);
+
+      if (task) {
+        await TaskManager.addGood(id, task?.PlanNum, task?.Id, model.ID).then(
+          async (response) => {
+            if (!response.success) {
+              throw new Error(response.error);
+            }
+            if (response.data) {
+              goods.push(response.data);
+              this.setState({ data: goods });
+            }
           }
-          if (response.data) {
-            goods.push(response.data);
-            this.setState({ data: goods });
-          }
-        }
-      );
+        );
+      }
     } catch (ex) {
       Alert.alert(
         OnRequestError.CREATE_TASK,
@@ -68,15 +108,47 @@ export default class Box extends Component<BoxButtonProps> {
 
   _onButtonClick = () => {
     const { navigation } = this.props;
-    navigation.push("Scan");
+    navigation.push("Scan", {
+      onGoBack: this._onScanned,
+    });
   };
 
   _onItemEdit = (model: GoodModel) => {
     console.warn(model);
   };
 
-  _onItemRemove = (model: GoodModel) => {
-    console.warn(model);
+  _onItemRemove = async (model: GoodModel) => {
+    try {
+      this.setState({ isLoading: true });
+      await TaskManager.removeGood(model.ID).then(async (response) => {
+        if (!response.success) {
+          throw new Error(response.error);
+        }
+        const task = await LocalStorage.getItem<TaskModel>(
+          StorageKeys.ACTIVE_TASK
+        );
+        if (task) {
+          await TaskManager.getGoodByTask(task.Id).then((response2) => {
+            if (!response2.success) {
+              throw new Error(response2.error);
+            }
+            if (response2.data) {
+              goods = response2.data;
+              this.setState({ data: goods });
+            }
+          });
+        }
+      });
+    } catch (ex) {
+      Alert.alert(
+        OnRequestError.CREATE_TASK,
+        JSON.stringify(ex.message),
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   _renderItem = (model: GoodModel) => {
@@ -94,38 +166,45 @@ export default class Box extends Component<BoxButtonProps> {
   };
 
   _onRowOpen = (rowId: string, rowMap: any) => {
-    const item = (this.state.data.find(
-      (value: GoodModel) => value.GoodId.toString() === rowId
-    ) as unknown) as GoodModel;
+    const item = goods.find((value) => {
+      return (value as GoodModel).StrID === rowId;
+    }) as GoodModel;
 
     if (item.IsBox) {
       rowMap[`${rowId}`].closeRow();
     }
-    //.map((value: GoodModel) => value.IsBox);
   };
 
   render() {
+    const { model } = this.props.route.params;
+    const { data, isLoading } = this.state;
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          {this.props.route.params?.model.GoodName}
-        </Text>
+      <Loading isLoading={isLoading}>
+        <View style={styles.container}>
+          <Text style={styles.title}>{model.GoodName}</Text>
 
-        <CustomButton label="Сканировать товар" onClick={this._onButtonClick} />
+          <CustomButton
+            label="Сканировать товар"
+            onClick={this._onButtonClick}
+          />
 
-        <SwipeListView
-          data={this.state.data}
-          keyExtractor={(item) => (item as GoodModel).StrID}
-          useFlatList={true}
-          disableRightSwipe={true}
-          rightOpenValue={-150}
-          onRowOpen={(rowId, rowMap) => this._onRowOpen(rowId, rowMap)}
-          renderItem={(model) => this._renderItem(model.item as GoodModel)}
-          renderHiddenItem={(model) =>
-            this._renderHiddenItem(model.item as GoodModel)
-          }
-        />
-      </View>
+          {data && (
+            <SwipeListView
+              data={data}
+              keyExtractor={(item) => (item as GoodModel).StrID}
+              useFlatList={true}
+              disableRightSwipe={true}
+              rightOpenValue={-150}
+              onRowOpen={(rowId, rowMap) => this._onRowOpen(rowId, rowMap)}
+              renderItem={(row) => this._renderItem(row.item as GoodModel)}
+              renderHiddenItem={(row) =>
+                this._renderHiddenItem(row.item as GoodModel)
+              }
+            />
+          )}
+        </View>
+      </Loading>
     );
   }
 }

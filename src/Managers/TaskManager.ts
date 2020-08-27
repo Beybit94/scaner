@@ -54,15 +54,49 @@ export class TaskManager {
     return response;
   };
 
+  static getGoodByBox = async (
+    BoxId: number,
+    TaskId?: number
+  ): Promise<HttpResponse<[GoodModel]>> => {
+    const response = await post<[GoodModel]>(Endpoints.GOOD_BY_BOX, {
+      BoxId: BoxId,
+      TaskId: TaskId,
+    });
+
+    return response;
+  };
+
   static addGood = async (
     BarCode: string,
     PlanNum?: string,
-    TaskId?: number
+    TaskId?: number,
+    BoxId?: number
   ): Promise<HttpResponse<BaseModel>> => {
     const response = await post<BaseModel>(Endpoints.CREATE_GOOD, {
       PlanNum: PlanNum,
       TaskId: TaskId,
       BarCode: BarCode,
+      BoxId: BoxId,
+    });
+
+    return response;
+  };
+
+  static editGood = async (
+    Id: number,
+    Count: string
+  ): Promise<HttpResponse<BaseModel>> => {
+    const response = await post<BaseModel>(Endpoints.UPDATE_GOOD, {
+      Id: Id,
+      CountQty: Count,
+    });
+
+    return response;
+  };
+
+  static removeGood = async (Id: number): Promise<HttpResponse<BaseModel>> => {
+    const response = await post<BaseModel>(Endpoints.DELETE_GOOD, {
+      Id: Id,
     });
 
     return response;
