@@ -108,6 +108,7 @@ export default class Good extends Component<GoodProps> {
               id: response.data.PlanNum,
               page: ReceptionPage.GOOD,
             });
+
             await TaskManager.getGoodByTask(response.data.Id).then(
               (response2) => {
                 if (!response2.success) {

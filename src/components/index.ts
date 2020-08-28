@@ -9,7 +9,7 @@ import {
   TaskModel,
   GoodModel,
 } from "./Models";
-import { Endpoints, get, post, OnRequestError } from "./Request";
+import { Endpoints, get, post, OnRequestError, getFile } from "./Request";
 
 export {
   LoadAssets,
@@ -26,4 +26,5 @@ export {
   OnRequestError,
   get,
   post,
+  getFile,
 };

@@ -5413,6 +5413,11 @@ react-native-elements@2.2.1:
     react-native-ratings "^7.2.0"
     react-native-status-bar-height "^2.5.0"
 
+react-native-file-viewer@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-file-viewer/-/react-native-file-viewer-2.1.1.tgz#d0b4c51e9b38870ba2b9fb1d436df844e974f087"
+  integrity sha512-Q5OtfA+VlprLaXmKk1tH/IFzMHwa2B5YnR4xfoEKOJ53UI5BKvYc67Y/ammUUog7bUwPkUBWenwd4MxBTi1R+g==
+
 react-native-gesture-handler@1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
@@ -5436,6 +5441,11 @@ react-native-paper@4.0.1:
     "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
     react-native-safe-area-view "^0.14.9"
+
+react-native-pdf-view@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-pdf-view/-/react-native-pdf-view-0.3.2.tgz#aca9887079bf8f71a3123e23d6ee36f55724a9d8"
+  integrity sha1-rKmIcHm/j3GjEj4j1u429Vckqdg=
 
 react-native-ratings@^7.2.0:
   version "7.2.0"

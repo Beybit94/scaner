@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   post,
   Endpoints,
@@ -5,6 +6,8 @@ import {
   TaskModel,
   BaseModel,
   GoodModel,
+  get,
+  getFile,
 } from "../components";
 
 export class TaskManager {
@@ -112,11 +115,8 @@ export class TaskManager {
     return response;
   };
 
-  static pdf = async (
-    TaskId: number,
-    PlanNum: string
-  ): Promise<HttpResponse<BaseModel>> => {
-    const response = await get<BaseModel>(
+  static pdf = async (TaskId: number, PlanNum: string): Promise<any> => {
+    const response = await getFile(
       `${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${TaskId}`
     );
 

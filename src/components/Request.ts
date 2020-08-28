@@ -39,6 +39,11 @@ enum HTTP_METHODS {
   POST = "POST",
 }
 
+async function httpFile(request: RequestInfo): Promise<Response> {
+  const response = await fetch(request);
+  return response;
+}
+
 async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
   const response: HttpResponse<T> = await fetch(request);
   try {
@@ -57,6 +62,13 @@ const headers = new Headers();
 headers.set("Access-Control-Allow-Origin", "*");
 headers.set("Accept", "application/json");
 headers.set("Content-Type", "application/json");
+
+export async function getFile(
+  path: string,
+  args: RequestInit = { method: HTTP_METHODS.GET, headers }
+): Promise<Response> {
+  return await httpFile(new Request(`${Endpoints.BASE}${path}`, args));
+}
 
 export async function get<T>(
   path: Endpoints,
