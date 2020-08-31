@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-alert */
-/* eslint-disable react/no-did-mount-set-state */
+
 import React, { Component } from "react";
 import { Platform, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import * as FileSystem from "expo-file-system";
-import FileViewer from "react-native-file-viewer";
 import PDFReader from "rn-pdf-reader-js";
-import PDFView from "react-native-pdf-view";
+import FileViewer from "react-native-file-viewer";
 
 import {
   Endpoints,
@@ -15,6 +14,7 @@ import {
   StorageKeys,
   TaskModel,
 } from "../../components";
+import { TaskManager } from "../../Managers";
 
 import { RootStackParamList } from "./Reception";
 
@@ -22,11 +22,22 @@ type PdfProps = StackScreenProps<RootStackParamList, "Pdf">;
 export default class PdfFile extends Component<PdfProps> {
   state = {
     uri: "",
+    html: "",
+    filePath: "",
   };
 
   async componentDidMount() {
     this.donwloadFile();
   }
+
+  getPdf = async () => {
+    const task = await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK);
+    if (task) {
+      await TaskManager.pdf(task.Id, task.PlanNum).then((res) => {
+        this.setState({ html: res.data });
+      });
+    }
+  };
 
   donwloadFile = async () => {
     const task = await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK);
@@ -51,7 +62,6 @@ export default class PdfFile extends Component<PdfProps> {
       if (Platform.OS === "ios") {
         uri = uri.replace("file://", "");
       }
-      console.log("URI : " + uri);
       FileViewer.open(uri)
         .then(() => {})
         .catch((_err) => {
@@ -71,12 +81,7 @@ export default class PdfFile extends Component<PdfProps> {
     return <PDFReader source={{ uri: uri }} />;
   };
 
-  renderPDFView = () => {
-    const { uri } = this.state;
-    return <PDFView src={uri} />;
-  };
-
   render() {
-    return this.renderPDFView();
+    return this.renderPDFReader();
   }
 }

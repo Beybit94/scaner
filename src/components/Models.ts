@@ -1,3 +1,5 @@
+import { string } from "react-native-redash";
+
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface HttpResponse<T> extends Response {
   data?: T;
@@ -38,4 +40,23 @@ export interface GoodModel extends BaseModel {
   GoodArticle: string;
   GoodBarCode: string;
   IsBox: boolean;
+}
+
+export interface DifferenceModel extends BaseModel {
+  ID: number;
+  NumberDoc: string;
+  GoodId: number;
+  GoodArticle: string;
+  GoodName: string;
+  Quantity: number;
+  CountQty: number;
+  ExcessQty: number;
+  TaskId: number;
+  GoodGroupName: string;
+  Favorite: string;
+  Img: string;
+  Text1: string;
+  UserName: string;
+  CreationDate: string;
+  Status: number;
 }

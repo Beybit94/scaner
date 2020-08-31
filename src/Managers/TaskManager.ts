@@ -8,6 +8,7 @@ import {
   GoodModel,
   get,
   getFile,
+  DifferenceModel,
 } from "../components";
 
 export class TaskManager {
@@ -107,16 +108,19 @@ export class TaskManager {
 
   static endTask = async (
     TaskId: number
-  ): Promise<HttpResponse<[GoodModel]>> => {
-    const response = await post<[GoodModel]>(Endpoints.END_TASK, {
+  ): Promise<HttpResponse<[DifferenceModel]>> => {
+    const response = await post<[DifferenceModel]>(Endpoints.END_TASK, {
       TaskId: TaskId,
     });
 
     return response;
   };
 
-  static pdf = async (TaskId: number, PlanNum: string): Promise<any> => {
-    const response = await getFile(
+  static pdf = async (
+    TaskId: number,
+    PlanNum: string
+  ): Promise<HttpResponse<string>> => {
+    const response = await get<string>(
       `${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${TaskId}`
     );
 

@@ -75,9 +75,8 @@ export default class Good extends Component<GoodProps> {
     data: goods,
     currentRow: 0,
     currentCount: "",
-    isLoading: false,
     isShowModal: false,
-    selectedIndex: 2,
+    isLoading: false,
     page: ReceptionPage.DOCUMENT,
   };
 
@@ -265,7 +264,7 @@ export default class Good extends Component<GoodProps> {
   _onItemClick = (model: GoodModel) => {
     const { navigation } = this.props;
     navigation.push("Box", {
-      model: model,
+      box: model,
     });
   };
 
@@ -303,6 +302,11 @@ export default class Good extends Component<GoodProps> {
     }
   };
 
+  _onEndTask = async () => {
+    const { navigation } = this.props;
+    navigation.push("Difference");
+  };
+
   _renderItem = (model: GoodModel) => {
     return goods.length > 0 ? (
       <GoodItem data={model} onPress={this._onItemClick} />
@@ -329,33 +333,6 @@ export default class Good extends Component<GoodProps> {
       rowMap[`${rowId}`].closeRow();
     }
     //.map((value: GoodModel) => value.IsBox);
-  };
-
-  _onEndTask = async () => {
-    const { navigation } = this.props;
-    navigation.push("Pdf");
-    // try {
-    //   this.setState({ isLoading: true });
-    //   const task = await LocalStorage.getItem<TaskModel>(
-    //     StorageKeys.ACTIVE_TASK
-    //   );
-    //   if (task) {
-    //     await TaskManager.endTask(task.Id).then((response) => {
-    //       if (!response.success) {
-    //         throw new Error(response.error);
-    //       }
-    //     });
-    //   }
-    // } catch (ex) {
-    //   Alert.alert(
-    //     OnRequestError.CREATE_TASK,
-    //     JSON.stringify(ex.message),
-    //     [{ text: "OK" }],
-    //     { cancelable: false }
-    //   );
-    // } finally {
-    //   this.setState({ isLoading: false });
-    // }
   };
 
   render() {

@@ -10,11 +10,13 @@ import Scan from "./Scan";
 import Good from "./Good";
 import Box from "./Box";
 import PdfFile from "./Pdf";
+import Difference from "./Difference";
 
 export type RootStackParamList = {
   Good: undefined;
   Scan: undefined | { page?: number; onGoBack?: (model: any) => void };
-  Box: { model: GoodModel; onGoBack?: (id: string) => void };
+  Box: { box: GoodModel; onGoBack?: (id: string) => void };
+  Difference: undefined;
   Pdf: undefined;
 };
 
@@ -53,6 +55,13 @@ export default class Reception extends React.Component {
             component={Box}
             options={{
               title: "Прием короба",
+            }}
+          />
+          <Stack.Screen
+            name="Difference"
+            component={Difference}
+            options={{
+              title: "Расхождение",
             }}
           />
           <Stack.Screen

@@ -3000,6 +3000,13 @@ expo-error-recovery@~1.2.1:
   dependencies:
     fbjs "1.0.0"
 
+expo-file-system@9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-9.1.0.tgz#1ca5f069e4992b2c86fb12c4df6d0b8e70ba2a4e"
+  integrity sha512-kzjKZZ7WnswR39D7wgiMdztJYFy+Dig94pfpmw58G9MScxbLdjRy+5htNcvDfel4SlRBTzo6QDHzEBg6g0YdOg==
+  dependencies:
+    uuid "^3.4.0"
+
 expo-file-system@~9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-9.0.1.tgz#50a6a0b29fbc45413de9f7d38c0695503bf03d7e"
@@ -3042,6 +3049,11 @@ expo-location@~8.2.1:
   integrity sha512-MixKapt3nijAxyjIISscBzdKi8bwh0H/dWYsL2mCofrjguFHOh2gP07h95902lekb7NVqybl5AIQRW5cvrG4rQ==
   dependencies:
     invariant "^2.2.4"
+
+expo-permissions@9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.1.0.tgz#b830a9e8100d5650a874122b432a65ab1dfdf4c1"
+  integrity sha512-nNF8voeRSzMCIJzt27dmpHHm70ZiZh528GJJzHd9qX9aIgrN2j0WsrFI31p7Q8uPUI8HDCBbF7JmvO91GmFrhQ==
 
 expo-permissions@~9.0.1:
   version "9.0.1"
@@ -5433,19 +5445,14 @@ react-native-iphone-x-helper@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
   integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
 
-react-native-paper@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.0.1.tgz#13d2272757fb738113582e900787f365cfa77c74"
-  integrity sha512-C1kHZ5sS3QU2XdmdHnLAzp88T+FWtkOa+43wYjBClevsDvi72aRf6H9PTs8GS69E8tlNHym3kbVcENgnDPMqhQ==
+react-native-paper@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.1.0.tgz#26500fbfbb6af62aa9381eee22e508b8f2258c47"
+  integrity sha512-ML4cH31J7cfkkzP2p2YdCNaKeSY3gin04CESlshB4p95jLoN4VmfoDsvd/CTAibd+GJbsdDTJrk9VwHyLEVhlQ==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.5"
     color "^3.1.2"
     react-native-safe-area-view "^0.14.9"
-
-react-native-pdf-view@0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-pdf-view/-/react-native-pdf-view-0.3.2.tgz#aca9887079bf8f71a3123e23d6ee36f55724a9d8"
-  integrity sha1-rKmIcHm/j3GjEj4j1u429Vckqdg=
 
 react-native-ratings@^7.2.0:
   version "7.2.0"
@@ -5528,10 +5535,10 @@ react-native-web@~0.11.7:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.4"
 
-react-native-webview@10.8.2:
-  version "10.8.2"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-10.8.2.tgz#54a826cdbb81550996ad754282e0b7c3a5618122"
-  integrity sha512-GkIaKaP2CB7goxPCbtfqobWGojR9Owg7KF5cB3pcAZNmdQQ2AzawhYspydEX3xcsP8q9zgSJTtdoYbTm4WZZcA==
+react-native-webview@10.8.3:
+  version "10.8.3"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-10.8.3.tgz#63245fdf39320dbbc67c26e1e305342a51f93d66"
+  integrity sha512-QV3dCGG8xsr/65Rpf2/Khno8fzkyyJKUZpn00y6Wd1hbYRqataZOesCm2ceZS21yXzLLGVHmQlB5/41h3K787Q==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

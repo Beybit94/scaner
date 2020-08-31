@@ -8,8 +8,9 @@ import {
   UserModel,
   TaskModel,
   GoodModel,
+  DifferenceModel,
 } from "./Models";
-import { Endpoints, get, post, OnRequestError, getFile } from "./Request";
+import { Endpoints, get, post, OnRequestError } from "./Request";
 
 export {
   LoadAssets,
@@ -22,9 +23,9 @@ export {
   UserModel,
   TaskModel,
   GoodModel,
+  DifferenceModel,
   Endpoints,
   OnRequestError,
   get,
   post,
-  getFile,
 };

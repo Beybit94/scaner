@@ -5,7 +5,6 @@ import { Alert } from "react-native";
 import { BarCode } from "../Shared";
 
 import { RootStackParamList } from "./Reception";
-import { ReceptionPage } from "./Good";
 
 type ScanProps = StackScreenProps<RootStackParamList, "Scan">;
 export default class Scan extends Component<ScanProps> {
