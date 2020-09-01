@@ -128,7 +128,6 @@ export default class Box extends Component<BoxButtonProps> {
               throw new Error(response.error);
             }
             if (response.data) {
-              console.warn(response.data);
               goods.push(response.data);
               this.setState({ data: goods });
             }

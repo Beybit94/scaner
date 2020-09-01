@@ -7,7 +7,6 @@ import {
   BaseModel,
   GoodModel,
   get,
-  getFile,
   DifferenceModel,
 } from "../components";
 
@@ -107,10 +106,12 @@ export class TaskManager {
   };
 
   static endTask = async (
-    TaskId: number
+    TaskId: number,
+    PlanNum: string
   ): Promise<HttpResponse<[DifferenceModel]>> => {
     const response = await post<[DifferenceModel]>(Endpoints.END_TASK, {
       TaskId: TaskId,
+      PlanNum: PlanNum,
     });
 
     return response;

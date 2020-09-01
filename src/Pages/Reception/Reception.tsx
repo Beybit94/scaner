@@ -16,8 +16,8 @@ export type RootStackParamList = {
   Good: undefined;
   Scan: undefined | { page?: number; onGoBack?: (model: any) => void };
   Box: { box: GoodModel; onGoBack?: (id: string) => void };
-  Difference: undefined;
-  Pdf: undefined;
+  Difference: { onGoBack?: () => void };
+  Pdf: { taskId: number; PlanNum: string };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

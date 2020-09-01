@@ -44,6 +44,7 @@ export interface GoodModel extends BaseModel {
 
 export interface DifferenceModel extends BaseModel {
   ID: number;
+  StrID: string;
   NumberDoc: string;
   GoodId: number;
   GoodArticle: string;

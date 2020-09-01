@@ -304,7 +304,11 @@ export default class Good extends Component<GoodProps> {
 
   _onEndTask = async () => {
     const { navigation } = this.props;
-    navigation.push("Difference");
+    navigation.navigate("Difference", {
+      onGoBack: () => {
+        this._onGetActiveTask();
+      },
+    });
   };
 
   _renderItem = (model: GoodModel) => {

@@ -1,7 +1,8 @@
+/* eslint-disable react/no-did-mount-set-state */
 import React, { Component } from "react";
-import { View, Alert, StyleSheet, Text } from "react-native";
+import { View, Alert, StyleSheet, Text, FlatList } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { DataTable, List } from "react-native-paper";
+import { ListItem } from "react-native-elements";
 
 import { Loading, CustomButton } from "../Shared";
 import {
@@ -24,6 +25,13 @@ const styles = StyleSheet.create({
     margin: 8,
     fontSize: 18,
   },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    display: "flex",
+  },
 });
 
 let difference: DifferenceModel[] = [];
@@ -38,28 +46,30 @@ export default class Difference extends Component<DifferenceProps> {
   };
 
   async componentDidMount() {
-    await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK).then(
-      (res) => {
-        if (res) {
-          this.setState({ taskId: res.Id, PlanNum: res.PlanNum });
-        }
-      }
-    );
-    //this._endTask();
+    const task = await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK);
+    if (task) {
+      this.setState({ taskId: task.Id, PlanNum: task.PlanNum });
+      this._endTask();
+    }
   }
 
   async _endTask() {
-    const { taskId } = this.state;
+    const { taskId, PlanNum } = this.state;
+    const { onGoBack } = this.props.route.params;
     try {
       this.setState({ isLoading: true });
       if (taskId) {
-        await TaskManager.endTask(taskId).then((response) => {
+        await TaskManager.endTask(taskId, PlanNum).then(async (response) => {
           if (!response.success) {
             throw new Error(response.error);
           }
           if (response.data) {
+            await LocalStorage.deleteItem(StorageKeys.ACTIVE_TASK);
             difference = response.data;
             this.setState({ data: difference });
+            if (onGoBack) {
+              onGoBack();
+            }
           }
         });
       }
@@ -75,29 +85,37 @@ export default class Difference extends Component<DifferenceProps> {
     }
   }
 
-  _pdf() {
-    const { navigation } = this.props;
-    navigation.push("Pdf");
-  }
-
   render() {
-    const { isLoading, PlanNum } = this.state;
+    const { navigation } = this.props;
+    const { isLoading, taskId, PlanNum, data } = this.state;
     return (
       <Loading isLoading={isLoading}>
         <View style={styles.container}>
           <Text style={styles.title}>Планирование: {PlanNum}</Text>
-          <List.Item
-            title={<Text style={styles.title}>Наименование</Text>}
-            description={
-              <Text style={styles.title}>
-                Кол-во в 1С:1 {"\n"}
-                Отсканированного:2
-              </Text>
-            }
-            titleNumberOfLines={3}
-            descriptionNumberOfLines={5}
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <ListItem
+                key={item.StrID}
+                title={<Text style={styles.itemTitle}>{item.GoodName}</Text>}
+                subtitle={
+                  <View style={styles.subtitle}>
+                    <Text>Кол-во в 1С: {item.Quantity}</Text>
+                    <Text>Отсканированного: {item.CountQty}</Text>
+                  </View>
+                }
+                bottomDivider
+                children
+              />
+            )}
+            keyExtractor={(item) => item.StrID}
           />
-          <CustomButton label={"Акт приема"} onClick={this._pdf} />
+          <CustomButton
+            label={"Акт приема"}
+            onClick={() =>
+              navigation.push("Pdf", { taskId: taskId, PlanNum: PlanNum })
+            }
+          />
         </View>
       </Loading>
     );

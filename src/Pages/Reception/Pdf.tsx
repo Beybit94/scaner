@@ -15,12 +15,14 @@ import {
   TaskModel,
 } from "../../components";
 import { TaskManager } from "../../Managers";
+import { Loading } from "../Shared";
 
 import { RootStackParamList } from "./Reception";
 
 type PdfProps = StackScreenProps<RootStackParamList, "Pdf">;
 export default class PdfFile extends Component<PdfProps> {
   state = {
+    isLoading: false,
     uri: "",
     html: "",
     filePath: "",
@@ -40,48 +42,51 @@ export default class PdfFile extends Component<PdfProps> {
   };
 
   donwloadFile = async () => {
-    const task = await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK);
-    if (task) {
-      const uri = `${Endpoints.BASE}${Endpoints.PDF}?PlanNum=${task.PlanNum}&TaskId=${task.Id}`;
+    try {
+      const { taskId, PlanNum } = this.props.route.params;
+      this.setState({ isLoading: true });
+      const uri = `${Endpoints.BASE}${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${taskId}`;
       const fileUri = FileSystem.documentDirectory + "акт.pdf";
 
       const downloadObject = FileSystem.createDownloadResumable(uri, fileUri);
       const res = await downloadObject.downloadAsync();
       if (res) {
-        const data = FileSystem.readAsStringAsync(res?.uri);
-        console.log(data);
+        this.setState({ filePath: res?.uri, uri: uri });
       }
-
-      this.setState({ uri: uri });
+    } finally {
+      this.setState({ isLoading: false });
+      //this.selectOneFile();
     }
   };
 
   selectOneFile = async () => {
     try {
-      let { uri } = this.state;
-      if (Platform.OS === "ios") {
-        uri = uri.replace("file://", "");
+      let { filePath } = this.state;
+      if (filePath) {
+        if (Platform.OS === "ios") {
+          filePath = filePath.replace("file://", "");
+        }
+        FileViewer.open(filePath)
+          .then(() => {})
+          .catch((_err) => {
+            alert(_err);
+          });
       }
-      FileViewer.open(uri)
-        .then(() => {})
-        .catch((_err) => {
-          alert(_err);
-        });
     } catch (err) {
       alert("Unknown Error: " + JSON.stringify(err));
     }
   };
 
-  renderView = () => {
+  renderPDFReader = () => {
+    const { uri } = this.state;
+    if (uri) {
+      return <PDFReader source={{ uri: uri }} />;
+    }
     return <View />;
   };
 
-  renderPDFReader = () => {
-    const { uri } = this.state;
-    return <PDFReader source={{ uri: uri }} />;
-  };
-
   render() {
-    return this.renderPDFReader();
+    const { isLoading } = this.state;
+    return <Loading isLoading={isLoading}>{this.renderPDFReader()}</Loading>;
   }
 }
