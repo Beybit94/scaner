@@ -98,12 +98,6 @@ export default class SignIn extends React.Component {
     this.setState({ isLoading: true });
 
     try {
-      // await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
-
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "Home" }],
-      // });
       await AuthManager.signInAsync({
         login: this.state.login,
         password: this.state.pass,
@@ -111,8 +105,16 @@ export default class SignIn extends React.Component {
         if (!response.success) {
           throw new Error(response.error);
         }
-        await LocalStorage.setItem(StorageKeys.USER, response.data);
-        await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
+
+        if (!response.data) {
+          throw new Error();
+        }
+
+        await LocalStorage.setItem(StorageKeys.USER, response.data).then(
+          async () => {
+            await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
+          }
+        );
 
         navigation.reset({
           index: 0,
@@ -121,7 +123,6 @@ export default class SignIn extends React.Component {
       });
     } catch (ex) {
       this.setState({ isLoading: false });
-      //console.error(ex);
       Alert.alert(
         "Error signing in",
         JSON.stringify(ex.message),
