@@ -101,6 +101,11 @@ export default class Good extends Component<GoodProps> {
           if (!response.success) {
             throw new Error(response.error);
           }
+
+          if (!response.data?.PlanNum) {
+            throw new Error();
+          }
+
           if (response.data) {
             await LocalStorage.setItem(StorageKeys.ACTIVE_TASK, response.data);
             this.setState({
@@ -123,17 +128,18 @@ export default class Good extends Component<GoodProps> {
         }
       );
     } catch (ex) {
-      Alert.alert(
-        OnRequestError.CREATE_TASK,
-        JSON.stringify(ex.message),
-        [
-          {
-            text: "OK",
-            onPress: () => this.setState({ page: ReceptionPage.DOCUMENT }),
-          },
-        ],
-        { cancelable: false }
-      );
+      this.setState({ page: ReceptionPage.DOCUMENT });
+      // Alert.alert(
+      //   OnRequestError.CREATE_TASK,
+      //   JSON.stringify(ex.message),
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => this.setState({ page: ReceptionPage.DOCUMENT }),
+      //     },
+      //   ],
+      //   { cancelable: false }
+      // );
     } finally {
       this.setState({ isLoading: false });
     }
@@ -398,7 +404,12 @@ export default class Good extends Component<GoodProps> {
             />
           )}
 
-          <CustomButton label={"Завершить задачу"} onClick={this._onEndTask} />
+          {page === ReceptionPage.GOOD && (
+            <CustomButton
+              label={"Завершить задачу"}
+              onClick={this._onEndTask}
+            />
+          )}
         </View>
       </Loading>
     );

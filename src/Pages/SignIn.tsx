@@ -111,7 +111,6 @@ export default class SignIn extends React.Component {
         if (!response.success) {
           throw new Error(response.error);
         }
-
         await LocalStorage.setItem(StorageKeys.USER, response.data);
         await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
 

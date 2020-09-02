@@ -4,7 +4,7 @@ import { HttpResponse } from ".";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
-  BASE = "http://192.168.0.169:44341",
+  BASE = "http://89.20.48.50:3365",
   //BASE = "http://10.20.254.8:44341",
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
