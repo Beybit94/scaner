@@ -404,11 +404,8 @@ export default class Good extends Component<GoodProps> {
             />
           )}
 
-          {page === ReceptionPage.GOOD && (
-            <CustomButton
-              label={"Завершить задачу"}
-              onClick={this._onEndTask}
-            />
+          {page === ReceptionPage.GOOD && data && (
+            <CustomButton label={"Расхождение"} onClick={this._onEndTask} />
           )}
         </View>
       </Loading>

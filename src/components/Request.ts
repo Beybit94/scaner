@@ -4,12 +4,15 @@ import { HttpResponse } from ".";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
-  BASE = "http://89.20.48.50:3365",
+  //BASE = "http://89.20.48.50:3365",
   //BASE = "http://10.20.254.8:44341",
+  //BASE = "http://10.20.254.110:44341",
+  BASE = "http://192.168.8.101:44341",
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
   CREATE_TASK = "/api/Task/CreateTask",
   ACTIVE_TASK = "/api/Task/GetActiveTask",
+  DIFFERENCE = "/api/Task/Differences",
   END_TASK = "/api/Task/EndTask",
   GOOD_BY_CODE = "/api/Good/GetGoodByCode",
   GOOD_BY_TASK = "/api/Good/GetGoodsByTask",

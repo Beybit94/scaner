@@ -55,21 +55,17 @@ export default class Difference extends Component<DifferenceProps> {
 
   async _endTask() {
     const { taskId, PlanNum } = this.state;
-    const { onGoBack } = this.props.route.params;
+
     try {
       this.setState({ isLoading: true });
       if (taskId) {
-        await TaskManager.endTask(taskId, PlanNum).then(async (response) => {
+        await TaskManager.difference(taskId, PlanNum).then(async (response) => {
           if (!response.success) {
             throw new Error(response.error);
           }
           if (response.data) {
-            await LocalStorage.deleteItem(StorageKeys.ACTIVE_TASK);
             difference = response.data;
             this.setState({ data: difference });
-            if (onGoBack) {
-              onGoBack();
-            }
           }
         });
       }
@@ -112,6 +108,12 @@ export default class Difference extends Component<DifferenceProps> {
           />
           <CustomButton
             label={"Акт приема"}
+            onClick={() =>
+              navigation.push("Pdf", { taskId: taskId, PlanNum: PlanNum })
+            }
+          />
+          <CustomButton
+            label={"Прикрепить фото"}
             onClick={() =>
               navigation.push("Pdf", { taskId: taskId, PlanNum: PlanNum })
             }

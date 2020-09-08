@@ -108,8 +108,20 @@ export class TaskManager {
   static endTask = async (
     TaskId: number,
     PlanNum: string
+  ): Promise<HttpResponse<BaseModel>> => {
+    const response = await post<BaseModel>(Endpoints.END_TASK, {
+      TaskId: TaskId,
+      PlanNum: PlanNum,
+    });
+
+    return response;
+  };
+
+  static difference = async (
+    TaskId: number,
+    PlanNum: string
   ): Promise<HttpResponse<[DifferenceModel]>> => {
-    const response = await post<[DifferenceModel]>(Endpoints.END_TASK, {
+    const response = await post<[DifferenceModel]>(Endpoints.DIFFERENCE, {
       TaskId: TaskId,
       PlanNum: PlanNum,
     });
