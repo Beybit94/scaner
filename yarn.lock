@@ -3050,6 +3050,11 @@ expo-location@~8.2.1:
   dependencies:
     invariant "^2.2.4"
 
+expo-media-library@8.4.0:
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-8.4.0.tgz#3aafe558c9da581dc166518a3a26ba5af94cb87f"
+  integrity sha512-B7ui4nPtDdqZsVC6AvfaS231Do+njZRHEHlqxMpT9KFLIN+a2+2xNTNXvDwWC19td5CRK5Cnb78IEfzRUag9AQ==
+
 expo-permissions@9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.1.0.tgz#b830a9e8100d5650a874122b432a65ab1dfdf4c1"
@@ -3059,6 +3064,11 @@ expo-permissions@~9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.0.1.tgz#dc10b58654bbe39bbbed5827369942b01b08055e"
   integrity sha512-CosJgy8XQRN/OFG2JTQDcFxz3XTGi27coCMym/hVXWtQfk0z6PwdRG5IXHfLGuSckwIcgmirrwm2+Zc0X3MmNg==
+
+expo-sharing@8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-8.3.0.tgz#93287bda5da73b4dbe22e041d0b86a4f729ab834"
+  integrity sha512-xAkfIsJ9tMWTYQpOuqBkdWHvAoFb8lX8th98mtKd0BsuriDV4hleBbaoUFK11rULk532uLrBqopMYnxJSqLaAw==
 
 expo-splash-screen@^0.3.1:
   version "0.3.1"

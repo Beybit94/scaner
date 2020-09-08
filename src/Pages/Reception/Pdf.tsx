@@ -5,6 +5,9 @@ import React, { Component } from "react";
 import { Platform, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import * as FileSystem from "expo-file-system";
+import * as Permissions from "expo-permissions";
+import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
 import PDFReader from "rn-pdf-reader-js";
 import FileViewer from "react-native-file-viewer";
 
@@ -42,21 +45,27 @@ export default class PdfFile extends Component<PdfProps> {
   };
 
   donwloadFile = async () => {
-    try {
-      const { taskId, PlanNum } = this.props.route.params;
-      this.setState({ isLoading: true });
-      const uri = `${Endpoints.BASE}${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${taskId}`;
-      const fileUri = FileSystem.documentDirectory + "акт.pdf";
+    const { taskId, PlanNum } = this.props.route.params;
+    this.setState({ isLoading: true });
+    const uri = `${Endpoints.BASE}${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${taskId}`;
+    const fileLocation = FileSystem.documentDirectory + `акт_${PlanNum}.pdf`;
 
-      const downloadObject = FileSystem.createDownloadResumable(uri, fileUri);
-      const res = await downloadObject.downloadAsync();
-      if (res) {
-        this.setState({ filePath: res?.uri, uri: uri });
-      }
-    } finally {
-      this.setState({ isLoading: false });
-      //this.selectOneFile();
-    }
+    FileSystem.downloadAsync(uri, fileLocation)
+      .then(async (resp) => {
+        this.setState({ filePath: resp?.uri, uri: uri });
+        const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+        if (status === "granted") {
+          const asset = await MediaLibrary.createAssetAsync(resp.uri);
+          await MediaLibrary.createAlbumAsync("MyImages", asset, false);
+        }
+        Sharing.shareAsync(fileLocation);
+      })
+      .catch((error) => {
+        console.warn(error);
+      })
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   };
 
   selectOneFile = async () => {
