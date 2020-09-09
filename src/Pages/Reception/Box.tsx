@@ -28,7 +28,7 @@ import { TaskManager } from "../../Managers";
 
 import { RootStackParamList } from "./Reception";
 
-const { height } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -39,11 +39,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalContainer: {
-    marginTop: height / 2 - 150,
-    width: 300,
+    height: (height * 2) / 3,
+    width: width,
     padding: 50,
     alignSelf: "center",
     backgroundColor: "#EFEFF4",
+    justifyContent: "center",
   },
   innerContainer: {
     alignItems: "center",

@@ -5,8 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
-  Alert,
   Modal,
+  Alert,
   TextInput,
   Dimensions,
   ListRenderItemInfo,
@@ -35,7 +35,7 @@ export enum ReceptionPage {
   BOX = 3,
 }
 
-const { height } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -46,11 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalContainer: {
-    marginTop: height / 2 - 150,
-    width: 300,
+    height: (height * 2) / 3,
+    width: width,
     padding: 50,
     alignSelf: "center",
     backgroundColor: "#EFEFF4",
+    justifyContent: "center",
   },
   innerContainer: {
     alignItems: "center",
@@ -361,7 +362,7 @@ export default class Good extends Component<GoodProps> {
             <View style={styles.innerContainer}>
               <TextInput
                 style={styles.input}
-                value={currentCount}
+                // value={currentCount}
                 keyboardType="phone-pad"
                 autoFocus={true}
                 onChangeText={(value) =>
