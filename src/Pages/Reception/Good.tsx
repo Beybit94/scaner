@@ -7,10 +7,10 @@ import {
   StyleSheet,
   Modal,
   Alert,
-  TextInput,
   Dimensions,
   ListRenderItemInfo,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ButtonGroup } from "react-native-elements";
@@ -57,12 +57,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    margin: 8,
-    width: 150,
-    borderRadius: 3,
-    borderWidth: StyleSheet.hairlineWidth,
+    margin: 10,
+    width: 250,
+    fontSize: 32,
+    fontWeight: "bold",
     backgroundColor: "white",
-    borderColor: "grey",
     textAlign: "center",
   },
 });
@@ -189,10 +188,15 @@ export default class Good extends Component<GoodProps> {
               if (!response.success) {
                 throw new Error(response.error);
               }
-              if (response.data) {
-                goods.push(response.data);
-                this.setState({ data: goods });
-              }
+              await TaskManager.getGoodByTask(task?.Id).then((response2) => {
+                if (!response2.success) {
+                  throw new Error(response2.error);
+                }
+                if (response2.data) {
+                  goods = response2.data;
+                  this.setState({ data: goods });
+                }
+              });
             }
           );
           break;
@@ -347,22 +351,22 @@ export default class Good extends Component<GoodProps> {
   };
 
   render() {
-    const { page, id, data, isLoading, isShowModal, currentCount } = this.state;
+    const { page, id, data, isLoading, isShowModal } = this.state;
     const buttons = ["Изменить", "Закрыть"];
 
     return (
       <Loading isLoading={isLoading}>
         <Modal
           visible={isShowModal}
-          transparent={true}
           animationType={"fade"}
           onRequestClose={() => this.setState({ isShowModal: false })}
         >
           <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
               <TextInput
+                label="Количество"
+                mode="flat"
                 style={styles.input}
-                // value={currentCount}
                 keyboardType="phone-pad"
                 autoFocus={true}
                 onChangeText={(value) =>

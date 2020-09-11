@@ -8,9 +8,9 @@ import {
   Alert,
   ListRenderItemInfo,
   Modal,
-  TextInput,
   Dimensions,
 } from "react-native";
+import { TextInput } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ButtonGroup } from "react-native-elements";
@@ -50,12 +50,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    margin: 8,
-    width: 150,
-    borderRadius: 3,
-    borderWidth: StyleSheet.hairlineWidth,
+    margin: 10,
+    width: 250,
+    fontSize: 32,
+    fontWeight: "bold",
     backgroundColor: "white",
-    borderColor: "grey",
     textAlign: "center",
   },
 });
@@ -128,10 +127,17 @@ export default class Box extends Component<BoxButtonProps> {
             if (!response.success) {
               throw new Error(response.error);
             }
-            if (response.data) {
-              goods.push(response.data);
-              this.setState({ data: goods });
-            }
+            await TaskManager.getGoodByBox(box.ID, task?.Id).then(
+              (response2) => {
+                if (!response2.success) {
+                  throw new Error(response2.error);
+                }
+                if (response2.data) {
+                  goods = response2.data;
+                  this.setState({ data: goods });
+                }
+              }
+            );
           }
         );
       }
@@ -270,7 +276,7 @@ export default class Box extends Component<BoxButtonProps> {
 
   render() {
     const { box } = this.props.route.params;
-    const { data, isLoading, isShowModal, currentCount } = this.state;
+    const { data, isLoading, isShowModal } = this.state;
     const buttons = ["Изменить", "Закрыть"];
 
     return (
@@ -284,8 +290,9 @@ export default class Box extends Component<BoxButtonProps> {
           <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
               <TextInput
+                label="Количество"
+                mode="flat"
                 style={styles.input}
-                value={currentCount}
                 keyboardType="phone-pad"
                 autoFocus={true}
                 onChangeText={(value) =>
