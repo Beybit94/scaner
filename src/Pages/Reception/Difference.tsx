@@ -114,9 +114,7 @@ export default class Difference extends Component<DifferenceProps> {
           />
           <CustomButton
             label={"Прикрепить фото"}
-            onClick={() =>
-              navigation.push("Pdf", { taskId: taskId, PlanNum: PlanNum })
-            }
+            onClick={() => navigation.push("UploadPhoto")}
           />
         </View>
       </Loading>

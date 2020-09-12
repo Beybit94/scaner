@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { AuthContext, GoodModel } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
+import { ImagePicker } from "../Shared";
 
 import Scan from "./Scan";
 import Good from "./Good";
@@ -18,6 +19,7 @@ export type RootStackParamList = {
   Box: { box: GoodModel; onGoBack?: (id: string) => void };
   Difference: { onGoBack?: () => void };
   Pdf: { taskId: number; PlanNum: string };
+  UploadPhoto: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -69,6 +71,13 @@ export default class Reception extends React.Component {
             component={PdfFile}
             options={{
               title: "Акт приема",
+            }}
+          />
+          <Stack.Screen
+            name="UploadPhoto"
+            component={ImagePicker}
+            options={{
+              title: "Прикрепить фото",
             }}
           />
         </Stack.Navigator>

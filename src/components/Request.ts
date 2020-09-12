@@ -4,10 +4,10 @@ import { HttpResponse } from ".";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
-  //BASE = "http://89.20.48.50:3365",
+  BASE = "http://89.20.48.50:3365",
   //BASE = "http://10.20.254.8:44341",
   //BASE = "http://10.20.254.110:44341",
-  BASE = "http://192.168.8.101:44341",
+  //BASE = "http://192.168.8.101:44341",
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
   CREATE_TASK = "/api/Task/CreateTask",
@@ -21,6 +21,7 @@ export enum Endpoints {
   UPDATE_GOOD = "/api/Good/Update",
   DELETE_GOOD = "/api/Good/Delete",
   PDF = "/Web/Pdf/Index",
+  UPLOAD_PHOTO = "/api/Task/UploadPhoto",
 }
 
 export enum OnRequestError {
