@@ -1,5 +1,3 @@
-import { string } from "react-native-redash";
-
 /* eslint-disable @typescript-eslint/no-empty-interface */
 export interface HttpResponse<T> extends Response {
   data?: T;
@@ -60,4 +58,17 @@ export interface DifferenceModel extends BaseModel {
   UserName: string;
   CreationDate: string;
   Status: number;
+}
+
+declare global {
+  interface FormDataValue {
+    uri: string;
+    name: string;
+    type: string;
+  }
+
+  interface FormData {
+    append(name: string, value: FormDataValue, fileName?: string): void;
+    set(name: string, value: FormDataValue, fileName?: string): void;
+  }
 }

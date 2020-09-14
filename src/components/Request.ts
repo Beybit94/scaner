@@ -5,9 +5,8 @@ import { HttpResponse } from ".";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Endpoints {
   BASE = "http://89.20.48.50:3365",
-  //BASE = "http://10.20.254.8:44341",
-  //BASE = "http://10.20.254.110:44341",
-  //BASE = "http://192.168.8.101:44341",
+  //BASE = "http://10.20.254.93:44341",
+  //BASE = "http://192.168.0.169:44341",
   TEST = "/api/User/TEST",
   LOGIN = "/api/User/FindUser",
   CREATE_TASK = "/api/Task/CreateTask",
@@ -76,6 +75,23 @@ export async function post<T>(
     method: HTTP_METHODS.POST,
     headers,
     body: JSON.stringify(body),
+  }
+): Promise<HttpResponse<T>> {
+  return await http<T>(new Request(`${Endpoints.BASE}${path}`, args));
+}
+
+export async function upload<T>(
+  path: Endpoints,
+  body: FormData,
+  args: RequestInit = {
+    method: HTTP_METHODS.POST,
+    headers: {
+      // eslint-disable-next-line prettier/prettier
+      "Accept": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "multipart/form-data",
+    },
+    body: body,
   }
 ): Promise<HttpResponse<T>> {
   return await http<T>(new Request(`${Endpoints.BASE}${path}`, args));

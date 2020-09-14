@@ -49,11 +49,11 @@ export default class Difference extends Component<DifferenceProps> {
     const task = await LocalStorage.getItem<TaskModel>(StorageKeys.ACTIVE_TASK);
     if (task) {
       this.setState({ taskId: task.Id, PlanNum: task.PlanNum });
-      this._endTask();
+      this._difference();
     }
   }
 
-  async _endTask() {
+  async _difference() {
     const { taskId, PlanNum } = this.state;
 
     try {
@@ -84,6 +84,8 @@ export default class Difference extends Component<DifferenceProps> {
   render() {
     const { navigation } = this.props;
     const { isLoading, taskId, PlanNum, data } = this.state;
+    const { onGoBack } = this.props.route.params;
+
     return (
       <Loading isLoading={isLoading}>
         <View style={styles.container}>
@@ -114,7 +116,11 @@ export default class Difference extends Component<DifferenceProps> {
           />
           <CustomButton
             label={"Прикрепить фото"}
-            onClick={() => navigation.push("UploadPhoto")}
+            onClick={() =>
+              navigation.push("UploadPhoto", {
+                onGoBack: onGoBack,
+              })
+            }
           />
         </View>
       </Loading>

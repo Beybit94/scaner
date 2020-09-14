@@ -344,9 +344,9 @@ export default class Good extends Component<GoodProps> {
       return (value as GoodModel).StrID === rowId;
     }) as GoodModel;
 
-    if (item.IsBox) {
-      rowMap[`${rowId}`].closeRow();
-    }
+    // if (item.IsBox) {
+    //   rowMap[`${rowId}`].closeRow();
+    // }
     //.map((value: GoodModel) => value.IsBox);
   };
 

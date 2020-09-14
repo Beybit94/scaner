@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { AuthContext, GoodModel } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
-import { ImagePicker } from "../Shared";
+import { ImagePickerCustom } from "../Shared";
 
 import Scan from "./Scan";
 import Good from "./Good";
@@ -19,7 +19,7 @@ export type RootStackParamList = {
   Box: { box: GoodModel; onGoBack?: (id: string) => void };
   Difference: { onGoBack?: () => void };
   Pdf: { taskId: number; PlanNum: string };
-  UploadPhoto: undefined;
+  UploadPhoto: { onGoBack?: () => void };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -75,7 +75,7 @@ export default class Reception extends React.Component {
           />
           <Stack.Screen
             name="UploadPhoto"
-            component={ImagePicker}
+            component={ImagePickerCustom}
             options={{
               title: "Прикрепить фото",
             }}

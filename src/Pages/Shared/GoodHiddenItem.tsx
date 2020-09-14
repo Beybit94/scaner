@@ -44,25 +44,24 @@ export default class GoodHiddenItem extends Component<GoodHiddenItemProps> {
   render() {
     const { edit, remove, data, index } = this.props;
 
-    if (!data.IsBox) {
-      return (
-        <View style={styles.rowBack}>
+    return (
+      <View style={styles.rowBack}>
+        {!data.IsBox && (
           <TouchableOpacity
             style={[styles.backRightBtn, styles.backRightBtnLeft]}
             onPress={(_) => edit(index)}
           >
             <Text style={styles.backTextWhite}>Изменить</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.backRightBtn, styles.backRightBtnRight]}
-            onPress={() => remove(data)}
-          >
-            <Text style={styles.backTextWhite}>Удалить</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else {
-      return null;
-    }
+        )}
+
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={() => remove(data)}
+        >
+          <Text style={styles.backTextWhite}>Удалить</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 }

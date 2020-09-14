@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  post,
   Endpoints,
   HttpResponse,
   TaskModel,
   BaseModel,
   GoodModel,
-  get,
   DifferenceModel,
+  get,
+  post,
+  upload,
 } from "../components";
 
 export class TaskManager {
@@ -132,11 +133,21 @@ export class TaskManager {
   static pdf = async (
     TaskId: number,
     PlanNum: string
-  ): Promise<HttpResponse<string>> => {
-    const response = await get<string>(
+  ): Promise<HttpResponse<BaseModel>> => {
+    const response = await get<BaseModel>(
       `${Endpoints.PDF}?PlanNum=${PlanNum}&TaskId=${TaskId}`
     );
 
+    return response;
+  };
+
+  static upload = async (
+    file: FormDataValue
+  ): Promise<HttpResponse<BaseModel>> => {
+    const form = new FormData();
+    form.append("photo", file);
+
+    const response = await upload<BaseModel>(Endpoints.UPLOAD_PHOTO, form);
     return response;
   };
 }
