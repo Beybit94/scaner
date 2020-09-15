@@ -5,13 +5,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { AuthContext, GoodModel } from "../../components";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
-import { ImagePickerCustom } from "../Shared";
 
 import Scan from "./Scan";
 import Good from "./Good";
 import Box from "./Box";
 import PdfFile from "./Pdf";
 import Difference from "./Difference";
+import ImagePickerCustom from "./ImagePicker";
 
 export type RootStackParamList = {
   Good: undefined;

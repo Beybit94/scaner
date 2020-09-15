@@ -3,7 +3,6 @@ import BarCode, { BarCodeProps } from "./BarCode";
 import CustomButton, { ButtonProps } from "./Button";
 import GoodItem from "./GoodItem";
 import GoodHiddenItem from "./GoodHiddenItem";
-import ImagePickerCustom from "./ImagePicker";
 
 export {
   Loading,
@@ -13,5 +12,4 @@ export {
   ButtonProps,
   GoodItem,
   GoodHiddenItem,
-  ImagePickerCustom,
 };

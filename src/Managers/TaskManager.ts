@@ -142,10 +142,12 @@ export class TaskManager {
   };
 
   static upload = async (
-    file: FormDataValue
+    files: FormDataValue[]
   ): Promise<HttpResponse<BaseModel>> => {
     const form = new FormData();
-    form.append("photo", file);
+    files.forEach((file, index) => {
+      form.append(`photo_${index}`, file);
+    });
 
     const response = await upload<BaseModel>(Endpoints.UPLOAD_PHOTO, form);
     return response;
