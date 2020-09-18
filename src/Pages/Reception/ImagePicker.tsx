@@ -73,7 +73,7 @@ export default class ImagePickerCustom extends React.Component<
     try {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: false,
+        allowsEditing: true,
         quality: 1,
       });
 
