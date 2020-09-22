@@ -1,0 +1,11 @@
+rootProject.name = 'Scanner'
+include ':react-native-honeywell-barcode-reader'
+project(':react-native-honeywell-barcode-reader').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-honeywell-barcode-reader/android')
+
+apply from: '../node_modules/react-native-unimodules/gradle.groovy'
+includeUnimodulesProjects()
+
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle");
+applyNativeModulesSettingsGradle(settings)
+
+include ':app'

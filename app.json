@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -25,7 +26,8 @@
     "sdkVersion": "38.0.0",
     "description": "",
     "android": {
-      "package": "com.beka.brother.scanner"
-    }
+      "package": "com.scanner"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }

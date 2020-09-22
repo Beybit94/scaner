@@ -14,6 +14,7 @@ import { TextInput } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ButtonGroup } from "react-native-elements";
+import HoneywellBarcodeReader from "react-native-honeywell-barcode-reader";
 
 import {
   GoodModel,
@@ -82,6 +83,19 @@ export default class Good extends Component<GoodProps> {
 
   async componentDidMount() {
     this._onGetActiveTask();
+
+    HoneywellBarcodeReader.startReader().then((claimed: any) => {
+      console.warn(
+        claimed ? "Barcode reader is claimed" : "Barcode reader is busy"
+      );
+    });
+    HoneywellBarcodeReader.onBarcodeReadSuccess((event: any) => {
+      console.warn("Received data", event);
+      this._onScanned(event);
+    });
+    HoneywellBarcodeReader.onBarcodeReadFail(() => {
+      console.warn("Barcode read failed");
+    });
   }
 
   _handleStateChange = (inputName: string, inputValue: unknown) => {
@@ -165,15 +179,21 @@ export default class Good extends Component<GoodProps> {
                   throw new Error(response2.error);
                 }
 
-                await LocalStorage.setItem(
-                  StorageKeys.ACTIVE_TASK,
-                  response2.data
-                );
+                if (!response2.data?.PlanNum) {
+                  throw new Error();
+                }
 
-                this.setState({
-                  page: ReceptionPage.GOOD,
-                  id: response2.data?.PlanNum,
-                });
+                if (response2.data) {
+                  await LocalStorage.setItem(
+                    StorageKeys.ACTIVE_TASK,
+                    response2.data
+                  );
+
+                  this.setState({
+                    page: ReceptionPage.GOOD,
+                    id: response2.data?.PlanNum,
+                  });
+                }
               });
             }
           );
