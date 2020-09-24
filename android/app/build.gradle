@@ -122,6 +122,10 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.appdistribution'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -157,6 +161,10 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            firebaseAppDistribution {
+                releaseNotesFile="./releasenotes.txt"
+                testersFile="./testers.txt"
+            }
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -164,6 +172,16 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            firebaseAppDistribution {
+                serviceCredentialsFile="./scanner-290406-4ddc10e6b468.json"
+                releaseNotesFile="./releasenotes.txt"
+                testersFile="./testers.txt"
+            }
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${variant.name}-${variant.versionName}.apk"
+                }
+            }
         }
     }
 
@@ -195,6 +213,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:0.62.2"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

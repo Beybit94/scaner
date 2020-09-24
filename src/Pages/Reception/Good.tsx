@@ -78,6 +78,7 @@ export default class Good extends Component<GoodProps> {
     currentCount: "",
     isShowModal: false,
     isLoading: false,
+    isScanning: false,
     page: ReceptionPage.DOCUMENT,
   };
 
@@ -85,16 +86,19 @@ export default class Good extends Component<GoodProps> {
     this._onGetActiveTask();
 
     HoneywellBarcodeReader.startReader().then((claimed: any) => {
-      console.warn(
-        claimed ? "Barcode reader is claimed" : "Barcode reader is busy"
-      );
+      // console.warn(
+      //   claimed ? "Barcode reader is claimed" : "Barcode reader is busy"
+      // );
     });
     HoneywellBarcodeReader.onBarcodeReadSuccess((event: any) => {
-      console.warn("Received data", event);
-      this._onScanned(event);
+      const { isScanning } = this.state;
+      if (!isScanning) {
+        this._onScanned(event);
+      }
+      //console.warn("Received data", event);
     });
     HoneywellBarcodeReader.onBarcodeReadFail(() => {
-      console.warn("Barcode read failed");
+      //console.warn("Barcode read failed");
     });
   }
 
@@ -161,7 +165,7 @@ export default class Good extends Component<GoodProps> {
 
   _onScanned = async (id: string) => {
     try {
-      this.setState({ isLoading: true });
+      this.setState({ isLoading: true, isScanning: true });
       const user = await LocalStorage.getItem<UserModel>(StorageKeys.USER);
 
       switch (this.state.page) {
@@ -229,7 +233,7 @@ export default class Good extends Component<GoodProps> {
         { cancelable: false }
       );
     } finally {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, isScanning: false });
     }
   };
 

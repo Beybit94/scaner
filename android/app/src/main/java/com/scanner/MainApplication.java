@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 
+//import com.facebook.react.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -51,6 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
       if (BuildConfig.DEBUG) {
         return super.getJSBundleFile();
       } else {
+        //UpdatesController.initialize(this.getApplication().getApplicationContext());
         return UpdatesController.getInstance().getLaunchAssetFile();
       }
     }
@@ -60,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
       if (BuildConfig.DEBUG) {
         return super.getBundleAssetName();
       } else {
+        //UpdatesController.initialize(this.getApplication().getApplicationContext());
         return UpdatesController.getInstance().getBundleAssetName();
       }
     }
@@ -80,6 +83,9 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
 
+    if (!BuildConfig.DEBUG) {
+      UpdatesController.initialize(this);
+    }
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
