@@ -14,6 +14,7 @@ import { TextInput } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ButtonGroup } from "react-native-elements";
+import HoneywellBarcodeReader from "react-native-honeywell-barcode-reader";
 
 import {
   GoodModel,
@@ -69,10 +70,27 @@ export default class Box extends Component<BoxButtonProps> {
     currentRow: 0,
     currentCount: "",
     isShowModal: false,
+    isScanning: false,
   };
 
   async componentDidMount() {
     this._onGetActiveTask();
+
+    HoneywellBarcodeReader.startReader().then((claimed: any) => {
+      // console.warn(
+      //   claimed ? "Barcode reader is claimed" : "Barcode reader is busy"
+      // );
+    });
+    HoneywellBarcodeReader.onBarcodeReadSuccess((event: any) => {
+      const { isScanning } = this.state;
+      if (!isScanning) {
+        this._onScanned(event);
+      }
+      //console.warn("Received data", event);
+    });
+    HoneywellBarcodeReader.onBarcodeReadFail(() => {
+      //console.warn("Barcode read failed");
+    });
   }
 
   _handleStateChange = (inputName: string, inputValue: unknown) => {
@@ -115,7 +133,7 @@ export default class Box extends Component<BoxButtonProps> {
 
   _onScanned = async (id: string) => {
     try {
-      this.setState({ isLoading: true });
+      this.setState({ isLoading: true, isScanning: true });
       const { box } = this.props.route.params;
       const task = await LocalStorage.getItem<TaskModel>(
         StorageKeys.ACTIVE_TASK
@@ -149,7 +167,7 @@ export default class Box extends Component<BoxButtonProps> {
         { cancelable: false }
       );
     } finally {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, isScanning: false });
     }
   };
 

@@ -73,9 +73,11 @@ export default class ImagePickerCustom extends React.Component<
     try {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
+        allowsEditing: false,
         quality: 1,
       });
+
+      //console.log(result);
 
       if (!result.cancelled) {
         const task = await LocalStorage.getItem<TaskModel>(
@@ -198,7 +200,9 @@ export default class ImagePickerCustom extends React.Component<
           >
             Фото
           </Button>
-          <CustomButton label={"Отправить"} onClick={this._endTask} />
+          {images.length > 0 && (
+            <CustomButton label={"Завершить задачу"} onClick={this._endTask} />
+          )}
         </View>
       </Loading>
     );

@@ -14,8 +14,8 @@ import { TextInput } from "react-native-paper";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ButtonGroup } from "react-native-elements";
-import HoneywellBarcodeReader from "react-native-honeywell-barcode-reader";
 
+import { Honeywell } from "../../Native";
 import {
   GoodModel,
   LocalStorage,
@@ -85,19 +85,14 @@ export default class Good extends Component<GoodProps> {
   async componentDidMount() {
     this._onGetActiveTask();
 
-    HoneywellBarcodeReader.startReader().then((claimed: any) => {
-      // console.warn(
-      //   claimed ? "Barcode reader is claimed" : "Barcode reader is busy"
-      // );
-    });
-    HoneywellBarcodeReader.onBarcodeReadSuccess((event: any) => {
+    Honeywell.startReader();
+    Honeywell.onBarcodeReadSuccess((event: any) => {
       const { isScanning } = this.state;
       if (!isScanning) {
         this._onScanned(event);
       }
-      //console.warn("Received data", event);
     });
-    HoneywellBarcodeReader.onBarcodeReadFail(() => {
+    Honeywell.onBarcodeReadFail(() => {
       //console.warn("Barcode read failed");
     });
   }

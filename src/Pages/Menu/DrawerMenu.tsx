@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable react/no-did-mount-set-state */
 import React, { FC } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
@@ -9,6 +10,7 @@ import {
   DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 import { NavigationContext } from "@react-navigation/native";
+import DeviceInfo from "react-native-device-info";
 
 import Reception from "../Reception/Reception";
 import { AuthManager } from "../../Managers";
@@ -43,6 +45,10 @@ const CustomDrawerContent: FC<CustomDrawerContentProps> = (props) => (
     </View>
     <DrawerItemList {...props} />
     <DrawerItem label="Выйти" onPress={props.signOut} />
+    <DrawerItem
+      label={DeviceInfo.getApplicationName() + "-" + DeviceInfo.getVersion()}
+      onPress={() => {}}
+    />
   </DrawerContentScrollView>
 );
 
