@@ -17,6 +17,7 @@ import com.honeywell.aidc.BarcodeFailureEvent;
 import com.honeywell.aidc.BarcodeReadEvent;
 import com.honeywell.aidc.BarcodeReader;
 import com.honeywell.aidc.ScannerUnavailableException;
+import com.honeywell.aidc.UnsupportedPropertyException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,8 +82,10 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
                     reader.addBarcodeListener(HoneywellModule.this);
                     try {
                         reader.claim();
+                        reader.setProperty(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
+                        reader.setProperty(BarcodeReader.PROPERTY_EAN_13_CHECK_DIGIT_TRANSMIT_ENABLED, true);
                         promise.resolve(true);
-                    } catch (ScannerUnavailableException e) {
+                    } catch (ScannerUnavailableException | UnsupportedPropertyException e) {
                         promise.resolve(false);
                         e.printStackTrace();
                     }

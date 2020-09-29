@@ -6,7 +6,9 @@
     "web": "expo start --web",
     "lint": "eslint --ext .ts,.tsx . --max-warnings 0",
     "tsc": "tsc",
-    "ci": "yarn lint && yarn tsc"
+    "ci": "yarn lint && yarn tsc",
+    "dev_sulpak": "git push sulpak dev",
+    "dev_origin": "git push origin dev"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -66,5 +68,5 @@
   },
   "private": true,
   "name": "Scanner",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
