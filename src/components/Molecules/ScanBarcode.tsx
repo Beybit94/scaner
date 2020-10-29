@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import { CustomButton } from "../Atoms";
+import CustomButton from "./CustomButton";
 
 const styles = StyleSheet.create({
   title: {

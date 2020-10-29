@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
+import { NavigationContext } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import { GoodSwipableItem } from "../Molecules";
@@ -13,15 +14,16 @@ type Props = {
 };
 
 export default class GoodList extends Component<Props> {
+  static contextType = NavigationContext;
+
   itemClick = (model: Responses.GoodModel) => {
     const navigation = this.context;
-    navigation.push("Box", {
+    navigation.push("BoxPage", {
       box: model,
     });
   };
 
   render() {
-    const { itemClick } = this;
     const { data, defect, itemEdit, itemRemove } = this.props;
 
     return (
@@ -34,7 +36,7 @@ export default class GoodList extends Component<Props> {
             index={model.index}
             model={model.item}
             defect={defect}
-            itemClick={itemClick}
+            itemClick={this.itemClick}
             itemEdit={itemEdit}
             itemRemove={itemRemove}
           />

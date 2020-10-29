@@ -27,11 +27,12 @@ export default class GoodService {
         response = await GoodService.addGood(
           good?.BarCode,
           task?.PlanNum,
-          task?.ID
+          task?.ID,
+          boxId
         );
         break;
       case GoodAction.edit:
-        response = await GoodService.editGood(good.ID, good.CountQty);
+        response = await GoodService.editGood(good.ID, good.Count);
         break;
       case GoodAction.remove:
         response = await GoodService.removeGood(good.ID);

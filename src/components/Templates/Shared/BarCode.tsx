@@ -49,20 +49,18 @@ export default class BarCode extends Component<BarCodeProps> {
 
   render() {
     return (
-      <CameraPermission>
-        <BarCodeScanner
-          style={[StyleSheet.absoluteFill, styles.container]}
-          onBarCodeScanned={(scan) => this._setValue(scan.data)}
-        >
-          <View style={styles.layerTop} />
-          <View style={styles.layerCenter}>
-            <View style={styles.layerLeft} />
-            <View style={styles.focused} />
-            <View style={styles.layerRight} />
-          </View>
-          <View style={styles.layerBottom} />
-        </BarCodeScanner>
-      </CameraPermission>
+      <BarCodeScanner
+        style={[StyleSheet.absoluteFill, styles.container]}
+        onBarCodeScanned={(scan) => this._setValue(scan.data)}
+      >
+        <View style={styles.layerTop} />
+        <View style={styles.layerCenter}>
+          <View style={styles.layerLeft} />
+          <View style={styles.focused} />
+          <View style={styles.layerRight} />
+        </View>
+        <View style={styles.layerBottom} />
+      </BarCodeScanner>
     );
   }
 }

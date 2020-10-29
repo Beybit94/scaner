@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 
-import { CustomButton } from "../Atoms";
-import { ImageItem } from "../Molecules";
+import { CustomButton, ImageItem } from "../Molecules";
 import { Picker } from "../Organisms";
 
 const styles = StyleSheet.create({

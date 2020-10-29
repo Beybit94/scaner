@@ -7,7 +7,7 @@ import { NavigationContext } from "@react-navigation/native";
 
 import { AuthService, Storage } from "../services";
 import { Loading } from "../components/Templates";
-import { CustomButton } from "../components/Atoms";
+import { CustomButton } from "../components/Molecules";
 
 const styles = StyleSheet.create({
   container: {

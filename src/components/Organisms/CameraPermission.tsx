@@ -42,6 +42,6 @@ export default class Loading extends Component<Props> {
       );
     }
 
-    return <View>{this.props.children}</View>;
+    return this.props.children;
   }
 }

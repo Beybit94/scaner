@@ -3,5 +3,6 @@ import BarCode from "./Shared/BarCode";
 import Pdf from "./Shared/Pdf";
 import GoodTemplate from "./GoodTemplate";
 import GoodActTemplate from "./GoodActTemplate";
+import BoxTemplate from "./BoxTemplate";
 
-export { Loading, BarCode, Pdf, GoodTemplate, GoodActTemplate };
+export { Loading, BarCode, Pdf, GoodTemplate, GoodActTemplate, BoxTemplate };

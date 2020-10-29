@@ -5,7 +5,7 @@ import { NavigationContext } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { ButtonGroup } from "react-native-elements";
 
-import { CustomButton, ScanBarcode, CustomModal } from "../Molecules";
+import { ScanBarcode, CustomModal } from "../Molecules";
 import { GoodList } from "../Organisms";
 import { Responses } from "../../services";
 
@@ -50,16 +50,8 @@ type Props = {
   handleStateChange: (code: string, value: any) => void;
 };
 
-export default class GoodTemplate extends Component<Props> {
+export default class BoxTemplate extends Component<Props> {
   static contextType = NavigationContext;
-
-  itemClick = (model: Responses.GoodModel) => {
-    const navigation = this.context;
-    console.warn(navigation);
-    navigation.push("BoxPage", {
-      box: model,
-    });
-  };
 
   showScan = () => {
     const { scan } = this.props;
@@ -69,13 +61,8 @@ export default class GoodTemplate extends Component<Props> {
     });
   };
 
-  difference = async () => {
-    const navigation = this.context;
-    navigation.push("Difference");
-  };
-
   render() {
-    const { showScan, difference } = this;
+    const { showScan } = this;
     const {
       title,
       data,
@@ -99,7 +86,6 @@ export default class GoodTemplate extends Component<Props> {
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
           />
-          <CustomButton label={"Расхождение"} onClick={difference} />
           <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
             <View style={styles.modalContainer}>
               <View style={styles.innerContainer}>

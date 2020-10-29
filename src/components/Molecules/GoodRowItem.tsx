@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Icon, ListItem } from "react-native-elements";
 
 import { Responses } from "../../services";
-import { RowItem } from "../Atoms";
 
 type Props = {
   model: Responses.GoodModel;
@@ -11,26 +10,26 @@ type Props = {
 
 export default class GoodRowItem extends Component<Props> {
   render() {
-    const { model } = this.props;
+    const { model, onPress } = this.props;
 
     return (
-      <RowItem
+      <ListItem
         key={model.StrID}
-        isChevron={!model.IsBox}
-        isClickable={model.IsBox}
-        onPress={this.props.onPress}
-        avatar={
-          model.IsBox ? <Icon name="archive" type="font-awesome" /> : null
-        }
+        bottomDivider
+        onPress={() => onPress && onPress(model)}
+        disabled={!model.IsBox}
       >
+        {model.IsBox && <Icon name="archive" type="font-awesome" />}
         <ListItem.Content>
           <ListItem.Title>{this.props.model.GoodName}</ListItem.Title>
-          <ListItem.Subtitle>
-            {this.props.model.GoodArticle}{" "}
-            {model.IsBox ? "" : "| Кол-во:" + model.Count}
-          </ListItem.Subtitle>
+          {!model.IsBox && (
+            <ListItem.Subtitle>
+              {this.props.model.GoodArticle} | Кол-во: {model.Count}
+            </ListItem.Subtitle>
+          )}
         </ListItem.Content>
-      </RowItem>
+        {model.IsBox && <ListItem.Chevron />}
+      </ListItem>
     );
   }
 }

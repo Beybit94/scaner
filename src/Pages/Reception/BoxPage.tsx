@@ -4,22 +4,16 @@ import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 
 import { Honeywell } from "../../Native";
-import { GoodTemplate } from "../../components/Templates";
-import {
-  GoodService,
-  GoodAction,
-  Responses,
-  TaskService,
-} from "../../services";
+import { BoxTemplate } from "../../components/Templates";
+import { GoodService, GoodAction, Responses } from "../../services";
 
 import { RootStackParamList } from "./ReceptionStackParam";
 
-type GoodPageProps = StackScreenProps<RootStackParamList, "GoodPage">;
-export default class GoodPage extends Component<GoodPageProps> {
+type BoxPageProps = StackScreenProps<RootStackParamList, "BoxPage">;
+export default class BoxPage extends Component<BoxPageProps> {
   state = {
-    title: "Планирование:",
+    title: "",
     data: [],
-    isGood: false,
     isLoading: false,
     isScanning: false,
     visible: false,
@@ -29,7 +23,6 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   componentDidMount() {
     this.scan();
-
     Honeywell.startReader();
     Honeywell.onBarcodeReadSuccess((event: any) => {
       const { isScanning } = this.state;
@@ -49,6 +42,7 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   itemEdit = async (visible: boolean, row: number) => {
     try {
+      const { box } = this.props.route.params;
       const { data, currentRow, currentCount } = this.state;
       this.setState({ visible: visible, currentRow: row });
       if (visible) {
@@ -60,9 +54,11 @@ export default class GoodPage extends Component<GoodPageProps> {
           const good = data[currentRow] as Responses.GoodModel;
           good.Count = currentCount;
 
-          await GoodService.crud(GoodAction.edit, good).then((goods) => {
-            this.setState({ data: goods });
-          });
+          await GoodService.crud(GoodAction.edit, good, box.ID).then(
+            (goods) => {
+              this.setState({ data: goods });
+            }
+          );
         }
       }
     } catch (ex) {
@@ -74,9 +70,10 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   itemRemove = async (model: Responses.GoodModel) => {
     try {
+      const { box } = this.props.route.params;
       this.setState({ isLoading: true, isScanning: true });
 
-      await GoodService.crud(GoodAction.remove, model).then((goods) => {
+      await GoodService.crud(GoodAction.remove, model, box.ID).then((goods) => {
         this.setState({ data: goods });
       });
     } catch (ex) {
@@ -98,25 +95,18 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   scan = async (id?: string) => {
     try {
-      const { isGood } = this.state;
+      const { box } = this.props.route.params;
       this.setState({ isLoading: true, isScanning: true });
       const good = {} as Responses.GoodModel;
 
-      if (!isGood) {
-        await TaskService.scan(id).then((task) => {
-          this.setState({
-            isGood: true,
-            title: `Планирование: ${task?.PlanNum}`,
-          });
-        });
-
-        await GoodService.crud(0, good).then((goods) => {
+      if (id) {
+        good.BarCode = id;
+        await GoodService.crud(GoodAction.add, good, box.ID).then((goods) => {
           this.setState({ data: goods });
         });
       } else {
-        good.BarCode = id || "";
-
-        await GoodService.crud(GoodAction.add, good).then((goods) => {
+        this.setState({ title: box.GoodName });
+        await GoodService.crud(0, good, box.ID).then((goods) => {
           this.setState({ data: goods });
         });
       }
@@ -132,7 +122,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     const { defect, itemEdit, itemRemove, scan, handleStateChange } = this;
 
     return (
-      <GoodTemplate
+      <BoxTemplate
         isLoading={isLoading}
         title={title}
         data={data}

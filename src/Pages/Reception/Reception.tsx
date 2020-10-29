@@ -1,22 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-did-mount-set-state */
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { AuthContext, Responses } from "../../services";
+import { AuthContext } from "../../services";
 import { headerOptions, DrawerToggle } from "../Menu/Header";
 import { BarCode } from "../../components/Templates";
 
 import GoodPage from "./GoodPage";
-
-export type RootStackParamList = {
-  GoodPage: undefined;
-  ScanPage: undefined | { onGoBack?: (model: any) => void };
-  Box: { box: Responses.GoodModel; onGoBack?: (id: string) => void };
-  Difference: { onGoBack?: () => void };
-  Pdf: { taskId: number; PlanNum: string };
-  UploadPhoto: { onGoBack?: () => void };
-};
+import BoxPage from "./BoxPage";
+import { RootStackParamList } from "./ReceptionStackParam";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -39,6 +31,13 @@ export default class Reception extends React.Component {
             options={{
               title: "Прием товара",
               headerLeft: () => <DrawerToggle />,
+            }}
+          />
+          <Stack.Screen
+            name="BoxPage"
+            component={BoxPage}
+            options={{
+              title: "Прием короба",
             }}
           />
           <Stack.Screen
