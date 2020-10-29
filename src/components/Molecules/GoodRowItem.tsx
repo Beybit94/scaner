@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Text } from "react-native";
 import { Icon, ListItem } from "react-native-elements";
-import { Responses } from "services/api/Responses";
-import RowItem from "components/Atoms/RowItem";
+
+import { Responses } from "../../services";
+import { RowItem } from "../Atoms";
 
 type Props = {
   model: Responses.GoodModel;
@@ -16,17 +16,19 @@ export default class GoodRowItem extends Component<Props> {
     return (
       <RowItem
         key={model.StrID}
-        isChevron={model.IsBox}
+        isChevron={!model.IsBox}
         isClickable={model.IsBox}
         onPress={this.props.onPress}
         avatar={
           model.IsBox ? <Icon name="archive" type="font-awesome" /> : null
         }
-        rightElement={<Text>{model.IsBox ? "" : "Кол-во:" + model.Count}</Text>}
       >
         <ListItem.Content>
           <ListItem.Title>{this.props.model.GoodName}</ListItem.Title>
-          <ListItem.Subtitle>{this.props.model.GoodArticle}</ListItem.Subtitle>
+          <ListItem.Subtitle>
+            {this.props.model.GoodArticle}{" "}
+            {model.IsBox ? "" : "| Кол-во:" + model.Count}
+          </ListItem.Subtitle>
         </ListItem.Content>
       </RowItem>
     );

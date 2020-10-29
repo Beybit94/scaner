@@ -2,7 +2,7 @@ import * as Constants from "./api/Constants";
 import { Api } from "./api/Http";
 import { Responses } from "./api/Responses";
 import { ViewModels } from "./Utils/Models";
-import LocalStorage, { StorageKeys } from "./Utils/LocalStorage";
+import { LocalStorage, StorageKeys } from "./Utils/LocalStorage";
 
 export default class AuthService {
   static signInAsync = async (

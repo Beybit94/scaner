@@ -1,25 +1,46 @@
 import React, { Component } from "react";
-import SwipableRow from "components/Atoms/SwipableRow";
-import { Responses } from "services/api/Responses";
+import { SwipeRow } from "react-native-swipe-list-view";
 
-import GoodRowItem from "./GoodRowItem";
+import { Responses } from "../../services";
+
+import { GoodHiddenItem, GoodRowItem } from ".";
 
 type Props = {
+  index: number;
   model: Responses.GoodModel;
-  onPress?: (model: Responses.GoodModel) => void;
+  itemClick: (model: Responses.GoodModel) => void;
+  itemEdit: (row: number) => void;
+  itemRemove: (model: Responses.GoodModel) => void;
+  defect: (model: Responses.GoodModel) => void;
 };
 
 export default class GoodSwipableItem extends Component<Props> {
   render() {
-    const { model, onPress } = this.props;
+    const {
+      index,
+      model,
+      itemClick,
+      itemEdit,
+      itemRemove,
+      defect,
+    } = this.props;
+
     return (
-      <SwipableRow
-        key={model.StrID}
-        disableRight={true}
+      <SwipeRow
+        disableLeftSwipe={false}
+        disableRightSwipe={false}
+        leftOpenValue={75}
         rightOpenValue={model.IsBox ? -75 : -150}
       >
-        <GoodRowItem model={model} onPress={onPress} />
-      </SwipableRow>
+        <GoodHiddenItem
+          index={index}
+          model={model}
+          edit={itemEdit}
+          remove={itemRemove}
+          defect={defect}
+        />
+        <GoodRowItem model={model} onPress={itemClick} />
+      </SwipeRow>
     );
   }
 }

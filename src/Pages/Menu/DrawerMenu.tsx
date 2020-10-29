@@ -13,8 +13,7 @@ import { NavigationContext } from "@react-navigation/native";
 import DeviceInfo from "react-native-device-info";
 
 import Reception from "../Reception/Reception";
-import { AuthManager } from "../../Managers";
-import { LocalStorage, UserModel, StorageKeys } from "../../components";
+import { AuthService, Storage, Responses } from "../../services";
 
 const styles = StyleSheet.create({
   profileView: {
@@ -57,7 +56,9 @@ export default class DrawerMenuContent extends React.Component {
 
   async componentDidMount() {
     try {
-      const user = await LocalStorage.getItem<UserModel>(StorageKeys.USER);
+      const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
+        Storage.StorageKeys.USER
+      );
       this.setState({ userName: user?.UserFullName });
     } catch (error) {
       Alert.alert(
@@ -80,7 +81,7 @@ export default class DrawerMenuContent extends React.Component {
   _signOut = async () => {
     const navigation = this.context;
 
-    await AuthManager.signOutAsync();
+    await AuthService.signOutAsync();
 
     navigation.reset({
       index: 0,

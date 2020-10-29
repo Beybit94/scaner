@@ -30,8 +30,9 @@ export namespace Responses {
     Count: number;
     GoodName: string;
     GoodArticle: string;
-    GoodBarCode: string;
+    BarCode: string;
     IsBox: boolean;
+    IsDefect: boolean;
   }
 
   export interface DifferenceModel extends BaseResponse {

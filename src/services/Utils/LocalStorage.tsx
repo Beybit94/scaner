@@ -8,12 +8,12 @@ export enum StorageKeys {
   SAVEME = "SAVEME",
   ACTIVE_TASK = "ACTIVE_TASK",
 }
-class LocalStorage {
-  async setItem(key: StorageKeys, value: any): Promise<void> {
+export class LocalStorage {
+  static async setItem(key: StorageKeys, value: any): Promise<void> {
     return AsyncStorage.setItem(key, JSON.stringify(value));
   }
 
-  async getItem<T>(key: StorageKeys): Promise<T | null> {
+  static async getItem<T>(key: StorageKeys): Promise<T | null> {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem(key)
         .then((value) => {
@@ -29,10 +29,7 @@ class LocalStorage {
     });
   }
 
-  async deleteItem(key: StorageKeys): Promise<void> {
+  static async deleteItem(key: StorageKeys): Promise<void> {
     return AsyncStorage.removeItem(key);
   }
 }
-
-const localStorage = new LocalStorage();
-export default localStorage;

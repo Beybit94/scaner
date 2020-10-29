@@ -5,10 +5,9 @@ import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 import { NavigationContext } from "@react-navigation/native";
 
-import { AuthManager } from "../Managers";
-import { LocalStorage, StorageKeys } from "../components";
-
-import { Loading, CustomButton } from "./Shared";
+import { AuthService, Storage } from "../services";
+import { Loading } from "../components/Templates";
+import { CustomButton } from "../components/Atoms";
 
 const styles = StyleSheet.create({
   container: {
@@ -55,7 +54,7 @@ export default class SignIn extends React.Component {
   };
 
   async componentDidMount() {
-    const login = await AuthManager.getRemembered();
+    const login = await AuthService.getRemembered();
     this.setState({
       login: login?.login,
       pass: login?.password,
@@ -83,12 +82,12 @@ export default class SignIn extends React.Component {
 
     if (storageKey !== "") {
       if (inputValue === true) {
-        AuthManager.rememberUser({
+        AuthService.rememberUser({
           login: this.state.login,
           password: this.state.pass,
         });
       } else {
-        AuthManager.forgetUser();
+        AuthService.forgetUser();
       }
     }
   };
@@ -98,7 +97,7 @@ export default class SignIn extends React.Component {
     this.setState({ isLoading: true });
 
     try {
-      await AuthManager.signInAsync({
+      await AuthService.signInAsync({
         login: this.state.login,
         password: this.state.pass,
       }).then(async (response) => {
@@ -110,11 +109,12 @@ export default class SignIn extends React.Component {
           throw new Error();
         }
 
-        await LocalStorage.setItem(StorageKeys.USER, response.data).then(
-          async () => {
-            await LocalStorage.setItem(StorageKeys.LOGEDIN, true);
-          }
-        );
+        await Storage.LocalStorage.setItem(
+          Storage.StorageKeys.USER,
+          response.data
+        ).then(async () => {
+          await Storage.LocalStorage.setItem(Storage.StorageKeys.LOGEDIN, true);
+        });
 
         navigation.reset({
           index: 0,

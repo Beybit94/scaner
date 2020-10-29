@@ -1,28 +1,28 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
-import GoodHiddenItem from "components/Molecules/GoodHiddenItem";
-import GoodSwipableItem from "components/Molecules/GoodSwipableItem";
-import { Responses } from "services/api/Responses";
+
+import { GoodSwipableItem } from "../Molecules";
+import { Responses } from "../../services";
 
 type Props = {
   data: Responses.GoodModel[];
-  onPress?: (model: Responses.GoodModel) => void;
-  onEdit: (row: number) => void;
-  onRemove: (model: Responses.GoodModel) => void;
+  defect: (model: Responses.GoodModel) => void;
+  itemEdit: (row: number) => void;
+  itemRemove: (model: Responses.GoodModel) => void;
 };
 
 export default class GoodList extends Component<Props> {
-  render() {
-    const { data, onPress, onEdit, onRemove } = this.props;
+  itemClick = (model: Responses.GoodModel) => {
+    const navigation = this.context;
+    navigation.push("Box", {
+      box: model,
+    });
+  };
 
-    if (data.length <= 0) {
-      return (
-        <View>
-          <Text>Нет данных</Text>
-        </View>
-      );
-    }
+  render() {
+    const { itemClick } = this;
+    const { data, defect, itemEdit, itemRemove } = this.props;
 
     return (
       <SwipeListView
@@ -30,16 +30,20 @@ export default class GoodList extends Component<Props> {
         keyExtractor={(item) => item.StrID}
         useFlatList={true}
         renderItem={(model) => (
-          <GoodSwipableItem model={model.item} onPress={onPress} />
-        )}
-        renderHiddenItem={(model) => (
-          <GoodHiddenItem
+          <GoodSwipableItem
             index={model.index}
             model={model.item}
-            edit={onEdit}
-            remove={onRemove}
+            defect={defect}
+            itemClick={itemClick}
+            itemEdit={itemEdit}
+            itemRemove={itemRemove}
           />
         )}
+        ListEmptyComponent={
+          <View style={{ margin: 8 }}>
+            <Text style={{ textAlign: "center" }}>Нет данных</Text>
+          </View>
+        }
       />
     );
   }

@@ -1,9 +1,8 @@
 import React from "react";
 import { NavigationContext } from "@react-navigation/native";
 
-import { LocalStorage, StorageKeys } from "../components";
-
-import { Loading } from "./Shared";
+import { Storage } from "../services";
+import { Loading } from "../components/Templates";
 
 export default class Splash extends React.Component {
   static contextType = NavigationContext;
@@ -13,7 +12,9 @@ export default class Splash extends React.Component {
   }
 
   _bootstrapAsync = async () => {
-    const userToken = await LocalStorage.getItem<boolean>(StorageKeys.LOGEDIN);
+    const userToken = await Storage.LocalStorage.getItem<boolean>(
+      Storage.StorageKeys.LOGEDIN
+    );
     const navigation = this.context;
 
     navigation.reset({

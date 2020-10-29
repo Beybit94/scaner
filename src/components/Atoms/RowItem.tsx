@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import React, { Component, ReactElement } from "react";
 import { ListItem } from "react-native-elements";
 
@@ -9,7 +8,6 @@ type Props = {
   children?: ReactElement | ReactElement[];
   onPress?: (model: never) => void;
   avatar?: ReactElement | null;
-  rightElement?: ReactElement | ReactElement<{}>;
 };
 
 export default class RowItem extends Component<Props> {
@@ -18,7 +16,6 @@ export default class RowItem extends Component<Props> {
       <ListItem
         key={this.props.key}
         bottomDivider
-        rightElement={this.props.rightElement}
         onPress={() => this.props.onPress}
         disabled={this.props.isClickable}
       >

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Responses } from "services/api/Responses";
+
+import { Responses } from "../../services";
 
 const styles = StyleSheet.create({
   rowBack: {
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   backTextWhite: {
-    color: "#FFF",
+    color: "white",
   },
   backRightBtn: {
     alignItems: "center",
@@ -30,21 +31,35 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     right: 0,
   },
+  backLeftBtnLeft: {
+    backgroundColor: "grey",
+    left: 0,
+  },
 });
 
 type Props = {
   edit: (row: number) => void;
   remove: (model: Responses.GoodModel) => void;
+  defect: (model: Responses.GoodModel) => void;
   model: Responses.GoodModel;
   index: number;
 };
 
 export default class GoodHiddenItem extends Component<Props> {
   render() {
-    const { edit, remove, model, index } = this.props;
+    const { edit, remove, defect, model, index } = this.props;
 
     return (
       <View style={styles.rowBack}>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backLeftBtnLeft]}
+          onPress={() => defect(model)}
+        >
+          <Text style={styles.backTextWhite}>
+            {model.IsDefect ? "Undefect" : "Дефект"}
+          </Text>
+        </TouchableOpacity>
+
         {!model.IsBox && (
           <TouchableOpacity
             style={[styles.backRightBtn, styles.backRightBtnLeft]}

@@ -5,7 +5,7 @@ import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import { InitialState, NavigationContainer } from "@react-navigation/native";
 
-import LocalStorage, { StorageKeys } from "./LocalStorage";
+import { LocalStorage, StorageKeys } from "./LocalStorage";
 
 export type FontSource = Parameters<typeof Font.loadAsync>[0];
 const usePromiseAll = (promises: Promise<void | void[]>[], cb: () => void) =>

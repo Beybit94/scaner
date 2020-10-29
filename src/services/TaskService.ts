@@ -2,8 +2,40 @@
 import * as Constants from "./api/Constants";
 import { Api } from "./api/Http";
 import { Responses } from "./api/Responses";
+import * as Storage from "./Utils/LocalStorage";
 
 export default class TaskService {
+  static scan = async (barcode?: string): Promise<Responses.TaskModel> => {
+    const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
+      Storage.StorageKeys.USER
+    );
+
+    if (barcode) {
+      const createTask = await TaskService.createTask(barcode, user?.UserId);
+      if (!createTask.success) {
+        throw new Error(createTask.error);
+      }
+    }
+
+    const getActiveTask = await TaskService.getActiveTask(
+      user?.UserId,
+      user?.UserDivisionId
+    );
+
+    if (!getActiveTask.success) {
+      throw new Error(getActiveTask.error);
+    }
+
+    if (!getActiveTask.data?.PlanNum) {
+      throw new Error();
+    }
+
+    const task = getActiveTask.data;
+    await Storage.LocalStorage.setItem(Storage.StorageKeys.ACTIVE_TASK, task);
+
+    return task;
+  };
+
   static createTask = async (
     PlanNum: string,
     UserId?: number
