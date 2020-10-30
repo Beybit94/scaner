@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
+import { Keyboard } from "react-native";
+import { Icon } from "react-native-elements";
 
 import { Honeywell } from "../../Native";
-import { BoxTemplate } from "../../components/Templates";
+import { BoxTemplate, SearchTemplate } from "../../components/Templates";
 import { GoodService, GoodAction, Responses } from "../../services";
 
 import { RootStackParamList } from "./ReceptionStackParam";
@@ -13,15 +15,30 @@ type BoxPageProps = StackScreenProps<RootStackParamList, "BoxPage">;
 export default class BoxPage extends Component<BoxPageProps> {
   state = {
     title: "",
+    searchQuery: "",
     data: [],
+    searches: [],
     isLoading: false,
     isScanning: false,
+    isSearching: false,
     visible: false,
     currentRow: 0,
     currentCount: 0,
   };
 
   componentDidMount() {
+    const { navigation } = this.props;
+    navigation.setOptions({
+      headerRight: () => (
+        <Icon
+          iconStyle={{ marginRight: 10, color: "black" }}
+          size={30}
+          name="search"
+          onPress={this.toggleSearch}
+        />
+      ),
+    });
+
     this.scan();
     Honeywell.startReader();
     Honeywell.onBarcodeReadSuccess((event: any) => {
@@ -93,22 +110,54 @@ export default class BoxPage extends Component<BoxPageProps> {
     }
   };
 
-  scan = async (id?: string) => {
+  onRefresh = async () => {
+    const { box } = this.props.route.params;
+    const good = {} as Responses.GoodModel;
+    await GoodService.crud(0, good, box.ID).then((goods) => {
+      this.setState({ data: goods });
+    });
+  };
+
+  toggleSearch = () => {
+    const { isSearching } = this.state;
+    if (isSearching) {
+      this.setState({ searches: [], searchQuery: "" });
+    }
+    this.setState({ isSearching: !isSearching });
+  };
+
+  search = async () => {
+    try {
+      this.setState({ isLoading: true });
+      const { searchQuery } = this.state;
+      await GoodService.getGoodByFilter(searchQuery).then((searches) => {
+        this.setState({ searches: searches });
+        Keyboard.dismiss;
+      });
+    } catch (ex) {
+      throw new Error(ex);
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  scan = async (data?: string, article?: string) => {
     try {
       const { box } = this.props.route.params;
       this.setState({ isLoading: true, isScanning: true });
       const good = {} as Responses.GoodModel;
 
-      if (id) {
-        good.BarCode = id;
+      if (data) {
+        good.BarCode = data;
+        good.GoodArticle = article || "";
+
         await GoodService.crud(GoodAction.add, good, box.ID).then((goods) => {
+          this.toggleSearch();
           this.setState({ data: goods });
         });
       } else {
         this.setState({ title: box.GoodName });
-        await GoodService.crud(0, good, box.ID).then((goods) => {
-          this.setState({ data: goods });
-        });
+        this.onRefresh();
       }
     } catch (ex) {
       throw new Error(ex);
@@ -118,8 +167,38 @@ export default class BoxPage extends Component<BoxPageProps> {
   };
 
   render() {
-    const { isLoading, visible, title, data } = this.state;
-    const { defect, itemEdit, itemRemove, scan, handleStateChange } = this;
+    const {
+      isLoading,
+      isSearching,
+      searchQuery,
+      searches,
+      visible,
+      title,
+      data,
+    } = this.state;
+
+    const {
+      defect,
+      onRefresh,
+      itemEdit,
+      itemRemove,
+      scan,
+      search,
+      handleStateChange,
+    } = this;
+
+    if (isSearching) {
+      return (
+        <SearchTemplate
+          isLoading={isLoading}
+          data={searches}
+          searchQuery={searchQuery}
+          scan={scan}
+          search={search}
+          handleStateChange={handleStateChange}
+        />
+      );
+    }
 
     return (
       <BoxTemplate
@@ -128,6 +207,7 @@ export default class BoxPage extends Component<BoxPageProps> {
         data={data}
         visible={visible}
         defect={defect}
+        onRefresh={onRefresh}
         itemEdit={itemEdit}
         itemRemove={itemRemove}
         scan={scan}

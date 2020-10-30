@@ -8,22 +8,22 @@ const styles = StyleSheet.create({
     width: width / 2,
   },
   button: {
-    margin: 8,
     backgroundColor: "green",
+    width: "100%",
   },
 });
 
 type Props = {
   uri: string;
   index: number;
-  onDelete?: () => void;
+  onDelete: () => void;
 };
 
 export default class ImageItem extends Component<Props> {
   render() {
-    const { uri, index, onDelete } = this.props;
+    const { uri, onDelete } = this.props;
     return (
-      <Card key={index} style={styles.card}>
+      <Card style={styles.card}>
         <Card.Cover source={{ uri: uri }} resizeMode={"cover"} />
         <Card.Actions>
           <Button

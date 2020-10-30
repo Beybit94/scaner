@@ -14,6 +14,7 @@ declare global {
 
   interface FormData {
     append(name: string, value: FormDataValue, fileName?: string): void;
+    append(name: string, value: string | any, fileName?: string): void;
     set(name: string, value: FormDataValue, fileName?: string): void;
   }
 }
@@ -101,7 +102,7 @@ export namespace Api {
     const params = request.Params ? `?${JSON.stringify(request.Params)}` : "";
     const path = `${url}${params}`;
 
-    const args: RequestInit = SetHeaders(Constants.HTTP_METHODS.POST);
+    const args: RequestInit = SetHeaders(Constants.HTTP_METHODS.UPLOAD);
     args.body = request.FormData;
     return await http<T>(new Request(path, args));
   }

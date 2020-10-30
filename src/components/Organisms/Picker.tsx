@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
 
-import { CameraPermission } from ".";
+import CameraPermission from "./CameraPermission";
 
 const styles = StyleSheet.create({
   button: {
@@ -13,12 +13,12 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  images: FormDataValue[];
+  add: (image: FormDataValue) => void;
 };
 
 export default class Picker extends Component<Props> {
   _pickImage = async () => {
-    const { images } = this.props;
+    const { add } = this.props;
     try {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -26,15 +26,13 @@ export default class Picker extends Component<Props> {
         quality: 1,
       });
 
-      //console.log(result);
-
       if (!result.cancelled) {
         const media = {
           uri: result.uri,
           type: "image/jpeg",
           name: `Акт_${new Date().toISOString()}.jpg`,
         };
-        images.push(media);
+        add(media);
       }
     } catch (ex) {
       console.log(ex);

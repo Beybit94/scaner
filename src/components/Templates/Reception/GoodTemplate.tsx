@@ -5,11 +5,10 @@ import { NavigationContext } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { ButtonGroup } from "react-native-elements";
 
-import { CustomButton, ScanBarcode, CustomModal } from "../Molecules";
-import { GoodList } from "../Organisms";
-import { Responses } from "../../services";
-
-import Loading from "./Shared/Loading";
+import { CustomButton, ScanBarcode, CustomModal } from "../../Molecules";
+import { GoodList } from "../../Organisms";
+import { Responses } from "../../../services";
+import Loading from "../Shared/Loading";
 
 const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -46,20 +45,13 @@ type Props = {
   defect: (model: Responses.GoodModel) => void;
   itemEdit: (visible: boolean, row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
-  scan: (id: string) => void;
+  onRefresh: () => void;
+  scan: (data: string) => void;
   handleStateChange: (code: string, value: any) => void;
 };
 
 export default class GoodTemplate extends Component<Props> {
   static contextType = NavigationContext;
-
-  itemClick = (model: Responses.GoodModel) => {
-    const navigation = this.context;
-    console.warn(navigation);
-    navigation.push("BoxPage", {
-      box: model,
-    });
-  };
 
   showScan = () => {
     const { scan } = this.props;
@@ -69,9 +61,16 @@ export default class GoodTemplate extends Component<Props> {
     });
   };
 
+  itemClick = (model: Responses.GoodModel) => {
+    const navigation = this.context;
+    navigation.push("BoxPage", {
+      box: model,
+    });
+  };
+
   difference = async () => {
     const navigation = this.context;
-    navigation.push("Difference");
+    navigation.push("DifferencePage");
   };
 
   render() {
@@ -82,6 +81,7 @@ export default class GoodTemplate extends Component<Props> {
       isLoading,
       visible,
       defect,
+      onRefresh,
       itemEdit,
       itemRemove,
       handleStateChange,
@@ -98,6 +98,8 @@ export default class GoodTemplate extends Component<Props> {
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
+            refreshing={isLoading}
+            onRefresh={onRefresh}
           />
           <CustomButton label={"Расхождение"} onClick={difference} />
           <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>

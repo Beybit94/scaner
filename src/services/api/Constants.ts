@@ -11,6 +11,7 @@ export enum Endpoints {
   GOOD_BY_CODE = "/api/Good/GetGoodByCode",
   GOOD_BY_TASK = "/api/Good/GetGoodsByTask",
   GOOD_BY_BOX = "/api/Good/GetGoodsByBox",
+  GOOD_BY_FILTER = "/api/Good/GetGoodsByFilter",
   CREATE_GOOD = "/api/Good/Create",
   UPDATE_GOOD = "/api/Good/Update",
   DELETE_GOOD = "/api/Good/Delete",

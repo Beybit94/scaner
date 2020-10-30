@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Alert } from "react-native";
 
-import { BarCode } from "../Shared";
+import { BarCode } from "../../components/Templates";
 
-import { RootStackParamList } from "./Reception";
+import { RootStackParamList } from "./ReceptionStackParam";
 
-type ScanProps = StackScreenProps<RootStackParamList, "Scan">;
-export default class Scan extends Component<ScanProps> {
+type ScanPageProps = StackScreenProps<RootStackParamList, "ScanPage">;
+export default class ScanPage extends Component<ScanPageProps> {
   state = {
     isScanned: false,
   };
@@ -28,13 +27,6 @@ export default class Scan extends Component<ScanProps> {
       if (onGoBack) {
         onGoBack(data);
       }
-    } catch (ex) {
-      Alert.alert(
-        "Error signing in",
-        JSON.stringify(ex.message),
-        [{ text: "OK" }],
-        { cancelable: false }
-      );
     } finally {
       navigation.goBack();
     }
@@ -43,9 +35,7 @@ export default class Scan extends Component<ScanProps> {
   render() {
     return (
       <BarCode
-        onBarCodeScanned={
-          this.state.isScanned ? undefined : this._barCodeSacanned
-        }
+        onScaned={this.state.isScanned ? undefined : this._barCodeSacanned}
       />
     );
   }

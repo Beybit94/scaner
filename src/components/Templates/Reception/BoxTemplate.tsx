@@ -5,11 +5,10 @@ import { NavigationContext } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { ButtonGroup } from "react-native-elements";
 
-import { ScanBarcode, CustomModal } from "../Molecules";
-import { GoodList } from "../Organisms";
-import { Responses } from "../../services";
-
-import Loading from "./Shared/Loading";
+import { ScanBarcode, CustomModal } from "../../Molecules";
+import { GoodList } from "../../Organisms";
+import { Responses } from "../../../services";
+import Loading from "../Shared/Loading";
 
 const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -46,6 +45,7 @@ type Props = {
   defect: (model: Responses.GoodModel) => void;
   itemEdit: (visible: boolean, row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
+  onRefresh: () => void;
   scan: (id: string) => void;
   handleStateChange: (code: string, value: any) => void;
 };
@@ -69,6 +69,7 @@ export default class BoxTemplate extends Component<Props> {
       isLoading,
       visible,
       defect,
+      onRefresh,
       itemEdit,
       itemRemove,
       handleStateChange,
@@ -85,6 +86,8 @@ export default class BoxTemplate extends Component<Props> {
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
+            refreshing={isLoading}
+            onRefresh={onRefresh}
           />
           <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
             <View style={styles.modalContainer}>

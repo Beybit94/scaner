@@ -28,7 +28,8 @@ export default class GoodService {
           good?.BarCode,
           task?.PlanNum,
           task?.ID,
-          boxId
+          boxId,
+          good.GoodArticle
         );
         break;
       case GoodAction.edit:
@@ -90,11 +91,30 @@ export default class GoodService {
     return response;
   };
 
+  static getGoodByFilter = async (
+    GoodArticle: string
+  ): Promise<[Responses.GoodModel] | null | undefined> => {
+    const request: Api.HttpRequest = {
+      Url: Constants.Endpoints.GOOD_BY_FILTER,
+      Body: {
+        GoodArticle: GoodArticle,
+      },
+    };
+
+    const response = await Api.post<[Responses.GoodModel]>(request);
+    if (!response.success) {
+      throw new Error(response.error);
+    }
+
+    return response.data;
+  };
+
   static addGood = async (
     BarCode: string,
     PlanNum?: string,
     TaskId?: number,
-    BoxId?: number
+    BoxId?: number,
+    GoodArticle?: string
   ): Promise<Api.HttpResponse<{}>> => {
     const request: Api.HttpRequest = {
       Url: Constants.Endpoints.CREATE_GOOD,
@@ -103,6 +123,7 @@ export default class GoodService {
         TaskId: TaskId,
         BarCode: BarCode,
         BoxId: BoxId,
+        GoodArticle: GoodArticle,
       },
     };
 

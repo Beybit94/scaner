@@ -3,7 +3,8 @@ import { SwipeRow } from "react-native-swipe-list-view";
 
 import { Responses } from "../../services";
 
-import { GoodHiddenItem, GoodRowItem } from ".";
+import GoodHiddenItem from "./GoodHiddenItem";
+import GoodRowItem from "./GoodRowItem";
 
 type Props = {
   index: number;

@@ -1,8 +1,8 @@
 import Loading from "./Shared/Loading";
 import BarCode from "./Shared/BarCode";
 import Pdf from "./Shared/Pdf";
-import GoodTemplate from "./GoodTemplate";
-import GoodActTemplate from "./GoodActTemplate";
-import BoxTemplate from "./BoxTemplate";
+import GoodTemplate from "./Reception/GoodTemplate";
+import BoxTemplate from "./Reception/BoxTemplate";
+import SearchTemplate from "./Reception/SearchTemplate";
 
-export { Loading, BarCode, Pdf, GoodTemplate, GoodActTemplate, BoxTemplate };
+export { Loading, BarCode, Pdf, GoodTemplate, BoxTemplate, SearchTemplate };

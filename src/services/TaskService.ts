@@ -68,58 +68,75 @@ export default class TaskService {
     return response;
   };
 
-  static endTask = async (
-    TaskId: number,
-    PlanNum: string
-  ): Promise<Api.HttpResponse<{}>> => {
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.END_TASK,
-      Body: {
-        TaskId: TaskId,
-        PlanNum: PlanNum,
-      },
-    };
+  static endTask = async (files: FormDataValue[]) => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
 
-    const response = await Api.post<{}>(request);
-    return response;
+    if (task) {
+      await TaskService.upload(files, task.ID).then((upload) => {
+        if (!upload.success) {
+          throw new Error(upload.error);
+        }
+      });
+
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.END_TASK,
+        Body: {
+          TaskId: task.ID,
+          PlanNum: task.PlanNum,
+        },
+      };
+
+      const response = await Api.post<{}>(request);
+      if (!response.success) {
+        throw new Error(response.error);
+      }
+    }
   };
 
-  static difference = async (
-    TaskId: number,
-    PlanNum: string
-  ): Promise<Api.HttpResponse<[Responses.DifferenceModel]>> => {
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.DIFFERENCE,
-      Body: {
-        TaskId: TaskId,
-        PlanNum: PlanNum,
-      },
-    };
+  static difference = async (): Promise<
+    [Responses.DifferenceModel] | null | undefined
+  > => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
 
-    const response = await Api.post<[Responses.DifferenceModel]>(request);
-    return response;
+    let response: Api.HttpResponse<[Responses.DifferenceModel]> | undefined;
+    if (task) {
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.DIFFERENCE,
+        Body: {
+          TaskId: task.ID,
+          PlanNum: task.PlanNum,
+        },
+      };
+
+      response = await Api.post<[Responses.DifferenceModel]>(request);
+    }
+
+    return response?.data;
   };
 
-  static pdf = async (
-    TaskId: number,
-    PlanNum: string
-  ): Promise<Api.HttpResponse<{}>> => {
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.PDF,
-      Params: {
-        TaskId: TaskId,
-        PlanNum: PlanNum,
-      },
-    };
+  static pdf = async (): Promise<string> => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
 
-    const response = await Api.get<{}>(request);
-    return response;
+    let uri = "";
+    if (task) {
+      uri = `${Constants.Endpoints.BASE}${Constants.Endpoints.PDF}?PlanNum=${task?.PlanNum}&TaskId=${task?.ID}`;
+    }
+    return uri;
   };
 
   static upload = async (
-    files: FormDataValue[]
+    files: FormDataValue[],
+    TaskId: number
   ): Promise<Api.HttpResponse<{}>> => {
     const form = new FormData();
+    form.append("TaskId", TaskId);
+
     files.forEach((file, index) => {
       form.append(`photo_${index}`, file);
     });

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { RefreshControl, Text, View } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
@@ -11,6 +11,8 @@ type Props = {
   defect: (model: Responses.GoodModel) => void;
   itemEdit: (row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
+  onRefresh: () => void;
+  refreshing: boolean;
 };
 
 export default class GoodList extends Component<Props> {
@@ -24,7 +26,14 @@ export default class GoodList extends Component<Props> {
   };
 
   render() {
-    const { data, defect, itemEdit, itemRemove } = this.props;
+    const {
+      data,
+      defect,
+      itemEdit,
+      itemRemove,
+      onRefresh,
+      refreshing,
+    } = this.props;
 
     return (
       <SwipeListView
@@ -45,6 +54,13 @@ export default class GoodList extends Component<Props> {
           <View style={{ margin: 8 }}>
             <Text style={{ textAlign: "center" }}>Нет данных</Text>
           </View>
+        }
+        refreshControl={
+          <RefreshControl
+            colors={["#9Bd35A", "#689F38"]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
       />
     );
