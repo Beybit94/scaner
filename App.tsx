@@ -24,7 +24,7 @@ const AuthStack = createStackNavigator();
 
 const jsErrorHandler = (error: Error, isFatal: boolean) => {
   Alert.alert(
-    "Произошла ошибка",
+    `Произошла ошибка ${isFatal ? "Fatal" : ""}`,
     JSON.stringify(error.message),
     [{ text: "OK" }],
     {
@@ -42,7 +42,7 @@ const nativeErrorHandler = (exceptionMsg: string) => {
     }
   );
 };
-setJSExceptionHandler(jsErrorHandler);
+setJSExceptionHandler(jsErrorHandler, true);
 setNativeExceptionHandler(nativeErrorHandler);
 
 type Props = {
