@@ -78,8 +78,6 @@ export default class BoxPage extends Component<BoxPageProps> {
           );
         }
       }
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -93,8 +91,6 @@ export default class BoxPage extends Component<BoxPageProps> {
       await GoodService.crud(GoodAction.remove, model, box.ID).then((goods) => {
         this.setState({ data: goods });
       });
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -103,8 +99,6 @@ export default class BoxPage extends Component<BoxPageProps> {
   defect = async (model: Responses.GoodModel) => {
     try {
       this.setState({ isLoading: true, isScanning: true });
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -120,9 +114,6 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   toggleSearch = () => {
     const { isSearching } = this.state;
-    if (isSearching) {
-      this.setState({ searches: [], searchQuery: "" });
-    }
     this.setState({ isSearching: !isSearching });
   };
 
@@ -134,8 +125,6 @@ export default class BoxPage extends Component<BoxPageProps> {
         this.setState({ searches: searches });
         Keyboard.dismiss;
       });
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -152,15 +141,13 @@ export default class BoxPage extends Component<BoxPageProps> {
         good.GoodArticle = article || "";
 
         await GoodService.crud(GoodAction.add, good, box.ID).then((goods) => {
-          this.toggleSearch();
           this.setState({ data: goods });
+          this.setState({ searches: [], searchQuery: "", isSearching: false });
         });
       } else {
         this.setState({ title: box.GoodName });
         this.onRefresh();
       }
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false, isScanning: false });
     }

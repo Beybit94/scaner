@@ -1,11 +1,9 @@
 /* eslint-disable react/no-did-mount-set-state */
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Header } from "react-native-elements";
-import { Searchbar } from "react-native-paper";
 
 import { AuthContext } from "../../services";
-import { headerOptions, DrawerToggle, CustomSearchbar } from "../Menu/Header";
+import { headerOptions, DrawerToggle } from "../Menu/Header";
 
 import GoodPage from "./GoodPage";
 import BoxPage from "./BoxPage";

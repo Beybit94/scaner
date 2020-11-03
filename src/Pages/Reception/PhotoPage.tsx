@@ -37,9 +37,13 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
     try {
       this.setState({ isLoading: true });
       const { images } = this.state;
-      await TaskService.endTask(images);
-    } catch (ex) {
-      throw new Error(ex);
+      await TaskService.endTask(images).then(() => {
+        const { navigation } = this.props;
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "GoodPage" }],
+        });
+      });
     } finally {
       this.setState({ isLoading: false });
     }

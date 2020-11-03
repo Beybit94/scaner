@@ -11,27 +11,25 @@ export default class TaskService {
     );
 
     if (barcode) {
-      const createTask = await TaskService.createTask(barcode, user?.UserId);
-      if (!createTask.success) {
-        throw new Error(createTask.error);
-      }
+      await TaskService.createTask(barcode, user?.UserId);
     }
 
-    const getActiveTask = await TaskService.getActiveTask(
-      user?.UserId,
-      user?.UserDivisionId
+    let task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
     );
+    if (!task) {
+      const getActiveTask = await TaskService.getActiveTask(
+        user?.UserId,
+        user?.UserDivisionId
+      );
 
-    if (!getActiveTask.success) {
-      throw new Error(getActiveTask.error);
+      if (!getActiveTask.data?.PlanNum) {
+        throw new Error();
+      }
+
+      task = getActiveTask.data;
+      await Storage.LocalStorage.setItem(Storage.StorageKeys.ACTIVE_TASK, task);
     }
-
-    if (!getActiveTask.data?.PlanNum) {
-      throw new Error();
-    }
-
-    const task = getActiveTask.data;
-    await Storage.LocalStorage.setItem(Storage.StorageKeys.ACTIVE_TASK, task);
 
     return task;
   };
@@ -74,23 +72,41 @@ export default class TaskService {
     );
 
     if (task) {
-      await TaskService.upload(files, task.ID).then((upload) => {
-        if (!upload.success) {
-          throw new Error(upload.error);
+      await TaskService.upload(files, task.ID).then(async (upload) => {
+        if (upload.success) {
+          const request: Api.HttpRequest = {
+            Url: Constants.Endpoints.END_TASK,
+            Body: {
+              TaskId: task.ID,
+              PlanNum: task.PlanNum,
+            },
+          };
+
+          const endTask = await Api.post<{}>(request);
+          if (endTask.success) {
+            Storage.LocalStorage.deleteItem(Storage.StorageKeys.ACTIVE_TASK);
+          }
         }
       });
+    }
+  };
 
+  static closeTask = async () => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
+
+    if (task) {
       const request: Api.HttpRequest = {
-        Url: Constants.Endpoints.END_TASK,
+        Url: Constants.Endpoints.CLOSE_TASK,
         Body: {
           TaskId: task.ID,
-          PlanNum: task.PlanNum,
         },
       };
 
       const response = await Api.post<{}>(request);
-      if (!response.success) {
-        throw new Error(response.error);
+      if (response.success) {
+        Storage.LocalStorage.deleteItem(Storage.StorageKeys.ACTIVE_TASK);
       }
     }
   };

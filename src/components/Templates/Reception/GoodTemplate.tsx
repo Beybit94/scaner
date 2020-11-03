@@ -42,11 +42,12 @@ type Props = {
   data: Responses.GoodModel[];
   isLoading: boolean;
   visible: boolean;
+  scan: (data: string) => void;
   defect: (model: Responses.GoodModel) => void;
+  onRefresh: () => void;
+  closeTask: () => void;
   itemEdit: (visible: boolean, row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
-  onRefresh: () => void;
-  scan: (data: string) => void;
   handleStateChange: (code: string, value: any) => void;
 };
 
@@ -81,6 +82,7 @@ export default class GoodTemplate extends Component<Props> {
       isLoading,
       visible,
       defect,
+      closeTask,
       onRefresh,
       itemEdit,
       itemRemove,
@@ -90,9 +92,9 @@ export default class GoodTemplate extends Component<Props> {
     const buttons = ["Закрыть", "Изменить"];
 
     return (
-      <Loading isLoading={isLoading}>
-        <View style={styles.container}>
-          <ScanBarcode title={title} showScan={showScan} />
+      <View style={styles.container}>
+        <ScanBarcode title={title} showScan={showScan} />
+        <Loading isLoading={isLoading}>
           <GoodList
             data={data}
             defect={defect}
@@ -102,31 +104,32 @@ export default class GoodTemplate extends Component<Props> {
             onRefresh={onRefresh}
           />
           <CustomButton label={"Расхождение"} onClick={difference} />
-          <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
-            <View style={styles.modalContainer}>
-              <View style={styles.innerContainer}>
-                <TextInput
-                  label="Количество"
-                  mode="flat"
-                  style={styles.input}
-                  keyboardType="phone-pad"
-                  autoFocus={true}
-                  onChangeText={(value) =>
-                    handleStateChange("currentCount", value)
-                  }
-                />
-                <ButtonGroup
-                  onPress={(selectedIndex: number) =>
-                    itemEdit(false, selectedIndex)
-                  }
-                  buttons={buttons}
-                  containerStyle={{ height: 50 }}
-                />
-              </View>
+          <CustomButton label={"Закрыть задачу"} onClick={closeTask} />
+        </Loading>
+        <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.innerContainer}>
+              <TextInput
+                label="Количество"
+                mode="flat"
+                style={styles.input}
+                keyboardType="phone-pad"
+                autoFocus={true}
+                onChangeText={(value) =>
+                  handleStateChange("currentCount", value)
+                }
+              />
+              <ButtonGroup
+                onPress={(selectedIndex: number) =>
+                  itemEdit(false, selectedIndex)
+                }
+                buttons={buttons}
+                containerStyle={{ height: 50 }}
+              />
             </View>
-          </CustomModal>
-        </View>
-      </Loading>
+          </View>
+        </CustomModal>
+      </View>
     );
   }
 }

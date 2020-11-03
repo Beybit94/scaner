@@ -78,9 +78,9 @@ export default class BoxTemplate extends Component<Props> {
     const buttons = ["Закрыть", "Изменить"];
 
     return (
-      <Loading isLoading={isLoading}>
-        <View style={styles.container}>
-          <ScanBarcode title={title} showScan={showScan} />
+      <View style={styles.container}>
+        <ScanBarcode title={title} showScan={showScan} />
+        <Loading isLoading={isLoading}>
           <GoodList
             data={data}
             defect={defect}
@@ -89,31 +89,31 @@ export default class BoxTemplate extends Component<Props> {
             refreshing={isLoading}
             onRefresh={onRefresh}
           />
-          <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
-            <View style={styles.modalContainer}>
-              <View style={styles.innerContainer}>
-                <TextInput
-                  label="Количество"
-                  mode="flat"
-                  style={styles.input}
-                  keyboardType="phone-pad"
-                  autoFocus={true}
-                  onChangeText={(value) =>
-                    handleStateChange("currentCount", value)
-                  }
-                />
-                <ButtonGroup
-                  onPress={(selectedIndex: number) =>
-                    itemEdit(false, selectedIndex)
-                  }
-                  buttons={buttons}
-                  containerStyle={{ height: 50 }}
-                />
-              </View>
+        </Loading>
+        <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.innerContainer}>
+              <TextInput
+                label="Количество"
+                mode="flat"
+                style={styles.input}
+                keyboardType="phone-pad"
+                autoFocus={true}
+                onChangeText={(value) =>
+                  handleStateChange("currentCount", value)
+                }
+              />
+              <ButtonGroup
+                onPress={(selectedIndex: number) =>
+                  itemEdit(false, selectedIndex)
+                }
+                buttons={buttons}
+                containerStyle={{ height: 50 }}
+              />
             </View>
-          </CustomModal>
-        </View>
-      </Loading>
+          </View>
+        </CustomModal>
+      </View>
     );
   }
 }

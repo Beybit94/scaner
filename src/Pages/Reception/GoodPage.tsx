@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
+import { Keyboard } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
-import { Keyboard } from "react-native";
 
 import { Honeywell } from "../../Native";
 import { GoodTemplate, SearchTemplate } from "../../components/Templates";
@@ -81,8 +81,6 @@ export default class GoodPage extends Component<GoodPageProps> {
           });
         }
       }
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -95,8 +93,6 @@ export default class GoodPage extends Component<GoodPageProps> {
       await GoodService.crud(GoodAction.remove, model).then((goods) => {
         this.setState({ data: goods });
       });
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -105,8 +101,6 @@ export default class GoodPage extends Component<GoodPageProps> {
   defect = async (model: Responses.GoodModel) => {
     try {
       this.setState({ isLoading: true, isScanning: true });
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -121,9 +115,6 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   toggleSearch = () => {
     const { isSearching } = this.state;
-    if (isSearching) {
-      this.setState({ searches: [], searchQuery: "" });
-    }
     this.setState({ isSearching: !isSearching });
   };
 
@@ -135,8 +126,21 @@ export default class GoodPage extends Component<GoodPageProps> {
         this.setState({ searches: searches });
         Keyboard.dismiss;
       });
-    } catch (ex) {
-      throw new Error(ex);
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  closeTask = async () => {
+    try {
+      this.setState({ isLoading: true });
+      await TaskService.closeTask().then(() => {
+        this.setState({
+          isGood: false,
+          title: "Планирование:",
+          data: [],
+        });
+      });
     } finally {
       this.setState({ isLoading: false });
     }
@@ -162,12 +166,10 @@ export default class GoodPage extends Component<GoodPageProps> {
         good.GoodArticle = article || "";
 
         await GoodService.crud(GoodAction.add, good).then((goods) => {
-          this.toggleSearch();
           this.setState({ data: goods });
+          this.setState({ searches: [], searchQuery: "", isSearching: false });
         });
       }
-    } catch (ex) {
-      throw new Error(ex);
     } finally {
       this.setState({ isLoading: false, isScanning: false });
     }
@@ -184,12 +186,13 @@ export default class GoodPage extends Component<GoodPageProps> {
       data,
     } = this.state;
     const {
-      defect,
-      onRefresh,
-      itemEdit,
-      itemRemove,
       scan,
+      defect,
       search,
+      itemEdit,
+      closeTask,
+      onRefresh,
+      itemRemove,
       handleStateChange,
     } = this;
 
@@ -217,6 +220,7 @@ export default class GoodPage extends Component<GoodPageProps> {
         itemEdit={itemEdit}
         itemRemove={itemRemove}
         scan={scan}
+        closeTask={closeTask}
         handleStateChange={handleStateChange}
       />
     );

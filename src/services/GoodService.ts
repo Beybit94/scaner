@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { HttpResponse } from "../components";
-
 import * as Constants from "./api/Constants";
 import { Api } from "./api/Http";
 import { Responses } from "./api/Responses";
@@ -21,10 +19,10 @@ export default class GoodService {
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    let response: Api.HttpResponse<{}> | undefined;
+    //let response: Api.HttpResponse<{}> | undefined;
     switch (action) {
       case GoodAction.add:
-        response = await GoodService.addGood(
+        await GoodService.addGood(
           good?.BarCode,
           task?.PlanNum,
           task?.ID,
@@ -33,18 +31,13 @@ export default class GoodService {
         );
         break;
       case GoodAction.edit:
-        response = await GoodService.editGood(good.ID, good.Count);
+        await GoodService.editGood(good.ID, good.Count);
         break;
       case GoodAction.remove:
-        response = await GoodService.removeGood(good.ID);
+        await GoodService.removeGood(good.ID);
         break;
       default:
-        response = undefined;
         break;
-    }
-
-    if (response && !response.success) {
-      throw new Error(response.error);
     }
 
     let result: Api.HttpResponse<[Responses.GoodModel]>;
@@ -52,10 +45,6 @@ export default class GoodService {
       result = await GoodService.getGoodByBox(boxId, task?.ID);
     } else {
       result = await GoodService.getGoodByTask(task?.ID);
-    }
-
-    if (!result.success) {
-      throw new Error(result.error);
     }
 
     return result.data;
@@ -102,10 +91,6 @@ export default class GoodService {
     };
 
     const response = await Api.post<[Responses.GoodModel]>(request);
-    if (!response.success) {
-      throw new Error(response.error);
-    }
-
     return response.data;
   };
 

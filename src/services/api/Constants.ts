@@ -8,6 +8,7 @@ export enum Endpoints {
   ACTIVE_TASK = "/api/Task/GetActiveTask",
   DIFFERENCE = "/api/Task/Differences",
   END_TASK = "/api/Task/EndTask",
+  CLOSE_TASK = "/api/Task/CloseTask",
   GOOD_BY_CODE = "/api/Good/GetGoodByCode",
   GOOD_BY_TASK = "/api/Good/GetGoodsByTask",
   GOOD_BY_BOX = "/api/Good/GetGoodsByBox",

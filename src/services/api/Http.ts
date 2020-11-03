@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-undef */
-import NetInfo from "@react-native-community/netinfo";
+import { Alert } from "react-native";
 
 import * as Constants from "./Constants";
 
@@ -61,23 +61,35 @@ export namespace Api {
     }
   }
 
+  export function errorHandler(error: Error, isFatal?: boolean) {
+    if (isFatal) {
+      Alert.alert(error.name, error.message, [
+        {
+          text: "OK",
+        },
+      ]);
+    } else {
+      console.log(error);
+    }
+  }
+
   async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
     const response: HttpResponse<T> = await fetch(request);
     try {
-      const network = await NetInfo.fetch();
-      if (!network.isConnected) {
-        throw new Error("Network is not connected");
-      }
-
       await response.json().then((r) => {
         response.data = r.data;
         response.error = r.error;
         response.success = r.success;
       });
+
+      if (!response.success) {
+        throw new Error(response.error);
+      }
     } catch (ex) {
-      throw new Error(ex);
+      errorHandler(ex, true);
+    } finally {
+      return response;
     }
-    return response;
   }
 
   export async function get<T>(request: HttpRequest): Promise<HttpResponse<T>> {
