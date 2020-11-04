@@ -59,6 +59,11 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
     public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
         if (D) Log.d(TAG, "HoneywellBarcodeReader - Barcode scan read");
         sendEvent(BARCODE_READ_SUCCESS, barcodeReadEvent.getBarcodeData());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

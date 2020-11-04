@@ -5,18 +5,17 @@ import { Responses } from "./api/Responses";
 import * as Storage from "./Utils/LocalStorage";
 
 export default class TaskService {
-  static scan = async (barcode?: string) => {
+  static scan = async (barcode?: string): Promise<Api.HttpResponse<{}>> => {
     const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
       Storage.StorageKeys.USER
     );
 
-    if (barcode) {
-      await TaskService.createTask(barcode, user?.UserId);
-    }
+    const response = await TaskService.createTask(barcode, user?.UserId);
+    return response;
   };
 
   static createTask = async (
-    PlanNum: string,
+    PlanNum?: string,
     UserId?: number
   ): Promise<Api.HttpResponse<{}>> => {
     const request: Api.HttpRequest = {
