@@ -27,6 +27,7 @@ export namespace Responses {
     ID: number;
     StrID: string;
     GoodId: number;
+    BoxId?: number;
     Count: number;
     GoodName: string;
     GoodArticle: string;

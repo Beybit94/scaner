@@ -10,23 +10,18 @@ export enum GoodAction {
   remove,
 }
 export default class GoodService {
-  static crud = async (
-    action: GoodAction,
-    good: Responses.GoodModel,
-    boxId?: number
-  ): Promise<[Responses.GoodModel] | null | undefined> => {
+  static crud = async (action: GoodAction, good: Responses.GoodModel) => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    //let response: Api.HttpResponse<{}> | undefined;
     switch (action) {
       case GoodAction.add:
         await GoodService.addGood(
           good?.BarCode,
           task?.PlanNum,
           task?.ID,
-          boxId,
+          good.BoxId,
           good.GoodArticle
         );
         break;
@@ -39,45 +34,43 @@ export default class GoodService {
       default:
         break;
     }
-
-    let result: Api.HttpResponse<[Responses.GoodModel]>;
-    if (boxId) {
-      result = await GoodService.getGoodByBox(boxId, task?.ID);
-    } else {
-      result = await GoodService.getGoodByTask(task?.ID);
-    }
-
-    return result.data;
   };
 
-  static getGoodByTask = async (
-    TaskId?: number
-  ): Promise<Api.HttpResponse<[Responses.GoodModel]>> => {
+  static getGoodByTask = async (): Promise<
+    [Responses.GoodModel] | undefined
+  > => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
+
     const request: Api.HttpRequest = {
       Url: Constants.Endpoints.GOOD_BY_TASK,
       Body: {
-        TaskId: TaskId,
+        TaskId: task?.ID,
       },
     };
 
     const response = await Api.post<[Responses.GoodModel]>(request);
-    return response;
+    return response.data;
   };
 
   static getGoodByBox = async (
-    BoxId: number,
-    TaskId?: number
-  ): Promise<Api.HttpResponse<[Responses.GoodModel]>> => {
+    BoxId: number
+  ): Promise<[Responses.GoodModel] | undefined> => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
+
     const request: Api.HttpRequest = {
       Url: Constants.Endpoints.GOOD_BY_BOX,
       Body: {
         BoxId: BoxId,
-        TaskId: TaskId,
+        TaskId: task?.ID,
       },
     };
 
     const response = await Api.post<[Responses.GoodModel]>(request);
-    return response;
+    return response.data;
   };
 
   static getGoodByFilter = async (

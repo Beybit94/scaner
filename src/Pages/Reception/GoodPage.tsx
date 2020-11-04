@@ -27,6 +27,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     isLoading: false,
     isScanning: false,
     isSearching: false,
+    isRefreshing: false,
     visible: false,
     currentRow: 0,
     currentCount: 0,
@@ -48,10 +49,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     this.scan();
     Honeywell.startReader();
     Honeywell.onBarcodeReadSuccess((event: any) => {
-      const { isScanning } = this.state;
-      if (!isScanning) {
-        this.scan(event);
-      }
+      this.scan(event);
     });
     Honeywell.onBarcodeReadFail(() => {});
   }
@@ -72,12 +70,12 @@ export default class GoodPage extends Component<GoodPageProps> {
         this.setState({ currentCount: good.Count });
       } else {
         if (row > 0) {
-          this.setState({ isLoading: true, isScanning: true });
+          this.setState({ isLoading: true });
           const good = data[currentRow] as Responses.GoodModel;
           good.Count = currentCount;
 
-          await GoodService.crud(GoodAction.edit, good).then((goods) => {
-            this.setState({ data: goods });
+          await GoodService.crud(GoodAction.edit, good).then(async () => {
+            await this.onRefresh();
           });
         }
       }
@@ -88,10 +86,10 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   itemRemove = async (model: Responses.GoodModel) => {
     try {
-      this.setState({ isLoading: true, isScanning: true });
+      this.setState({ isLoading: true });
 
-      await GoodService.crud(GoodAction.remove, model).then((goods) => {
-        this.setState({ data: goods });
+      await GoodService.crud(GoodAction.remove, model).then(async () => {
+        await this.onRefresh();
       });
     } finally {
       this.setState({ isLoading: false });
@@ -100,16 +98,16 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   defect = async (model: Responses.GoodModel) => {
     try {
-      this.setState({ isLoading: true, isScanning: true });
+      this.setState({ isLoading: true });
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
   onRefresh = async () => {
-    const good = {} as Responses.GoodModel;
-    await GoodService.crud(0, good).then((goods) => {
-      this.setState({ data: goods });
+    this.setState({ isRefreshing: true });
+    await GoodService.getGoodByTask().then((goods) => {
+      this.setState({ data: goods, isRefreshing: false });
     });
   };
 
@@ -148,27 +146,36 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   scan = async (data?: string, article?: string) => {
     try {
-      const { isGood } = this.state;
-      this.setState({ isLoading: true, isScanning: true });
-      const good = {} as Responses.GoodModel;
+      const { isScanning } = this.state;
+      if (!isScanning) {
+        this.setState({ isLoading: true, isScanning: true });
+        const good = {} as Responses.GoodModel;
 
-      if (!isGood) {
-        await TaskService.scan(data).then((task) => {
-          this.setState({
-            isGood: true,
-            title: `Планирование: ${task?.PlanNum}`,
+        if (!this.state.isGood) {
+          await TaskService.scan(data).then(() => {
+            TaskService.getActiveTask().then(async (task) => {
+              this.setState({
+                isGood: true,
+                title: `Планирование: ${task?.PlanNum}`,
+              });
+
+              await this.onRefresh();
+            });
           });
-        });
+        } else {
+          good.BarCode = data || "";
+          good.GoodArticle = article || "";
 
-        this.onRefresh();
-      } else {
-        good.BarCode = data || "";
-        good.GoodArticle = article || "";
+          await GoodService.crud(GoodAction.add, good).then(async () => {
+            this.setState({
+              searches: [],
+              searchQuery: "",
+              isSearching: false,
+            });
 
-        await GoodService.crud(GoodAction.add, good).then((goods) => {
-          this.setState({ data: goods });
-          this.setState({ searches: [], searchQuery: "", isSearching: false });
-        });
+            await this.onRefresh();
+          });
+        }
       }
     } finally {
       this.setState({ isLoading: false, isScanning: false });
@@ -179,6 +186,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     const {
       isLoading,
       isSearching,
+      isRefreshing,
       visible,
       title,
       searchQuery,
@@ -212,6 +220,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     return (
       <GoodTemplate
         isLoading={isLoading}
+        isRefreshing={isRefreshing}
         title={title}
         data={data}
         visible={visible}

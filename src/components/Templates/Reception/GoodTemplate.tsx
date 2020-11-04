@@ -41,6 +41,7 @@ type Props = {
   title: string;
   data: Responses.GoodModel[];
   isLoading: boolean;
+  isRefreshing: boolean;
   visible: boolean;
   scan: (data: string) => void;
   defect: (model: Responses.GoodModel) => void;
@@ -80,6 +81,7 @@ export default class GoodTemplate extends Component<Props> {
       title,
       data,
       isLoading,
+      isRefreshing,
       visible,
       defect,
       closeTask,
@@ -100,7 +102,7 @@ export default class GoodTemplate extends Component<Props> {
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
-            refreshing={isLoading}
+            refreshing={isRefreshing}
             onRefresh={onRefresh}
           />
           <CustomButton label={"Расхождение"} onClick={difference} />

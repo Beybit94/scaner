@@ -21,6 +21,7 @@ export default class BoxPage extends Component<BoxPageProps> {
     isLoading: false,
     isScanning: false,
     isSearching: false,
+    isRefreshing: false,
     visible: false,
     currentRow: 0,
     currentCount: 0,
@@ -59,7 +60,6 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   itemEdit = async (visible: boolean, row: number) => {
     try {
-      const { box } = this.props.route.params;
       const { data, currentRow, currentCount } = this.state;
       this.setState({ visible: visible, currentRow: row });
       if (visible) {
@@ -67,15 +67,13 @@ export default class BoxPage extends Component<BoxPageProps> {
         this.setState({ currentCount: good.Count });
       } else {
         if (row > 0) {
-          this.setState({ isLoading: true, isScanning: true });
+          this.setState({ isLoading: true });
           const good = data[currentRow] as Responses.GoodModel;
           good.Count = currentCount;
 
-          await GoodService.crud(GoodAction.edit, good, box.ID).then(
-            (goods) => {
-              this.setState({ data: goods });
-            }
-          );
+          await GoodService.crud(GoodAction.edit, good).then(async () => {
+            await this.onRefresh();
+          });
         }
       }
     } finally {
@@ -85,11 +83,10 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   itemRemove = async (model: Responses.GoodModel) => {
     try {
-      const { box } = this.props.route.params;
-      this.setState({ isLoading: true, isScanning: true });
+      this.setState({ isLoading: true });
 
-      await GoodService.crud(GoodAction.remove, model, box.ID).then((goods) => {
-        this.setState({ data: goods });
+      await GoodService.crud(GoodAction.remove, model).then(async () => {
+        await this.onRefresh();
       });
     } finally {
       this.setState({ isLoading: false });
@@ -98,17 +95,17 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   defect = async (model: Responses.GoodModel) => {
     try {
-      this.setState({ isLoading: true, isScanning: true });
+      this.setState({ isLoading: true });
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
   onRefresh = async () => {
+    this.setState({ isRefreshing: true });
     const { box } = this.props.route.params;
-    const good = {} as Responses.GoodModel;
-    await GoodService.crud(0, good, box.ID).then((goods) => {
-      this.setState({ data: goods });
+    await GoodService.getGoodByBox(box.ID).then((goods) => {
+      this.setState({ data: goods, isRefreshing: false });
     });
   };
 
@@ -132,21 +129,29 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   scan = async (data?: string, article?: string) => {
     try {
-      const { box } = this.props.route.params;
-      this.setState({ isLoading: true, isScanning: true });
-      const good = {} as Responses.GoodModel;
+      const { isScanning } = this.state;
+      if (!isScanning) {
+        const { box } = this.props.route.params;
+        this.setState({ isLoading: true, isScanning: true });
+        const good = {} as Responses.GoodModel;
 
-      if (data) {
-        good.BarCode = data;
-        good.GoodArticle = article || "";
+        if (data) {
+          good.BarCode = data;
+          good.GoodArticle = article || "";
+          good.BoxId = box.ID;
 
-        await GoodService.crud(GoodAction.add, good, box.ID).then((goods) => {
-          this.setState({ data: goods });
-          this.setState({ searches: [], searchQuery: "", isSearching: false });
-        });
-      } else {
-        this.setState({ title: box.GoodName });
-        this.onRefresh();
+          await GoodService.crud(GoodAction.add, good).then(async () => {
+            this.setState({
+              searches: [],
+              searchQuery: "",
+              isSearching: false,
+            });
+            await this.onRefresh();
+          });
+        } else {
+          this.setState({ title: box.GoodName });
+          await this.onRefresh();
+        }
       }
     } finally {
       this.setState({ isLoading: false, isScanning: false });
@@ -157,6 +162,7 @@ export default class BoxPage extends Component<BoxPageProps> {
     const {
       isLoading,
       isSearching,
+      isRefreshing,
       searchQuery,
       searches,
       visible,
@@ -190,6 +196,7 @@ export default class BoxPage extends Component<BoxPageProps> {
     return (
       <BoxTemplate
         isLoading={isLoading}
+        isRefreshing={isRefreshing}
         title={title}
         data={data}
         visible={visible}

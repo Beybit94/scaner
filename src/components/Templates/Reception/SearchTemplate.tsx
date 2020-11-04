@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
 import { FlatList, View, Text } from "react-native";
-import { ListItem, Icon } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import { Searchbar } from "react-native-paper";
 
 import Loading from "../Shared/Loading";

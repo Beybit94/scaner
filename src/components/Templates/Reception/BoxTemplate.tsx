@@ -41,6 +41,7 @@ type Props = {
   title: string;
   data: Responses.GoodModel[];
   isLoading: boolean;
+  isRefreshing: boolean;
   visible: boolean;
   defect: (model: Responses.GoodModel) => void;
   itemEdit: (visible: boolean, row: number) => void;
@@ -67,6 +68,7 @@ export default class BoxTemplate extends Component<Props> {
       title,
       data,
       isLoading,
+      isRefreshing,
       visible,
       defect,
       onRefresh,
@@ -86,7 +88,7 @@ export default class BoxTemplate extends Component<Props> {
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
-            refreshing={isLoading}
+            refreshing={isRefreshing}
             onRefresh={onRefresh}
           />
         </Loading>
