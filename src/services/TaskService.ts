@@ -5,17 +5,22 @@ import { Responses } from "./api/Responses";
 import * as Storage from "./Utils/LocalStorage";
 
 export default class TaskService {
-  static scan = async (barcode?: string): Promise<Api.HttpResponse<{}>> => {
+  static scan = async (
+    barcode?: string
+  ): Promise<Api.HttpResponse<{}> | undefined> => {
     const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
       Storage.StorageKeys.USER
     );
 
-    const response = await TaskService.createTask(barcode, user?.UserId);
+    let response;
+    if (barcode) {
+      response = await TaskService.createTask(barcode, user?.UserId);
+    }
     return response;
   };
 
   static createTask = async (
-    PlanNum?: string,
+    PlanNum: string,
     UserId?: number
   ): Promise<Api.HttpResponse<{}>> => {
     const request: Api.HttpRequest = {
@@ -50,53 +55,71 @@ export default class TaskService {
       };
 
       const response = await Api.post<Responses.TaskModel>(request);
-      return response.data;
+      if (response.data) {
+        await Storage.LocalStorage.setItem(
+          Storage.StorageKeys.ACTIVE_TASK,
+          response.data
+        );
+
+        return response.data;
+      }
+      return;
     }
   };
 
-  static endTask = async (files: FormDataValue[]) => {
+  static endTask = async (
+    files: FormDataValue[]
+  ): Promise<Api.HttpResponse<{}> | undefined> => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    await TaskService.upload(files, task?.ID).then(async (upload) => {
-      if (upload.success) {
+    const upload = await TaskService.upload(files, task?.ID);
+    if (upload.success) {
+      if (task) {
         const request: Api.HttpRequest = {
           Url: Constants.Endpoints.END_TASK,
           Body: {
-            TaskId: task?.ID,
-            PlanNum: task?.PlanNum,
+            TaskId: task.ID,
           },
         };
 
-        await Api.post<{}>(request).then(async (response) => {
-          if (response.success) {
-            await Storage.LocalStorage.deleteItem(
-              Storage.StorageKeys.ACTIVE_TASK
-            );
-          }
-        });
+        const response = await Api.post<{}>(request);
+        if (response.success) {
+          await Storage.LocalStorage.deleteItem(
+            Storage.StorageKeys.ACTIVE_TASK
+          );
+        }
+
+        return response;
       }
-    });
+    }
+
+    return;
   };
 
-  static closeTask = async () => {
+  static closeTask = async (): Promise<Api.HttpResponse<{}> | undefined> => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.CLOSE_TASK,
-      Body: {
-        TaskId: task?.ID,
-      },
-    };
+    if (task) {
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.CLOSE_TASK,
+        Body: {
+          TaskId: task.ID,
+        },
+      };
 
-    await Api.post<{}>(request).then(async (response) => {
+      const response = await Api.post<{}>(request);
       if (response.success) {
         await Storage.LocalStorage.deleteItem(Storage.StorageKeys.ACTIVE_TASK);
       }
-    });
+
+      return response;
+    }
+
+    return;
   };
 
   static difference = async (): Promise<

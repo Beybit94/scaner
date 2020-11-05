@@ -22,6 +22,7 @@ export default class AuthService {
 
   static signOutAsync = async () => {
     await LocalStorage.setItem(StorageKeys.LOGEDIN, false);
+    await LocalStorage.deleteItem(StorageKeys.ACTIVE_TASK);
   };
 
   static rememberUser = async (model: ViewModels.LoginModel) => {

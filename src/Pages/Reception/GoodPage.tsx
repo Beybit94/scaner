@@ -49,7 +49,9 @@ export default class GoodPage extends Component<GoodPageProps> {
     this.scan();
     Honeywell.startReader();
     Honeywell.onBarcodeReadSuccess((event: any) => {
-      this.scan(event);
+      if (!this.state.isScanning) {
+        this.scan(event);
+      }
     });
     Honeywell.onBarcodeReadFail(() => {});
   }
@@ -105,7 +107,6 @@ export default class GoodPage extends Component<GoodPageProps> {
   };
 
   onRefresh = async () => {
-    this.setState({ isRefreshing: true });
     await GoodService.getGoodByTask().then((goods) => {
       this.setState({ data: goods, isRefreshing: false });
     });
@@ -132,12 +133,14 @@ export default class GoodPage extends Component<GoodPageProps> {
   closeTask = async () => {
     try {
       this.setState({ isLoading: true });
-      await TaskService.closeTask().then(() => {
-        this.setState({
-          isGood: false,
-          title: "Планирование:",
-          data: [],
-        });
+      await TaskService.closeTask().then((response) => {
+        if (response) {
+          this.setState({
+            isGood: false,
+            title: "Планирование:",
+            data: [],
+          });
+        }
       });
     } finally {
       this.setState({ isLoading: false });
@@ -146,7 +149,9 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   scan = async (data?: string, article?: string) => {
     try {
+      this.setState({ isRefreshing: true });
       const { isScanning } = this.state;
+
       if (!isScanning) {
         this.setState({ isLoading: true, isScanning: true });
         const good = {} as Responses.GoodModel;
@@ -154,10 +159,12 @@ export default class GoodPage extends Component<GoodPageProps> {
         if (!this.state.isGood) {
           await TaskService.scan(data).then(() => {
             TaskService.getActiveTask().then(async (task) => {
-              this.setState({
-                isGood: true,
-                title: `Планирование: ${task?.PlanNum}`,
-              });
+              if (task) {
+                this.setState({
+                  isGood: true,
+                  title: `Планирование: ${task?.PlanNum}`,
+                });
+              }
 
               await this.onRefresh();
             });

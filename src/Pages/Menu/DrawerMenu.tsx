@@ -81,11 +81,11 @@ export default class DrawerMenuContent extends React.Component {
   _signOut = async () => {
     const navigation = this.context;
 
-    await AuthService.signOutAsync();
-
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "SignIn" }],
+    await AuthService.signOutAsync().then(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "SignIn" }],
+      });
     });
   };
 
