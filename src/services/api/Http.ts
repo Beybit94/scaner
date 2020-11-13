@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-undef */
-import { Alert } from "react-native";
+import { Alert, Vibration } from "react-native";
 
 import * as Constants from "./Constants";
 
@@ -86,6 +86,7 @@ export namespace Api {
         throw new Error(response.error);
       }
     } catch (ex) {
+      Vibration.vibrate(1000);
       errorHandler(ex, true);
     } finally {
       return response;

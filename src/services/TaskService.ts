@@ -134,7 +134,7 @@ export default class TaskService {
       const request: Api.HttpRequest = {
         Url: Constants.Endpoints.DIFFERENCE,
         Body: {
-          TaskId: task.ID,
+          TaskId: task.Id,
           PlanNum: task.PlanNum,
         },
       };
