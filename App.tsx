@@ -12,6 +12,7 @@ import { Alert } from "react-native";
 
 import { SignIn, Splash, DrawerMenu } from "./src/Pages";
 import { LoadAssets } from "./src/services";
+import { Honeywell } from "./src/Native";
 
 const AppStack = createStackNavigator();
 const AuthStack = createStackNavigator();
@@ -22,7 +23,7 @@ type Props = {
 
 const errorHandler = (error: Error, isFatal: boolean) => {
   if (isFatal) {
-    Alert.alert("Error:"+error.name, error.message, [
+    Alert.alert("Error:" + error.name, error.message, [
       {
         text: "OK",
       },
@@ -43,6 +44,7 @@ class AuthStackComponent extends React.Component<Props> {
     this.props.navigation.setOptions({
       headerShown: false,
     });
+    Honeywell.startReader();
   }
 
   render() {

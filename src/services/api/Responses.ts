@@ -14,7 +14,7 @@ export namespace Responses {
   }
 
   export interface TaskModel extends BaseResponse {
-    ID: number;
+    Id: number;
     StrID: string;
     DivisionId: number;
     UserId: number;
@@ -24,7 +24,7 @@ export namespace Responses {
   }
 
   export interface GoodModel extends BaseResponse {
-    ID: number;
+    Id: number;
     StrID: string;
     GoodId: number;
     BoxId?: number;
@@ -37,7 +37,7 @@ export namespace Responses {
   }
 
   export interface DifferenceModel extends BaseResponse {
-    ID: number;
+    Id: number;
     StrID: string;
     NumberDoc: string;
     GoodId: number;

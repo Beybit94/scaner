@@ -38,21 +38,23 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  title: string;
+  box: Responses.GoodModel;
   data: Responses.GoodModel[];
-  isLoading: boolean;
-  isRefreshing: boolean;
   visible: boolean;
+  isLoading: boolean;
+  scan: (id: string) => void;
   defect: (model: Responses.GoodModel) => void;
   itemEdit: (visible: boolean, row: number) => void;
-  itemRemove: (model: Responses.GoodModel) => void;
   onRefresh: () => void;
-  scan: (id: string) => void;
+  itemRemove: (model: Responses.GoodModel) => void;
   handleStateChange: (code: string, value: any) => void;
 };
 
 export default class BoxTemplate extends Component<Props> {
   static contextType = NavigationContext;
+  state = {
+    isActive: true,
+  };
 
   showScan = () => {
     const { scan } = this.props;
@@ -64,15 +66,15 @@ export default class BoxTemplate extends Component<Props> {
 
   render() {
     const { showScan } = this;
+    const { isActive } = this.state;
     const {
-      title,
+      box,
       data,
-      isLoading,
-      isRefreshing,
       visible,
+      isLoading,
       defect,
-      onRefresh,
       itemEdit,
+      onRefresh,
       itemRemove,
       handleStateChange,
     } = this.props;
@@ -81,14 +83,13 @@ export default class BoxTemplate extends Component<Props> {
 
     return (
       <View style={styles.container}>
-        <ScanBarcode title={title} showScan={showScan} />
+        <ScanBarcode title={box.GoodName} showScan={showScan} />
         <Loading isLoading={isLoading}>
           <GoodList
             data={data}
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
-            refreshing={isRefreshing}
             onRefresh={onRefresh}
           />
         </Loading>

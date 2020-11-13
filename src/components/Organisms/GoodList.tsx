@@ -12,7 +12,6 @@ type Props = {
   itemEdit: (row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
   onRefresh: () => void;
-  refreshing: boolean;
 };
 
 export default class GoodList extends Component<Props> {
@@ -26,14 +25,7 @@ export default class GoodList extends Component<Props> {
   };
 
   render() {
-    const {
-      data,
-      defect,
-      itemEdit,
-      itemRemove,
-      onRefresh,
-      refreshing,
-    } = this.props;
+    const { data, defect, itemEdit, itemRemove, onRefresh } = this.props;
 
     return (
       <SwipeListView
@@ -58,7 +50,7 @@ export default class GoodList extends Component<Props> {
         refreshControl={
           <RefreshControl
             colors={["#9Bd35A", "#689F38"]}
-            refreshing={refreshing}
+            refreshing={false}
             onRefresh={onRefresh}
           />
         }

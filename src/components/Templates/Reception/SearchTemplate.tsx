@@ -29,7 +29,7 @@ export default class SearchTemplate extends Component<Props> {
     return (
       <View style={{ flex: 1 }}>
         <Searchbar
-          placeholder="Поиск по атрибуту товара"
+          placeholder="Поиск товара"
           onChangeText={(value) => handleStateChange("searchQuery", value)}
           value={searchQuery}
           onIconPress={search}

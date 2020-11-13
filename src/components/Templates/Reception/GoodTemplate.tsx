@@ -38,16 +38,15 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  title: string;
   data: Responses.GoodModel[];
-  isLoading: boolean;
-  isRefreshing: boolean;
+  title: string;
   visible: boolean;
+  isLoading: boolean;
   scan: (data: string) => void;
   defect: (model: Responses.GoodModel) => void;
+  itemEdit: (visible: boolean, row: number) => void;
   onRefresh: () => void;
   closeTask: () => void;
-  itemEdit: (visible: boolean, row: number) => void;
   itemRemove: (model: Responses.GoodModel) => void;
   handleStateChange: (code: string, value: any) => void;
 };
@@ -78,21 +77,19 @@ export default class GoodTemplate extends Component<Props> {
   render() {
     const { showScan, difference } = this;
     const {
-      title,
       data,
-      isLoading,
-      isRefreshing,
+      title,
       visible,
+      isLoading,
       defect,
+      itemEdit,
       closeTask,
       onRefresh,
-      itemEdit,
       itemRemove,
       handleStateChange,
     } = this.props;
 
     const buttons = ["Закрыть", "Изменить"];
-
     return (
       <View style={styles.container}>
         <ScanBarcode title={title} showScan={showScan} />
@@ -102,7 +99,6 @@ export default class GoodTemplate extends Component<Props> {
             defect={defect}
             itemEdit={(row: number) => itemEdit(true, row)}
             itemRemove={itemRemove}
-            refreshing={isRefreshing}
             onRefresh={onRefresh}
           />
           <CustomButton label={"Расхождение"} onClick={difference} />

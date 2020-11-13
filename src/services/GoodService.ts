@@ -5,7 +5,8 @@ import { Responses } from "./api/Responses";
 import * as Storage from "./Utils/LocalStorage";
 
 export enum GoodAction {
-  add = 1,
+  good = 1,
+  box,
   edit,
   remove,
 }
@@ -16,20 +17,32 @@ export default class GoodService {
     );
 
     switch (action) {
-      case GoodAction.add:
-        await GoodService.addGood(
-          good?.BarCode,
-          task?.PlanNum,
-          task?.ID,
-          good.BoxId,
-          good.GoodArticle
-        );
+      case GoodAction.good:
+        if (task) {
+          await GoodService.addGood(
+            task.Id,
+            task.PlanNum,
+            good?.BarCode,
+            good.GoodArticle
+          );
+        }
+        break;
+      case GoodAction.box:
+        if (task) {
+          await GoodService.addGood(
+            task.Id,
+            task.PlanNum,
+            good?.BarCode,
+            good.GoodArticle,
+            good.BoxId
+          );
+        }
         break;
       case GoodAction.edit:
-        await GoodService.editGood(good.ID, good.Count);
+        await GoodService.editGood(good.Id, good.Count);
         break;
       case GoodAction.remove:
-        await GoodService.removeGood(good.ID);
+        await GoodService.removeGood(good.Id);
         break;
       default:
         break;
@@ -46,7 +59,7 @@ export default class GoodService {
     const request: Api.HttpRequest = {
       Url: Constants.Endpoints.GOOD_BY_TASK,
       Body: {
-        TaskId: task?.ID,
+        TaskId: task?.Id,
       },
     };
 
@@ -65,7 +78,7 @@ export default class GoodService {
       Url: Constants.Endpoints.GOOD_BY_BOX,
       Body: {
         BoxId: BoxId,
-        TaskId: task?.ID,
+        TaskId: task?.Id,
       },
     };
 
@@ -88,11 +101,11 @@ export default class GoodService {
   };
 
   static addGood = async (
+    TaskId: number,
+    PlanNum: string,
     BarCode: string,
-    PlanNum?: string,
-    TaskId?: number,
-    BoxId?: number,
-    GoodArticle?: string
+    GoodArticle?: string,
+    BoxId?: number
   ): Promise<Api.HttpResponse<{}>> => {
     const request: Api.HttpRequest = {
       Url: Constants.Endpoints.CREATE_GOOD,

@@ -1,30 +1,28 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Keyboard } from "react-native";
 import { Icon } from "react-native-elements";
 
-import { Honeywell } from "../../Native";
 import { BoxTemplate, SearchTemplate } from "../../components/Templates";
 import { GoodService, GoodAction, Responses } from "../../services";
+import { Honeywell } from "../../Native";
 
 import { RootStackParamList } from "./ReceptionStackParam";
 
 type BoxPageProps = StackScreenProps<RootStackParamList, "BoxPage">;
 export default class BoxPage extends Component<BoxPageProps> {
   state = {
-    title: "",
-    searchQuery: "",
     data: [],
+    title: "",
     searches: [],
-    isLoading: false,
-    isScanning: false,
-    isSearching: false,
-    isRefreshing: false,
-    visible: false,
     currentRow: 0,
     currentCount: 0,
+    searchQuery: "",
+    visible: false,
+    isInitial: true,
+    isLoading: false,
+    isSearching: false,
   };
 
   componentDidMount() {
@@ -39,16 +37,16 @@ export default class BoxPage extends Component<BoxPageProps> {
         />
       ),
     });
+    navigation.addListener("focus", () => {
+      Honeywell.onBarcodeReadSuccess((event: any) => {
+        this.scan(event);
+      });
+    });
+    navigation.addListener("blur", () => {
+      Honeywell.offBarcodeReadSuccess();
+    });
 
     this.scan();
-    Honeywell.startReader();
-    Honeywell.onBarcodeReadSuccess((event: any) => {
-      const { isScanning } = this.state;
-      if (!isScanning) {
-        this.scan(event);
-      }
-    });
-    Honeywell.onBarcodeReadFail(() => {});
   }
 
   handleStateChange = (inputName: string, inputValue: unknown) => {
@@ -102,10 +100,10 @@ export default class BoxPage extends Component<BoxPageProps> {
   };
 
   onRefresh = async () => {
-    this.setState({ isRefreshing: true });
     const { box } = this.props.route.params;
-    await GoodService.getGoodByBox(box.ID).then((goods) => {
-      this.setState({ data: goods, isRefreshing: false });
+    this.setState({ isLoading: true });
+    await GoodService.getGoodByBox(box.Id).then((goods) => {
+      this.setState({ data: goods, isLoading: false });
     });
   };
 
@@ -129,54 +127,53 @@ export default class BoxPage extends Component<BoxPageProps> {
 
   scan = async (data?: string, article?: string) => {
     try {
-      const { isScanning } = this.state;
-      if (!isScanning) {
-        const { box } = this.props.route.params;
-        this.setState({ isLoading: true, isScanning: true });
+      const { box } = this.props.route.params;
+      this.setState({ isLoading: true });
+
+      if (!this.state.isInitial) {
         const good = {} as Responses.GoodModel;
+        good.BarCode = data || "";
+        good.GoodArticle = article || "";
+        good.BoxId = box.Id;
 
-        if (data) {
-          good.BarCode = data;
-          good.GoodArticle = article || "";
-          good.BoxId = box.ID;
-
-          await GoodService.crud(GoodAction.add, good).then(async () => {
-            this.setState({
-              searches: [],
-              searchQuery: "",
-              isSearching: false,
-            });
-            await this.onRefresh();
+        await GoodService.crud(GoodAction.box, good).then(async () => {
+          this.setState({
+            searches: [],
+            searchQuery: "",
+            isSearching: false,
           });
-        } else {
-          this.setState({ title: box.GoodName });
           await this.onRefresh();
-        }
+        });
+      } else {
+        this.setState({
+          title: box.GoodName,
+          isInitial: false,
+        });
+        await this.onRefresh();
       }
     } finally {
-      this.setState({ isLoading: false, isScanning: false });
+      this.setState({ isLoading: false });
     }
   };
 
   render() {
+    const { box } = this.props.route.params;
     const {
+      data,
+      searches,
+      searchQuery,
+      visible,
       isLoading,
       isSearching,
-      isRefreshing,
-      searchQuery,
-      searches,
-      visible,
-      title,
-      data,
     } = this.state;
 
     const {
-      defect,
-      onRefresh,
-      itemEdit,
-      itemRemove,
       scan,
+      defect,
       search,
+      itemEdit,
+      onRefresh,
+      itemRemove,
       handleStateChange,
     } = this;
 
@@ -195,16 +192,15 @@ export default class BoxPage extends Component<BoxPageProps> {
 
     return (
       <BoxTemplate
-        isLoading={isLoading}
-        isRefreshing={isRefreshing}
-        title={title}
+        box={box}
         data={data}
         visible={visible}
-        defect={defect}
-        onRefresh={onRefresh}
-        itemEdit={itemEdit}
-        itemRemove={itemRemove}
+        isLoading={isLoading}
         scan={scan}
+        defect={defect}
+        itemEdit={itemEdit}
+        onRefresh={onRefresh}
+        itemRemove={itemRemove}
         handleStateChange={handleStateChange}
       />
     );

@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
 import { Keyboard } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
 
-import { Honeywell } from "../../Native";
 import { GoodTemplate, SearchTemplate } from "../../components/Templates";
 import {
   GoodService,
@@ -13,24 +11,23 @@ import {
   Responses,
   TaskService,
 } from "../../services";
+import { Honeywell } from "../../Native";
 
 import { RootStackParamList } from "./ReceptionStackParam";
 
 type GoodPageProps = StackScreenProps<RootStackParamList, "GoodPage">;
 export default class GoodPage extends Component<GoodPageProps> {
   state = {
-    title: "Планирование:",
-    searchQuery: "",
     data: [],
+    title: "Планирование:",
     searches: [],
-    isGood: false,
-    isLoading: false,
-    isScanning: false,
-    isSearching: false,
-    isRefreshing: false,
-    visible: false,
     currentRow: 0,
     currentCount: 0,
+    searchQuery: "",
+    visible: false,
+    isInitial: true,
+    isLoading: false,
+    isSearching: false,
   };
 
   componentDidMount() {
@@ -45,15 +42,16 @@ export default class GoodPage extends Component<GoodPageProps> {
         />
       ),
     });
+    navigation.addListener("focus", () => {
+      Honeywell.onBarcodeReadSuccess((event: any) => {
+        this.scan(event);
+      });
+    });
+    navigation.addListener("blur", () => {
+      Honeywell.offBarcodeReadSuccess();
+    });
 
     this.scan();
-    Honeywell.startReader();
-    Honeywell.onBarcodeReadSuccess((event: any) => {
-      if (!this.state.isScanning) {
-        this.scan(event);
-      }
-    });
-    Honeywell.onBarcodeReadFail(() => {});
   }
 
   handleStateChange = (inputName: string, inputValue: unknown) => {
@@ -107,8 +105,9 @@ export default class GoodPage extends Component<GoodPageProps> {
   };
 
   onRefresh = async () => {
+    this.setState({ isLoading: true });
     await GoodService.getGoodByTask().then((goods) => {
-      this.setState({ data: goods, isRefreshing: false });
+      this.setState({ data: goods, isLoading: false });
     });
   };
 
@@ -149,56 +148,51 @@ export default class GoodPage extends Component<GoodPageProps> {
 
   scan = async (data?: string, article?: string) => {
     try {
-      this.setState({ isRefreshing: true });
-      const { isScanning } = this.state;
+      this.setState({ isLoading: true });
 
-      if (!isScanning) {
-        this.setState({ isLoading: true, isScanning: true });
+      if (!this.state.isInitial) {
         const good = {} as Responses.GoodModel;
+        good.BarCode = data || "";
+        good.GoodArticle = article || "";
 
-        if (!this.state.isGood) {
-          await TaskService.scan(data).then(() => {
-            TaskService.getActiveTask().then(async (task) => {
-              if (task) {
-                this.setState({
-                  isGood: true,
-                  title: `Планирование: ${task?.PlanNum}`,
-                });
-              }
-
-              await this.onRefresh();
-            });
+        await GoodService.crud(GoodAction.good, good).then(async () => {
+          this.setState({
+            searches: [],
+            searchQuery: "",
+            isSearching: false,
           });
-        } else {
-          good.BarCode = data || "";
-          good.GoodArticle = article || "";
 
-          await GoodService.crud(GoodAction.add, good).then(async () => {
-            this.setState({
-              searches: [],
-              searchQuery: "",
-              isSearching: false,
-            });
+          await this.onRefresh();
+        });
+      } else {
+        await TaskService.scan(data).then(() => {
+          this.setState({ isScanning: false });
+          TaskService.getActiveTask().then(async (task) => {
+            if (task) {
+              this.setState({
+                isInitial: false,
+                title: `Планирование: ${task?.PlanNum}`,
+              });
+            }
 
             await this.onRefresh();
           });
-        }
+        });
       }
     } finally {
-      this.setState({ isLoading: false, isScanning: false });
+      this.setState({ isLoading: false });
     }
   };
 
   render() {
     const {
+      data,
+      title,
+      searches,
+      searchQuery,
+      visible,
       isLoading,
       isSearching,
-      isRefreshing,
-      visible,
-      title,
-      searchQuery,
-      searches,
-      data,
     } = this.state;
     const {
       scan,
@@ -226,17 +220,16 @@ export default class GoodPage extends Component<GoodPageProps> {
 
     return (
       <GoodTemplate
-        isLoading={isLoading}
-        isRefreshing={isRefreshing}
-        title={title}
         data={data}
+        title={title}
         visible={visible}
-        defect={defect}
-        onRefresh={onRefresh}
-        itemEdit={itemEdit}
-        itemRemove={itemRemove}
+        isLoading={isLoading}
         scan={scan}
+        defect={defect}
+        itemEdit={itemEdit}
         closeTask={closeTask}
+        onRefresh={onRefresh}
+        itemRemove={itemRemove}
         handleStateChange={handleStateChange}
       />
     );
