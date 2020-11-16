@@ -52,10 +52,6 @@ type Props = {
 
 export default class BoxTemplate extends Component<Props> {
   static contextType = NavigationContext;
-  state = {
-    isActive: true,
-  };
-
   showScan = () => {
     const { scan } = this.props;
     const navigation = this.context;
@@ -66,7 +62,6 @@ export default class BoxTemplate extends Component<Props> {
 
   render() {
     const { showScan } = this;
-    const { isActive } = this.state;
     const {
       box,
       data,

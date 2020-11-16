@@ -14,7 +14,7 @@ export default class TaskService {
 
     let response;
     if (barcode) {
-      response = await TaskService.createTask(barcode, user?.UserId);
+      response = await TaskService.createTask(barcode, user?.Id);
     }
     return response;
   };
@@ -49,7 +49,7 @@ export default class TaskService {
       const request: Api.HttpRequest = {
         Url: Constants.Endpoints.ACTIVE_TASK,
         Body: {
-          UserId: user?.UserId,
+          UserId: user?.Id,
           DivisionId: user?.UserDivisionId,
         },
       };
@@ -80,7 +80,7 @@ export default class TaskService {
         const request: Api.HttpRequest = {
           Url: Constants.Endpoints.END_TASK,
           Body: {
-            TaskId: task.ID,
+            TaskId: task.Id,
           },
         };
 
@@ -107,7 +107,7 @@ export default class TaskService {
       const request: Api.HttpRequest = {
         Url: Constants.Endpoints.CLOSE_TASK,
         Body: {
-          TaskId: task.ID,
+          TaskId: task.Id,
         },
       };
 

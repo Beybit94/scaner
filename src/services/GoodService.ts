@@ -39,7 +39,7 @@ export default class GoodService {
         }
         break;
       case GoodAction.edit:
-        await GoodService.editGood(good.Id, good.Count);
+        await GoodService.editGood(good.Id, good.CountQty);
         break;
       case GoodAction.remove:
         await GoodService.removeGood(good.Id);

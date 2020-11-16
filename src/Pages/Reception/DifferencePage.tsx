@@ -26,16 +26,15 @@ export default class DifferencePage extends Component<any, State> {
       this.setState({ isLoading: true });
       this.onRefresh();
     } catch (ex) {
-      throw new Error(ex);
-    } finally {
       this.setState({ isLoading: false });
+      throw new Error(ex);
     }
   }
 
   onRefresh = async () => {
     await TaskService.difference().then((difference) => {
       if (difference) {
-        this.setState({ data: difference });
+        this.setState({ data: difference, isLoading: false });
       }
     });
   };

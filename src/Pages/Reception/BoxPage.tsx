@@ -62,12 +62,12 @@ export default class BoxPage extends Component<BoxPageProps> {
       this.setState({ visible: visible, currentRow: row });
       if (visible) {
         const good = data[row] as Responses.GoodModel;
-        this.setState({ currentCount: good.Count });
+        this.setState({ currentCount: good.CountQty });
       } else {
         if (row > 0) {
           this.setState({ isLoading: true });
           const good = data[currentRow] as Responses.GoodModel;
-          good.Count = currentCount;
+          good.CountQty = currentCount;
 
           await GoodService.crud(GoodAction.edit, good).then(async () => {
             await this.onRefresh();

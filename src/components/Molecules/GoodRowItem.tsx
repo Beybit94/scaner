@@ -24,7 +24,7 @@ export default class GoodRowItem extends Component<Props> {
           <ListItem.Title>{this.props.model.GoodName}</ListItem.Title>
           {!model.IsBox && (
             <ListItem.Subtitle>
-              {this.props.model.GoodArticle} | Кол-во: {model.Count}
+              {this.props.model.GoodArticle} | Кол-во: {model.CountQty}
             </ListItem.Subtitle>
           )}
         </ListItem.Content>

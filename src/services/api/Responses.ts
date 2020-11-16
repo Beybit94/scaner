@@ -4,7 +4,7 @@ export namespace Responses {
   export interface BaseResponse {}
 
   export interface UserModel extends BaseResponse {
-    UserId: number;
+    Id: number;
     UserDivisionId: number;
     UserFirstName: string;
     UserSecondName: string;
@@ -28,7 +28,7 @@ export namespace Responses {
     StrID: string;
     GoodId: number;
     BoxId?: number;
-    Count: number;
+    CountQty: number;
     GoodName: string;
     GoodArticle: string;
     BarCode: string;
