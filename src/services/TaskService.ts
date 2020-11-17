@@ -81,9 +81,9 @@ export default class TaskService {
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    const upload = await TaskService.upload(files, task?.ID);
-    if (upload.success) {
-      if (task) {
+    if (task) {
+      const upload = await TaskService.upload(files, task.Id);
+      if (upload.success) {
         const request: Api.HttpRequest = {
           Url: Constants.Endpoints.END_TASK,
           Body: {
@@ -96,10 +96,12 @@ export default class TaskService {
           await Storage.LocalStorage.deleteItem(
             Storage.StorageKeys.ACTIVE_TASK
           );
-        }
 
-        return response;
+          return response;
+        }
       }
+
+      return;
     }
 
     return;
@@ -159,7 +161,7 @@ export default class TaskService {
 
     let uri = "";
     if (task) {
-      uri = `${Constants.Endpoints.BASE}${Constants.Endpoints.PDF}?PlanNum=${task?.PlanNum}&TaskId=${task?.ID}`;
+      uri = `${Constants.Endpoints.BASE}${Constants.Endpoints.PDF}?PlanNum=${task?.PlanNum}&TaskId=${task?.Id}`;
     }
     return uri;
   };
