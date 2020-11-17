@@ -8,30 +8,33 @@ export default class TaskService {
   static scan = async (
     barcode?: string
   ): Promise<Api.HttpResponse<{}> | undefined> => {
-    const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
-      Storage.StorageKeys.USER
-    );
-
     let response;
     if (barcode) {
-      response = await TaskService.createTask(barcode, user?.Id);
+      response = await TaskService.createTask(barcode);
     }
     return response;
   };
 
   static createTask = async (
-    PlanNum: string,
-    UserId?: number
-  ): Promise<Api.HttpResponse<{}>> => {
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.CREATE_TASK,
-      Body: {
-        PlanNum: PlanNum,
-        UserId: UserId,
-      },
-    };
+    PlanNum: string
+  ): Promise<Api.HttpResponse<{}> | undefined> => {
+    const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
+      Storage.StorageKeys.USER
+    );
 
-    const response = await Api.post<{}>(request);
+    let response;
+    if (user) {
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.CREATE_TASK,
+        Body: {
+          PlanNum: PlanNum,
+          UserId: user.Id,
+        },
+      };
+
+      response = await Api.post<{}>(request);
+    }
+
     return response;
   };
 
@@ -46,23 +49,27 @@ export default class TaskService {
       const user = await Storage.LocalStorage.getItem<Responses.UserModel>(
         Storage.StorageKeys.USER
       );
-      const request: Api.HttpRequest = {
-        Url: Constants.Endpoints.ACTIVE_TASK,
-        Body: {
-          UserId: user?.Id,
-          DivisionId: user?.UserDivisionId,
-        },
-      };
 
-      const response = await Api.post<Responses.TaskModel>(request);
-      if (response.data) {
-        await Storage.LocalStorage.setItem(
-          Storage.StorageKeys.ACTIVE_TASK,
-          response.data
-        );
+      if (user) {
+        const request: Api.HttpRequest = {
+          Url: Constants.Endpoints.ACTIVE_TASK,
+          Body: {
+            UserId: user?.Id,
+            DivisionId: user?.UserDivisionId,
+          },
+        };
 
-        return response.data;
+        const response = await Api.post<Responses.TaskModel>(request);
+        if (response.data) {
+          await Storage.LocalStorage.setItem(
+            Storage.StorageKeys.ACTIVE_TASK,
+            response.data
+          );
+
+          return response.data;
+        }
       }
+
       return;
     }
   };

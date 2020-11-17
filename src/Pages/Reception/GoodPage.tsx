@@ -44,7 +44,9 @@ export default class GoodPage extends Component<GoodPageProps> {
     });
     navigation.addListener("focus", () => {
       Honeywell.onBarcodeReadSuccess((event: any) => {
-        this.scan(event);
+        if (event) {
+          this.scan(event);
+        }
       });
     });
     navigation.addListener("blur", () => {
