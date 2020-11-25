@@ -54,8 +54,8 @@ export default class TaskService {
         const request: Api.HttpRequest = {
           Url: Constants.Endpoints.ACTIVE_TASK,
           Body: {
-            UserId: user?.Id,
-            DivisionId: user?.UserDivisionId,
+            UserId: user.Id,
+            DivisionId: user.UserDivisionId,
           },
         };
 
