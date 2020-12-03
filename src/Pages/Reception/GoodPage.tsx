@@ -161,6 +161,7 @@ export default class GoodPage extends Component<GoodPageProps> {
           this.setState({
             searches: [],
             searchQuery: "",
+            isScanning: false,
             isSearching: false,
           });
 
@@ -182,7 +183,7 @@ export default class GoodPage extends Component<GoodPageProps> {
         });
       }
     } finally {
-      this.setState({ isLoading: false });
+      //this.setState({ isLoading: false });
     }
   };
 
