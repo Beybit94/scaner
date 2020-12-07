@@ -45,6 +45,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     navigation.addListener("focus", () => {
       Honeywell.onBarcodeReadSuccess((event: any) => {
         if (event) {
+          //console.warn(event);
           this.scan(event);
         }
       });
@@ -135,16 +136,17 @@ export default class GoodPage extends Component<GoodPageProps> {
     try {
       this.setState({ isLoading: true });
       await TaskService.closeTask().then((response) => {
+        this.setState({ isLoading: false });
         if (response) {
           this.setState({
-            isGood: false,
+            isInitial: true,
             title: "Планирование:",
             data: [],
           });
         }
       });
     } finally {
-      this.setState({ isLoading: false });
+      //this.setState({ isLoading: false });
     }
   };
 
