@@ -85,8 +85,9 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
                         reader.setProperty(BarcodeReader.PROPERTY_EAN_13_ENABLED, true);
                         reader.setProperty(BarcodeReader.PROPERTY_EAN_13_CHECK_DIGIT_TRANSMIT_ENABLED, true);
                         reader.setProperty(BarcodeReader.PROPERTY_UPC_A_ENABLE,true);
+                        reader.setProperty(BarcodeReader.PROPERTY_UPC_A_CHECK_DIGIT_TRANSMIT_ENABLED,true);
                         reader.setProperty(BarcodeReader.PROPERTY_UPC_A_NUMBER_SYSTEM_TRANSMIT_ENABLED,true);
-                        reader.setProperty(BarcodeReader.PROPERTY_UPC_A_TRANSLATE_EAN13,true);
+                        //reader.setProperty(BarcodeReader.PROPERTY_UPC_A_TRANSLATE_EAN13,true);
                         promise.resolve(true);
                     } catch (ScannerUnavailableException | UnsupportedPropertyException e) {
                         promise.resolve(false);
