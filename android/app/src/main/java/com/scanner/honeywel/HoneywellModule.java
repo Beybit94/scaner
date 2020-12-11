@@ -1,5 +1,7 @@
 package com.scanner.honeywel;
 
+import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -27,17 +29,17 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
 
     private static final boolean D = true;
 
-    private static BarcodeReader barcodeReader;
-    private AidcManager manager;
-    private BarcodeReader reader;
     private ReactApplicationContext mReactContext;
-
     private static final String BARCODE_READ_SUCCESS = "barcodeReadSuccess";
     private static final String BARCODE_READ_FAIL = "barcodeReadFail";
 
+    //Honeywell
+    private static BarcodeReader barcodeReader;
+    private AidcManager manager;
+    private BarcodeReader reader;
+
     public HoneywellModule(ReactApplicationContext reactContext) {
         super(reactContext);
-
         mReactContext = reactContext;
     }
 
@@ -87,11 +89,10 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
                         reader.setProperty(BarcodeReader.PROPERTY_UPC_A_ENABLE,true);
                         reader.setProperty(BarcodeReader.PROPERTY_UPC_A_CHECK_DIGIT_TRANSMIT_ENABLED,true);
                         reader.setProperty(BarcodeReader.PROPERTY_UPC_A_NUMBER_SYSTEM_TRANSMIT_ENABLED,true);
-                        //reader.setProperty(BarcodeReader.PROPERTY_UPC_A_TRANSLATE_EAN13,true);
                         promise.resolve(true);
                     } catch (ScannerUnavailableException | UnsupportedPropertyException e) {
-                        promise.resolve(false);
                         e.printStackTrace();
+                        promise.resolve(false);
                     }
                 }
             }
