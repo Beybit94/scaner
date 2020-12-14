@@ -38,17 +38,17 @@ public class HoneywellPackage implements ReactPackage {
         }
     }
 
-    private boolean isCompatible() {
-        return this.getDeviceName().toLowerCase().contains("honeywell");
+    private boolean isCompatible(String model) {
+        return this.getDeviceName().toLowerCase().contains(model);
     }
 
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        if(isCompatible()){
-            modules.add(new HoneywellModule(reactContext));
-        }else{
+        if(isCompatible("speedata")){
             modules.add(new SpeedataModule(reactContext));
+        }else {
+            modules.add(new HoneywellModule(reactContext));
         }
         return modules;
     }
