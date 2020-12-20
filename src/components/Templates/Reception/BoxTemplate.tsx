@@ -5,7 +5,7 @@ import { NavigationContext } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { ButtonGroup } from "react-native-elements";
 
-import { ScanBarcode, CustomModal } from "../../Molecules";
+import { ScanBarcode, CustomModal, CustomButton } from "../../Molecules";
 import { GoodList } from "../../Organisms";
 import { Responses } from "../../../services";
 import Loading from "../Shared/Loading";
@@ -88,6 +88,7 @@ export default class BoxTemplate extends Component<Props> {
             onRefresh={onRefresh}
           />
         </Loading>
+        <CustomButton label="Сканировать" onClick={showScan} />
         <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
           <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
