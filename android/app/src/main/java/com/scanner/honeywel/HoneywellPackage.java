@@ -1,6 +1,7 @@
 package com.scanner.honeywel;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -10,11 +11,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class HoneywellPackage implements ReactPackage {
     static final String TAG = "Honeywell";
+
+    public String[] manufacturers = {"datalogic","honeywell","htc","huawei","lenovo","oneplus","oppo","samsung","sony","xiaomi","zebra"};
 
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
@@ -38,14 +42,16 @@ public class HoneywellPackage implements ReactPackage {
         }
     }
 
-    private boolean isCompatible(String model) {
-        return this.getDeviceName().toLowerCase().contains(model);
+    private boolean isCompatible() {
+        String deviceName = this.getDeviceName().toLowerCase();
+        Log.d(TAG, deviceName);
+        return deviceName.contains("SD");
     }
 
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        if(isCompatible("speedata")){
+        if(isCompatible()){
             modules.add(new SpeedataModule(reactContext));
         }else {
             modules.add(new HoneywellModule(reactContext));

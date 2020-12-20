@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
-import { Keyboard } from "react-native";
+import { Keyboard, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
 
@@ -12,6 +12,7 @@ import {
   TaskService,
 } from "../../services";
 import { Honeywell } from "../../Native";
+import { PopupMenu } from "../../components/Organisms";
 
 import { RootStackParamList } from "./ReceptionStackParam";
 
@@ -34,12 +35,15 @@ export default class GoodPage extends Component<GoodPageProps> {
     const { navigation } = this.props;
     navigation.setOptions({
       headerRight: () => (
-        <Icon
-          iconStyle={{ marginRight: 10, color: "black" }}
-          size={30}
-          name="search"
-          onPress={this.toggleSearch}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <Icon
+            iconStyle={{ marginRight: 10, color: "black" }}
+            size={30}
+            name="search"
+            onPress={this.toggleSearch}
+          />
+          <PopupMenu actions={["Закрыть"]} onPress={this.closeTask} />
+        </View>
       ),
     });
     navigation.addListener("focus", () => {
@@ -54,6 +58,28 @@ export default class GoodPage extends Component<GoodPageProps> {
     });
 
     this.scan();
+  }
+
+  searchBtn() {
+    return (
+      <Icon
+        iconStyle={{ marginRight: 10, color: "black" }}
+        size={30}
+        name="search"
+        onPress={this.toggleSearch}
+      />
+    );
+  }
+
+  closeBtn() {
+    return (
+      <Icon
+        iconStyle={{ marginRight: 10, color: "black" }}
+        size={30}
+        name="search"
+        onPress={this.closeTask}
+      />
+    );
   }
 
   handleStateChange = (inputName: string, inputValue: unknown) => {

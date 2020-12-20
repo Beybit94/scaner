@@ -48,6 +48,27 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
         return "Honeywell";
     }
 
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.toLowerCase().startsWith(manufacturer.toLowerCase())) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
+    }
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
     private void sendEvent(String eventName, @Nullable String params) {
         if (mReactContext.hasActiveCatalystInstance()) {
             if (D) Log.d(TAG, "Sending event: " + eventName);
@@ -60,7 +81,7 @@ public class HoneywellModule extends ReactContextBaseJavaModule implements Barco
     @Override
     public void onBarcodeEvent(BarcodeReadEvent barcodeReadEvent) {
         if (D) Log.d(TAG, "HoneywellBarcodeReader - Barcode scan read");
-        sendEvent(BARCODE_READ_SUCCESS, barcodeReadEvent.getBarcodeData());
+        sendEvent(BARCODE_READ_SUCCESS, barcodeReadEvent.getBarcodeData()+":"+getDeviceName());
     }
 
     @Override

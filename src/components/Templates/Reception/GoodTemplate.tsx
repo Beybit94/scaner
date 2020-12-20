@@ -93,6 +93,7 @@ export default class GoodTemplate extends Component<Props> {
     return (
       <View style={styles.container}>
         <ScanBarcode title={title} showScan={showScan} />
+        <CustomButton label={"Расхождение"} onClick={difference} />
         <Loading isLoading={isLoading}>
           <GoodList
             data={data}
@@ -101,8 +102,7 @@ export default class GoodTemplate extends Component<Props> {
             itemRemove={itemRemove}
             onRefresh={onRefresh}
           />
-          <CustomButton label={"Расхождение"} onClick={difference} />
-          <CustomButton label={"Закрыть задачу"} onClick={closeTask} />
+          <CustomButton label="Сканировать" onClick={showScan} />
         </Loading>
         <CustomModal visible={visible} toggleModal={() => itemEdit(false, 0)}>
           <View style={styles.modalContainer}>
