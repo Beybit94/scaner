@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import { UIManager, findNodeHandle } from "react-native";
+import {
+  UIManager,
+  findNodeHandle,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { Icon } from "react-native-elements";
 
 type Props = {
   actions: string[];
-  onPress: () => void;
+  onPress: (item: string, index: number | undefined) => void;
 };
 
 export default class PopupMenu extends Component<Props> {
@@ -28,14 +33,17 @@ export default class PopupMenu extends Component<Props> {
 
   render() {
     return (
-      <Icon
-        iconStyle={{ marginRight: 10, color: "black" }}
-        size={25}
-        type="entypo"
-        name="dots-three-vertical"
-        onPress={this.onPress}
-        ref={this.icon}
-      />
+      <View>
+        <TouchableOpacity onPress={this.onPress}>
+          <Icon
+            iconStyle={{ marginRight: 10, color: "black" }}
+            size={25}
+            type="entypo"
+            name="dots-three-vertical"
+            ref={this.icon}
+          />
+        </TouchableOpacity>
+      </View>
     );
   }
 }
