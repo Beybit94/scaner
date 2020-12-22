@@ -42,7 +42,7 @@ export default class GoodPage extends Component<GoodPageProps> {
             name="search"
             onPress={this.toggleSearch}
           />
-          <PopupMenu actions={["Закрыть"]} onPress={this.closeTask} />
+          <PopupMenu actions={["Закрыть"]} onPress={this.onPopupEvent} />
         </View>
       ),
     });
@@ -58,28 +58,6 @@ export default class GoodPage extends Component<GoodPageProps> {
     });
 
     this.scan();
-  }
-
-  searchBtn() {
-    return (
-      <Icon
-        iconStyle={{ marginRight: 10, color: "black" }}
-        size={30}
-        name="search"
-        onPress={this.toggleSearch}
-      />
-    );
-  }
-
-  closeBtn() {
-    return (
-      <Icon
-        iconStyle={{ marginRight: 10, color: "black" }}
-        size={30}
-        name="search"
-        onPress={this.closeTask}
-      />
-    );
   }
 
   handleStateChange = (inputName: string, inputValue: unknown) => {
@@ -154,6 +132,15 @@ export default class GoodPage extends Component<GoodPageProps> {
       });
     } finally {
       this.setState({ isLoading: false });
+    }
+  };
+
+  onPopupEvent = async (item: string, index?: number) => {
+    if (item !== "itemSelected") {
+      return;
+    }
+    if (index === 0) {
+      this.closeTask();
     }
   };
 
