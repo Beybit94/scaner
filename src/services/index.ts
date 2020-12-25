@@ -7,6 +7,7 @@ import AuthContext from "./Utils/AuthContext";
 import AuthService from "./AuthService";
 import GoodService, { GoodAction } from "./GoodService";
 import TaskService from "./TaskService";
+import DictionaryService from "./DictionaryService";
 
 export {
   Constants,
@@ -19,4 +20,5 @@ export {
   GoodAction,
   TaskService,
   AuthService,
+  DictionaryService,
 };

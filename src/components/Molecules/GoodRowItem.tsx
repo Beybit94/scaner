@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import { Icon, ListItem } from "react-native-elements";
+import { View, Text, StyleSheet } from "react-native";
+import { Badge, Icon, ListItem } from "react-native-elements";
 
 import { Responses } from "../../services";
+
+const styles = StyleSheet.create({
+  subtitleView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 5,
+  },
+});
 
 type Props = {
   model: Responses.GoodModel;
@@ -19,16 +28,27 @@ export default class GoodRowItem extends Component<Props> {
         onPress={() => onPress && onPress(model)}
         disabled={!model.IsBox}
       >
-        {model.IsBox && <Icon name="archive" type="font-awesome" />}
+        {model.IsBox && model.DamagePercentId && (
+          <Icon name="archive" type="font-awesome" />
+        )}
         <ListItem.Content>
           <ListItem.Title>{this.props.model.GoodName}</ListItem.Title>
-          {!model.IsBox && (
-            <ListItem.Subtitle>
-              {this.props.model.GoodArticle} | Кол-во: {model.CountQty}
-            </ListItem.Subtitle>
-          )}
+          <View style={styles.subtitleView}>
+            {model.DamagePercentId && (
+              <Badge
+                value="дефект"
+                status="warning"
+                containerStyle={{ padding: 2 }}
+              />
+            )}
+            {!model.IsBox && (
+              <Text>
+                {this.props.model.GoodArticle} | Кол-во: {model.CountQty}
+              </Text>
+            )}
+          </View>
         </ListItem.Content>
-        {model.IsBox && <ListItem.Chevron />}
+        {model.IsBox && model.DamagePercentId && <ListItem.Chevron />}
       </ListItem>
     );
   }

@@ -149,4 +149,71 @@ export default class GoodService {
     const response = await Api.post<{}>(request);
     return response;
   };
+
+  static endTask = async (
+    files: FormDataValue[]
+  ): Promise<Api.HttpResponse<{}> | undefined> => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
+
+    if (task) {
+      const upload = await TaskService.upload(files, task.Id);
+      if (upload.success) {
+        const request: Api.HttpRequest = {
+          Url: Constants.Endpoints.END_TASK,
+          Body: {
+            TaskId: task.Id,
+          },
+        };
+
+        const response = await Api.post<{}>(request);
+        if (response.success) {
+          await Storage.LocalStorage.deleteItem(
+            Storage.StorageKeys.ACTIVE_TASK
+          );
+
+          return response;
+        }
+      }
+
+      return;
+    }
+
+    return;
+  };
+
+  static defect = async (
+    GoodId: number,
+    BoxId: number,
+    DamagePercentId: number,
+    files?: FormDataValue[]
+  ): Promise<Api.HttpResponse<{}> | undefined> => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
+
+    if (task) {
+      const form = new FormData();
+      form.append("Id", GoodId);
+      form.append("BoxId", BoxId);
+      form.append("DamagePercentId", DamagePercentId);
+      form.append("TaskId", task.Id);
+
+      if (files) {
+        files.forEach((file, index) => {
+          form.append(`photo_${index}`, file);
+        });
+      }
+
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.DEFECT,
+        FormData: form,
+      };
+
+      const response = await Api.upload<{}>(request);
+      return response;
+    }
+    return;
+  };
 }

@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     width: width / 2,
   },
   button: {
-    backgroundColor: "green",
+    backgroundColor: "red",
     width: "100%",
   },
 });

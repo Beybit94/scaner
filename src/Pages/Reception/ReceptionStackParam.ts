@@ -7,4 +7,5 @@ export type RootStackParamList = {
   PhotoPage: { onGoBack?: () => void };
   ScanPage: undefined | { onGoBack?: (data: string) => void };
   PdfPage: undefined;
+  DefectPage: { good: Responses.GoodModel; onGoBack?: () => void };
 };
