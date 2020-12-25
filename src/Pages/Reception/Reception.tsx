@@ -11,6 +11,7 @@ import DifferencePage from "./DifferencePage";
 import PhotoPage from "./PhotoPage";
 import ScanPage from "./ScanPage";
 import PdfPage from "./PdfPage";
+import DefectPage from "./DefectPage";
 import { RootStackParamList } from "./ReceptionStackParam";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -27,7 +28,10 @@ export default class Reception extends React.Component {
   render() {
     return (
       <AuthContext.Provider value={this.state}>
-        <Stack.Navigator screenOptions={headerOptions}>
+        <Stack.Navigator
+          screenOptions={headerOptions}
+          // initialRouteName="DefectPage"
+        >
           <Stack.Screen
             name="GoodPage"
             component={GoodPage}
@@ -69,6 +73,13 @@ export default class Reception extends React.Component {
             component={PdfPage}
             options={{
               title: "Акт приема",
+            }}
+          />
+          <Stack.Screen
+            name="DefectPage"
+            component={DefectPage}
+            options={{
+              title: "Отметка дефектов",
             }}
           />
         </Stack.Navigator>

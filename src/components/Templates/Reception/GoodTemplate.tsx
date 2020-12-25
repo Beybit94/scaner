@@ -83,7 +83,6 @@ export default class GoodTemplate extends Component<Props> {
       isLoading,
       defect,
       itemEdit,
-      closeTask,
       onRefresh,
       itemRemove,
       handleStateChange,

@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingLeft: 15,
+    textAlign: "center",
   },
   backTextWhite: {
     color: "white",
@@ -56,7 +57,7 @@ export default class GoodHiddenItem extends Component<Props> {
           onPress={() => defect(model)}
         >
           <Text style={styles.backTextWhite}>
-            {model.IsDefect ? "Undefect" : "Дефект"}
+            {model.DamagePercentId ? "Снять дефект" : "Дефект"}
           </Text>
         </TouchableOpacity>
 

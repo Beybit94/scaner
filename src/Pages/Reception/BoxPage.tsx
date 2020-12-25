@@ -92,10 +92,17 @@ export default class BoxPage extends Component<BoxPageProps> {
   };
 
   defect = async (model: Responses.GoodModel) => {
-    try {
+    if (model.DamagePercentId) {
       this.setState({ isLoading: true });
-    } finally {
-      this.setState({ isLoading: false });
+      await GoodService.defect(model.Id, model.BoxId || 0, 0).then(() => {
+        this.onRefresh();
+      });
+    } else {
+      const { navigation } = this.props;
+      navigation.push("DefectPage", {
+        good: model,
+        onGoBack: this.onRefresh,
+      });
     }
   };
 

@@ -33,7 +33,7 @@ export namespace Responses {
     GoodArticle: string;
     BarCode: string;
     IsBox: boolean;
-    IsDefect: boolean;
+    DamagePercentId?: number;
   }
 
   export interface DifferenceModel extends BaseResponse {
@@ -54,5 +54,11 @@ export namespace Responses {
     UserName: string;
     CreationDate: string;
     Status: number;
+  }
+
+  export interface BaseDictionary extends BaseResponse {
+    Id: number;
+    Code: string;
+    Name: string;
   }
 }
