@@ -5,7 +5,7 @@ import { Button, Card } from "react-native-paper";
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   card: {
-    width: width / 2,
+    width: width / 2 - 10,
   },
   button: {
     backgroundColor: "red",

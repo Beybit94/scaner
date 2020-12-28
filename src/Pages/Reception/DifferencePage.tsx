@@ -1,9 +1,9 @@
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { FlatList, RefreshControl, View, Text } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Badge } from "react-native-elements";
 
 import { CustomButton } from "../../components/Molecules";
 import { Loading } from "../../components/Templates";
@@ -49,17 +49,36 @@ export default class DifferencePage extends Component<any, State> {
           <FlatList
             data={data}
             renderItem={({ item }) => (
-              <ListItem key={item.GoodArticle} bottomDivider disabled={true}>
+              <ListItem
+                key={item.Article + "_" + item.Barcode}
+                bottomDivider
+                disabled={true}
+              >
                 <ListItem.Content>
                   <ListItem.Title>{item.GoodName}</ListItem.Title>
-                  <ListItem.Subtitle>
-                    Кол-во в 1С: {item.Quantity} | Отсканированного:
-                    {item.CountQty}
-                  </ListItem.Subtitle>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      paddingTop: 5,
+                    }}
+                  >
+                    {item.Barcode !== "0" && (
+                      <Badge
+                        value={item.Barcode}
+                        status="warning"
+                        containerStyle={{ padding: 2 }}
+                      />
+                    )}
+                    <Text>
+                      Кол-во в 1С: {item.Quantity} | Отсканированного:
+                      {item.CountQty}
+                    </Text>
+                  </View>
                 </ListItem.Content>
               </ListItem>
             )}
-            keyExtractor={(item) => item.GoodArticle}
+            keyExtractor={(item) => item.Article + "_" + item.Barcode}
             refreshControl={
               <RefreshControl
                 colors={["#9Bd35A", "#689F38"]}

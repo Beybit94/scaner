@@ -36,24 +36,15 @@ export namespace Responses {
     DamagePercentId?: number;
   }
 
-  export interface DifferenceModel extends BaseResponse {
-    Id: number;
-    StrID: string;
+  export interface ReceiptModel extends BaseResponse {
+    Location: string;
     NumberDoc: string;
-    GoodId: number;
-    GoodArticle: string;
+    Article: string;
     GoodName: string;
     Quantity: number;
     CountQty: number;
-    ExcessQty: number;
-    TaskId: number;
-    GoodGroupName: string;
-    Favorite: string;
-    Img: string;
-    Text1: string;
-    UserName: string;
-    CreationDate: string;
-    Status: number;
+    Barcode: string;
+    GoodBarcode: string;
   }
 
   export interface BaseDictionary extends BaseResponse {
