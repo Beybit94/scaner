@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Button } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 
 import CameraPermission from "./CameraPermission";
 
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+  card: {
+    width: width / 2 - 10,
+  },
   button: {
-    margin: 8,
     backgroundColor: "green",
+    width: "100%",
   },
 });
 
@@ -42,14 +46,25 @@ export default class Picker extends Component<Props> {
   render() {
     return (
       <CameraPermission>
-        <Button
-          icon="camera"
-          mode="contained"
-          onPress={this._pickImage}
-          style={styles.button}
-        >
-          Фото
-        </Button>
+        <Card style={styles.card}>
+          <Card.Cover
+            source={{
+              uri:
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==",
+            }}
+            resizeMode={"cover"}
+          />
+          <Card.Actions>
+            <Button
+              icon="camera"
+              onPress={this._pickImage}
+              mode="contained"
+              style={styles.button}
+            >
+              Добавить фото
+            </Button>
+          </Card.Actions>
+        </Card>
       </CameraPermission>
     );
   }

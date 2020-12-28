@@ -124,6 +124,31 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 apply plugin: 'com.android.application'
 
+def changeApkName = { variant ->
+    variant.outputs.each { output ->
+        def newName = androidApplicationName;
+        def branch = getGitRevParseInfo("--abbrev-ref");
+        if (variant.buildType.name == "release") {
+            newName += "-v" + variant.mergedFlavor.versionName + "-" + branch + "-release.apk";
+        } else {
+            newName += "-v" + variant.mergedFlavor.versionName + "-" + branch + ".apk";
+        }
+
+        if (!output.zipAlign) {
+            newName = newName.replace(".apk", "-unaligned.apk");
+        }
+        output.outputFile = new File(apk.parentFile, newName);
+
+        println 'INFO: Set outputFile to ' + output.outputFile + " for [" + output.name + "]"
+    }
+}
+
+def getGitRevParseInfo(what) {
+    def cmd = "git rev-parse " + what + " HEAD"
+    def prc = cmd.execute()
+    prc.text.trim()
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -168,7 +193,14 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "${variant.name}-${variant.versionName}.apk"
+                    def newName = "scaner";
+                    def branch = getGitRevParseInfo("--abbrev-ref");
+                    if (variant.buildType.name == "release") {
+                        newName += "-v" + variant.mergedFlavor.versionName + "-" + branch + "-release.apk";
+                    } else {
+                        newName += "-v" + variant.mergedFlavor.versionName + "-" + branch + ".apk";
+                    }
+                    outputFileName = newName
                 }
             }
         }

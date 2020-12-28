@@ -69,6 +69,7 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
         <View style={styles.container}>
           <ScrollView>
             <View style={styles.image}>
+              <Picker add={onAdd} />
               {(images as FormDataValue[]).map((item, i) => (
                 <ImageItem
                   key={i}
@@ -79,7 +80,7 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
               ))}
             </View>
           </ScrollView>
-          <Picker add={onAdd} />
+
           {images.length > 0 && (
             <CustomButton label={"Завершить задачу"} onClick={endTask} />
           )}

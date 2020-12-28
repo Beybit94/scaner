@@ -146,15 +146,7 @@ export default class DefectPage extends Component<PhotoPageProps> {
               Фото повреждения
             </Text>
             <View style={styles.image}>
-              {images.length === 0 && (
-                <Image
-                  style={{ width: 50, height: 60 }}
-                  source={{
-                    uri:
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==",
-                  }}
-                />
-              )}
+              <Picker add={onAdd} />
               {(images as FormDataValue[]).map((item, i) => (
                 <ImageItem
                   key={i}
@@ -165,7 +157,6 @@ export default class DefectPage extends Component<PhotoPageProps> {
               ))}
             </View>
           </ScrollView>
-          <Picker add={onAdd} />
           {images.length > 0 && <CustomButton label={"Ok"} onClick={defect} />}
         </View>
       </Loading>
