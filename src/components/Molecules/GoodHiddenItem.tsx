@@ -57,7 +57,7 @@ export default class GoodHiddenItem extends Component<Props> {
           onPress={() => defect(model)}
         >
           <Text style={styles.backTextWhite}>
-            {model.DamagePercentId ? "Снять дефект" : "Дефект"}
+            {model.DefectId ? "Снять дефект" : "Дефект"}
           </Text>
         </TouchableOpacity>
 

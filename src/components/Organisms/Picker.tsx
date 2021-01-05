@@ -1,18 +1,33 @@
 import React, { Component } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableHighlight,
+  View,
+  Text,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Button, Card } from "react-native-paper";
+import { Card } from "react-native-paper";
+import { Icon } from "react-native-elements";
 
 import CameraPermission from "./CameraPermission";
 
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+  mTop: {
+    marginTop: 10,
+  },
   card: {
-    width: width / 2 - 10,
+    width: width / 2 - 15,
+    height: width / 2 - 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
-    backgroundColor: "green",
-    width: "100%",
+    width: width / 2 - 20,
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
@@ -46,24 +61,13 @@ export default class Picker extends Component<Props> {
   render() {
     return (
       <CameraPermission>
-        <Card style={styles.card}>
-          <Card.Cover
-            source={{
-              uri:
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==",
-            }}
-            resizeMode={"cover"}
-          />
-          <Card.Actions>
-            <Button
-              icon="camera"
-              onPress={this._pickImage}
-              mode="contained"
-              style={styles.button}
-            >
-              Добавить фото
-            </Button>
-          </Card.Actions>
+        <Card style={[styles.card, styles.mTop]}>
+          <TouchableHighlight onPress={this._pickImage}>
+            <View style={styles.button}>
+              <Text>Добавить фото</Text>
+              <Icon size={15} name="add" reverse />
+            </View>
+          </TouchableHighlight>
         </Card>
       </CameraPermission>
     );

@@ -28,13 +28,13 @@ export default class GoodRowItem extends Component<Props> {
         onPress={() => onPress && onPress(model)}
         disabled={!model.IsBox}
       >
-        {model.IsBox && model.DamagePercentId && (
+        {model.IsBox && model.DefectId && (
           <Icon name="archive" type="font-awesome" />
         )}
         <ListItem.Content>
-          <ListItem.Title>{this.props.model.GoodName}</ListItem.Title>
+          <ListItem.Title>{model.GoodName}</ListItem.Title>
           <View style={styles.subtitleView}>
-            {model.DamagePercentId && (
+            {model.DefectId && (
               <Badge
                 value="дефект"
                 status="warning"
@@ -43,12 +43,12 @@ export default class GoodRowItem extends Component<Props> {
             )}
             {!model.IsBox && (
               <Text>
-                {this.props.model.GoodArticle} | Кол-во: {model.CountQty}
+                {model.GoodArticle} | Кол-во: {model.CountQty}
               </Text>
             )}
           </View>
         </ListItem.Content>
-        {model.IsBox && model.DamagePercentId && <ListItem.Chevron />}
+        {model.IsBox && model.DefectId && <ListItem.Chevron />}
       </ListItem>
     );
   }
