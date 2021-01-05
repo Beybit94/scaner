@@ -39,6 +39,79 @@ export default class DifferencePage extends Component<any, State> {
     });
   };
 
+  renderItem(item: Responses.ReceiptModel) {
+    return (
+      <ListItem
+        key={item.Article + "_" + item.Barcode}
+        bottomDivider
+        disabled={true}
+      >
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                flex: 3,
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                {item.GoodName}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                {item.CountQty ? item.CountQty : 0}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View
+              style={{
+                flex: 3,
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text>{item.Article}</Text>
+              {item.Barcode && item.Barcode !== "0" && (
+                <Text> | {item.Barcode}</Text>
+              )}
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text>план:{item.Quantity ? item.Quantity : 0}</Text>
+            </View>
+          </View>
+        </View>
+      </ListItem>
+    );
+  }
+
   render() {
     const navigation = this.context;
     const { isLoading, data } = this.state;
@@ -48,36 +121,7 @@ export default class DifferencePage extends Component<any, State> {
         <View style={{ flex: 1, marginTop: 10 }}>
           <FlatList
             data={data}
-            renderItem={({ item }) => (
-              <ListItem
-                key={item.Article + "_" + item.Barcode}
-                bottomDivider
-                disabled={true}
-              >
-                <ListItem.Content>
-                  <ListItem.Title>{item.GoodName}</ListItem.Title>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      paddingTop: 5,
-                    }}
-                  >
-                    {item.Barcode !== "0" && (
-                      <Badge
-                        value={item.Barcode}
-                        status="warning"
-                        containerStyle={{ padding: 2 }}
-                      />
-                    )}
-                    <Text>
-                      Кол-во в 1С: {item.Quantity} | Отсканированного:
-                      {item.CountQty}
-                    </Text>
-                  </View>
-                </ListItem.Content>
-              </ListItem>
-            )}
+            renderItem={({ item }) => this.renderItem(item)}
             keyExtractor={(item) => item.Article + "_" + item.Barcode}
             refreshControl={
               <RefreshControl

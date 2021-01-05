@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 
 import { Loading } from "../../components/Templates";
 import { DictionaryService, GoodService } from "../../services";
 import {
   CustomButton,
-  DropDownWithTitile,
   ImageItem,
   TextInputWithTitle,
 } from "../../components/Molecules";
@@ -25,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 10,
+    justifyContent: "space-between",
   },
   title: {
     fontSize: 20,
@@ -40,12 +39,8 @@ export default class DefectPage extends Component<PhotoPageProps> {
     percetages: [],
     serialNumber: "",
     description: "",
-    damagePercent: 1,
+    damagePercent: "",
   };
-
-  componentDidMount() {
-    this.getPercetages();
-  }
 
   getPercetages = async () => {
     try {
@@ -64,11 +59,13 @@ export default class DefectPage extends Component<PhotoPageProps> {
     try {
       this.setState({ isLoading: true });
       const { good, onGoBack } = this.props.route.params;
-      const { images, damagePercent } = this.state;
+      const { images, damagePercent, description } = this.state;
       await GoodService.defect(
         good.Id,
-        good.BoxId || 0,
+        0,
+        good.BoxId,
         damagePercent,
+        description,
         images
       ).then(() => {
         this.setState({ isLoading: false });
@@ -103,14 +100,7 @@ export default class DefectPage extends Component<PhotoPageProps> {
 
   render() {
     const { defect, onDelete, onAdd, handleStateChange } = this;
-    const {
-      isLoading,
-      images,
-      percetages,
-      serialNumber,
-      description,
-      damagePercent,
-    } = this.state;
+    const { isLoading, images, description, damagePercent } = this.state;
     const { good } = this.props.route.params;
 
     return (
@@ -124,7 +114,7 @@ export default class DefectPage extends Component<PhotoPageProps> {
               inputName="serialNumber"
               inputValue={serialNumber}
               onChange={handleStateChange}
-            />
+            /> */}
             <TextInputWithTitle
               title="Описание"
               placeholder="опишите повреждение"
@@ -133,11 +123,10 @@ export default class DefectPage extends Component<PhotoPageProps> {
               multiline={true}
               numberOfLines={5}
               onChange={handleStateChange}
-            /> */}
-            <DropDownWithTitile
-              data={percetages}
+            />
+            <TextInputWithTitle
               title="Процент повреждения"
-              placeholder="опишите повреждение"
+              placeholder="процент"
               inputName="damagePercent"
               inputValue={damagePercent}
               onChange={handleStateChange}
@@ -146,7 +135,6 @@ export default class DefectPage extends Component<PhotoPageProps> {
               Фото повреждения
             </Text>
             <View style={styles.image}>
-              <Picker add={onAdd} />
               {(images as FormDataValue[]).map((item, i) => (
                 <ImageItem
                   key={i}
@@ -155,6 +143,7 @@ export default class DefectPage extends Component<PhotoPageProps> {
                   onDelete={() => onDelete(i)}
                 />
               ))}
+              <Picker add={onAdd} />
             </View>
           </ScrollView>
           {images.length > 0 && <CustomButton label={"Ok"} onClick={defect} />}

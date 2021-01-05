@@ -103,9 +103,9 @@ export default class GoodPage extends Component<GoodPageProps> {
   };
 
   defect = async (model: Responses.GoodModel) => {
-    if (model.DamagePercentId) {
+    if (model.DefectId) {
       this.setState({ isLoading: true });
-      await GoodService.defect(model.Id, model.BoxId || 0, 0).then(() => {
+      await GoodService.defect(model.Id, model.DefectId).then(() => {
         this.onRefresh();
       });
     } else {

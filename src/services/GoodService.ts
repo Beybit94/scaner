@@ -185,8 +185,10 @@ export default class GoodService {
 
   static defect = async (
     GoodId: number,
-    BoxId: number,
-    DamagePercentId: number,
+    DefectId: number,
+    BoxId?: number,
+    Damage?: string,
+    Description?: string,
     files?: FormDataValue[]
   ): Promise<Api.HttpResponse<{}> | undefined> => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
@@ -196,8 +198,10 @@ export default class GoodService {
     if (task) {
       const form = new FormData();
       form.append("Id", GoodId);
-      form.append("BoxId", BoxId);
-      form.append("DamagePercentId", DamagePercentId);
+      form.append("DefectId", DefectId ? DefectId : 0);
+      form.append("BoxId", BoxId ? BoxId : 0);
+      form.append("Damage", Damage ? Damage : 0);
+      form.append("Description", Description ? Description : "");
       form.append("TaskId", task.Id);
 
       if (files) {

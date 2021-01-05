@@ -14,11 +14,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#ecf0f1",
+    margin: 10,
   },
   image: {
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-between",
   },
 });
 
@@ -69,7 +71,6 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
         <View style={styles.container}>
           <ScrollView>
             <View style={styles.image}>
-              <Picker add={onAdd} />
               {(images as FormDataValue[]).map((item, i) => (
                 <ImageItem
                   key={i}
@@ -78,6 +79,7 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
                   onDelete={() => onDelete(i)}
                 />
               ))}
+              <Picker add={onAdd} />
             </View>
           </ScrollView>
 

@@ -132,13 +132,13 @@ export default class TaskService {
   };
 
   static difference = async (): Promise<
-    [Responses.DifferenceModel] | null | undefined
+    [Responses.ReceiptModel] | null | undefined
   > => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    let response: Api.HttpResponse<[Responses.DifferenceModel]> | undefined;
+    let response: Api.HttpResponse<[Responses.ReceiptModel]> | undefined;
     if (task) {
       const request: Api.HttpRequest = {
         Url: Constants.Endpoints.DIFFERENCE,
@@ -148,7 +148,8 @@ export default class TaskService {
         },
       };
 
-      response = await Api.post<[Responses.DifferenceModel]>(request);
+      response = await Api.post<[Responses.ReceiptModel]>(request);
+      console.log(response);
     }
 
     return response?.data;

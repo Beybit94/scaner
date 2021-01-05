@@ -33,7 +33,7 @@ export namespace Responses {
     GoodArticle: string;
     BarCode: string;
     IsBox: boolean;
-    DamagePercentId?: number;
+    DefectId?: number;
   }
 
   export interface ReceiptModel extends BaseResponse {
