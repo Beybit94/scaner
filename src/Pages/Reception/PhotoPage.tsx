@@ -39,7 +39,7 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
     try {
       this.setState({ isLoading: true });
       const { images } = this.state;
-      await TaskService.endTask(images).then(() => {
+      await TaskService.upload(images).then(() => {
         const { navigation } = this.props;
         navigation.reset({
           index: 0,
@@ -84,7 +84,7 @@ export default class PhotoPage extends Component<PhotoPageProps, State> {
           </ScrollView>
 
           {images.length > 0 && (
-            <CustomButton label={"Завершить задачу"} onClick={endTask} />
+            <CustomButton label={"Прикрепить фото"} onClick={endTask} />
           )}
         </View>
       </Loading>

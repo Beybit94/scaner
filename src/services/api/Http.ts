@@ -63,7 +63,7 @@ export namespace Api {
 
   export function errorHandler(error: Error, isFatal?: boolean) {
     if (isFatal) {
-      Alert.alert(error.name, error.message, [
+      Alert.alert("Внимание", error.message, [
         {
           text: "OK",
         },
@@ -74,13 +74,25 @@ export namespace Api {
   }
 
   async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
-    const response: HttpResponse<T> = await fetch(request);
+    const timeout = 60000;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const response: HttpResponse<T> = await fetch(request, {
+      signal: controller.signal,
+    });
     try {
-      await response.json().then((r) => {
-        response.data = r.data;
-        response.error = r.error;
-        response.success = r.success;
-      });
+      clearTimeout(id);
+      await response
+        .json()
+        .then((r) => {
+          response.data = r.data;
+          response.error = r.error;
+          response.success = r.success;
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
 
       if (!response.success) {
         throw new Error(response.error);

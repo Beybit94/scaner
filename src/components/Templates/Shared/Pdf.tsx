@@ -3,9 +3,9 @@ import { NavigationContext } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
-import * as Sharing from "expo-sharing";
 import { Icon } from "react-native-elements";
 import PDFReader from "rn-pdf-reader-js";
+import Share from "react-native-share";
 
 import Loading from "./Loading";
 
@@ -46,9 +46,22 @@ export default class Pdf extends Component<Props> {
     }
   };
 
+
   share = async () => {
     if (this.state.fileLocation) {
-      Sharing.shareAsync(this.state.fileLocation);
+      const shareOptions = {
+        title: "Share file",
+        failOnCancel: false,
+        saveToFiles: true,
+        urls: [this.state.fileLocation],
+      };
+
+      try {
+        const ShareResponse = await Share.open(shareOptions);
+        console.log(JSON.stringify(ShareResponse, null, 2));
+      } catch (error) {
+        console.log("Error =>", error);
+      }
     } else {
       this.setState({ isLoading: true });
 
@@ -60,7 +73,19 @@ export default class Pdf extends Component<Props> {
         .then(async (resp) => {
           this.setState({ uri: resp.uri, fileLocation: fileLocation });
           this.createAlbum();
-          Sharing.shareAsync(fileLocation);
+          const shareOptions = {
+            title: "Share file",
+            failOnCancel: false,
+            saveToFiles: true,
+            urls: [fileLocation],
+          };
+
+          try {
+            const ShareResponse = await Share.open(shareOptions);
+            console.log(JSON.stringify(ShareResponse, null, 2));
+          } catch (error) {
+            console.log("Error =>", error);
+          }
         })
         .catch((error) => {
           console.warn(error);

@@ -13,7 +13,7 @@ export class LocalStorage {
     return AsyncStorage.setItem(key, JSON.stringify(value));
   }
 
-  static async getItem<T>(key: StorageKeys): Promise<T | null> {
+  static async getItem<T>(key: StorageKeys): Promise<T | undefined> {
     return new Promise((resolve, reject) => {
       AsyncStorage.getItem(key)
         .then((value) => {

@@ -40,7 +40,7 @@ export default class GoodSwipableItem extends Component<Props> {
           remove={itemRemove}
           defect={defect}
         />
-        <GoodRowItem model={model} onPress={itemClick} />
+        <GoodRowItem index={index} model={model} onPress={itemClick} />
       </SwipeRow>
     );
   }
