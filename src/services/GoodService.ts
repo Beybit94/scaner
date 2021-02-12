@@ -56,15 +56,19 @@ export default class GoodService {
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.GOOD_BY_TASK,
-      Body: {
-        TaskId: task?.Id,
-      },
-    };
+    if (task) {
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.GOOD_BY_TASK,
+        Body: {
+          TaskId: task.Id,
+        },
+      };
 
-    const response = await Api.post<[Responses.GoodModel]>(request);
-    return response.data;
+      const response = await Api.post<[Responses.GoodModel]>(request);
+      return response.data;
+    }
+
+    return;
   };
 
   static getGoodByBox = async (
@@ -150,44 +154,12 @@ export default class GoodService {
     return response;
   };
 
-  static endTask = async (
-    files: FormDataValue[]
-  ): Promise<Api.HttpResponse<{}> | undefined> => {
-    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
-      Storage.StorageKeys.ACTIVE_TASK
-    );
-
-    if (task) {
-      const upload = await TaskService.upload(files, task.Id);
-      if (upload.success) {
-        const request: Api.HttpRequest = {
-          Url: Constants.Endpoints.END_TASK,
-          Body: {
-            TaskId: task.Id,
-          },
-        };
-
-        const response = await Api.post<{}>(request);
-        if (response.success) {
-          await Storage.LocalStorage.deleteItem(
-            Storage.StorageKeys.ACTIVE_TASK
-          );
-
-          return response;
-        }
-      }
-
-      return;
-    }
-
-    return;
-  };
-
   static defect = async (
     GoodId: number,
     DefectId: number,
     BoxId?: number,
     Damage?: string,
+    SerialNumber?: string,
     Description?: string,
     files?: FormDataValue[]
   ): Promise<Api.HttpResponse<{}> | undefined> => {
@@ -201,6 +173,7 @@ export default class GoodService {
       form.append("DefectId", DefectId ? DefectId : 0);
       form.append("BoxId", BoxId ? BoxId : 0);
       form.append("Damage", Damage ? Damage : 0);
+      form.append("SerialNumber", SerialNumber ? SerialNumber : "");
       form.append("Description", Description ? Description : "");
       form.append("TaskId", task.Id);
 

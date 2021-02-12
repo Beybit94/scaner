@@ -43,3 +43,9 @@ export enum HTTP_METHODS {
   POST = "POST",
   UPLOAD = "UPLOAD",
 }
+
+export enum TaskStatus {
+  Start = 1,
+  InProcess = 2,
+  End = 3,
+}

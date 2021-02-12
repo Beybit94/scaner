@@ -1,24 +1,54 @@
 /* eslint-disable react/no-did-mount-set-state */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
-import { FlatList, RefreshControl, View, Text } from "react-native";
+import { FlatList, RefreshControl, View, Text, StyleSheet } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
-import { ListItem, Badge } from "react-native-elements";
+import { ListItem } from "react-native-elements";
+import { Caption, Divider, List, Subheading } from "react-native-paper";
 
 import { CustomButton } from "../../components/Molecules";
 import { Loading } from "../../components/Templates";
 import { Responses, TaskService } from "../../services";
 
-type State = {
-  isLoading: boolean;
-  data: Responses.DifferenceModel[];
-};
+const styles = StyleSheet.create({
+  titile: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+  goodName: {
+    flex: 3,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  goodCount: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignSelf: "center",
+  },
+  subtitle: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  goodArticle: {
+    flex: 3,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  goodQuantity: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+});
 
-export default class DifferencePage extends Component<any, State> {
+export default class DifferencePage extends Component {
   static contextType = NavigationContext;
   state = {
-    data: [],
     isLoading: false,
+    data: { boxes: [], receipts: [] },
   };
 
   async componentDidMount() {
@@ -32,7 +62,7 @@ export default class DifferencePage extends Component<any, State> {
   }
 
   onRefresh = async () => {
-    await TaskService.difference().then((difference) => {
+    await TaskService.difference().then(async (difference) => {
       if (difference) {
         this.setState({ data: difference, isLoading: false });
       }
@@ -42,69 +72,36 @@ export default class DifferencePage extends Component<any, State> {
   renderItem(item: Responses.ReceiptModel) {
     return (
       <ListItem
-        key={item.Article + "_" + item.Barcode}
+        key={new Date().toISOString()}
         bottomDivider
         disabled={true}
+        containerStyle={{
+          backgroundColor:
+            item.Quantity > item.CountQty ? "#F58972" : "#E7F2FF",
+        }}
       >
         <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-            }}
-          >
-            <View
-              style={{
-                flex: 3,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-              }}
-            >
+          <View style={styles.titile}>
+            <View style={styles.goodName}>
               <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                 {item.GoodName}
               </Text>
             </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                {item.CountQty ? item.CountQty : 0}
+            <View style={styles.goodCount}>
+              <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+                {item.CountQty}
               </Text>
             </View>
           </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flex: 3,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-              }}
-            >
+          <View style={styles.subtitle}>
+            <View style={styles.goodArticle}>
               <Text>{item.Article}</Text>
               {item.Barcode && item.Barcode !== "0" && (
                 <Text> | {item.Barcode}</Text>
               )}
             </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Text>план:{item.Quantity ? item.Quantity : 0}</Text>
+            <View style={styles.goodQuantity}>
+              <Text>план: {item.Quantity}</Text>
             </View>
           </View>
         </View>
@@ -112,17 +109,79 @@ export default class DifferencePage extends Component<any, State> {
     );
   }
 
+  renderBox(box: Responses.GoodModel, receipts: Responses.ReceiptModel[]) {
+    const boxReceipts = receipts.filter(
+      (item: Responses.ReceiptModel) => item.Barcode === box.BarCode
+    );
+
+    if (boxReceipts.length <= 0) {
+      return;
+    }
+
+    return (
+      <List.Accordion title={box.BarCode}>
+        {boxReceipts &&
+          boxReceipts.map((item) => (
+            <>
+              <List.Item
+                title={
+                  <Subheading>
+                    <Text>{item.GoodName}</Text>
+                  </Subheading>
+                }
+                titleNumberOfLines={3}
+                description={
+                  <Caption>
+                    <Text>{item.Article}</Text>
+                  </Caption>
+                }
+                right={(props) => (
+                  <View
+                    {...props}
+                    style={{ marginRight: 10, alignSelf: "center" }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: "bold",
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      {item.CountQty}
+                    </Text>
+                    <Text>план: {item.Quantity}</Text>
+                  </View>
+                )}
+                style={{
+                  backgroundColor:
+                    item.Quantity > item.CountQty ? "#F58972" : "#E7F2FF",
+                }}
+              />
+              <Divider />
+            </>
+          ))}
+      </List.Accordion>
+    );
+  }
+
   render() {
     const navigation = this.context;
     const { isLoading, data } = this.state;
+    const { renderBox } = this;
 
     return (
       <Loading isLoading={isLoading}>
         <View style={{ flex: 1, marginTop: 10 }}>
+          {data.boxes &&
+            data.boxes.map((box: Responses.GoodModel) =>
+              renderBox(box, data.receipts as Responses.ReceiptModel[])
+            )}
           <FlatList
-            data={data}
+            data={data.receipts.filter(
+              (item: Responses.ReceiptModel) => item.Barcode === "0"
+            )}
             renderItem={({ item }) => this.renderItem(item)}
-            keyExtractor={(item) => item.Article + "_" + item.Barcode}
+            keyExtractor={() => new Date().toISOString()}
             refreshControl={
               <RefreshControl
                 colors={["#9Bd35A", "#689F38"]}

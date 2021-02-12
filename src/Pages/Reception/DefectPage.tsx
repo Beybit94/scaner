@@ -59,13 +59,14 @@ export default class DefectPage extends Component<PhotoPageProps> {
     try {
       this.setState({ isLoading: true });
       const { good, onGoBack } = this.props.route.params;
-      const { images, damagePercent, description } = this.state;
+      const { images, serialNumber, description, damagePercent } = this.state;
       await GoodService.defect(
         good.Id,
         0,
         good.BoxId,
         damagePercent,
         description,
+        serialNumber,
         images
       ).then(() => {
         this.setState({ isLoading: false });
@@ -100,7 +101,13 @@ export default class DefectPage extends Component<PhotoPageProps> {
 
   render() {
     const { defect, onDelete, onAdd, handleStateChange } = this;
-    const { isLoading, images, description, damagePercent } = this.state;
+    const {
+      isLoading,
+      images,
+      serialNumber,
+      description,
+      damagePercent,
+    } = this.state;
     const { good } = this.props.route.params;
 
     return (
@@ -108,13 +115,13 @@ export default class DefectPage extends Component<PhotoPageProps> {
         <View style={styles.container}>
           <ScrollView>
             <Text style={styles.title}>{good.GoodName}</Text>
-            {/* <TextInputWithTitle
+            <TextInputWithTitle
               title="Серийный номер"
-              placeholder="отсканируйте или введите вручную"
+              placeholder="серийный номер"
               inputName="serialNumber"
               inputValue={serialNumber}
               onChange={handleStateChange}
-            /> */}
+            />
             <TextInputWithTitle
               title="Описание"
               placeholder="опишите повреждение"

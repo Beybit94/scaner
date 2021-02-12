@@ -15,12 +15,11 @@ export namespace Responses {
 
   export interface TaskModel extends BaseResponse {
     Id: number;
-    StrID: string;
     DivisionId: number;
     UserId: number;
     PlanNum: string;
-    BoxNum: string;
-    TaskTypeId: number;
+    ParentId: number;
+    StatusId: number;
   }
 
   export interface GoodModel extends BaseResponse {
@@ -47,6 +46,10 @@ export namespace Responses {
     GoodBarcode: string;
   }
 
+  export interface DifferencesModel extends BaseResponse {
+    boxes: [GoodModel];
+    receipts: [ReceiptModel];
+  }
   export interface BaseDictionary extends BaseResponse {
     Id: number;
     Code: string;

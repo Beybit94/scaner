@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   },
   backTextWhite: {
     color: "white",
+    textAlign: "center",
   },
   backRightBtn: {
     alignItems: "center",

@@ -74,30 +74,35 @@ export default class TaskService {
     }
   };
 
-  static endTask = async (
-    files: FormDataValue[]
-  ): Promise<Api.HttpResponse<{}> | undefined> => {
-    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+  static endTask = async (): Promise<Responses.TaskModel | undefined> => {
+    let task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
     if (task) {
-      const upload = await TaskService.upload(files, task.Id);
-      if (upload.success) {
-        const request: Api.HttpRequest = {
-          Url: Constants.Endpoints.END_TASK,
-          Body: {
-            TaskId: task.Id,
-          },
-        };
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.END_TASK,
+        Body: {
+          TaskId: task.Id,
+        },
+      };
 
-        const response = await Api.post<{}>(request);
-        if (response.success) {
+      const response = await Api.post<Responses.TaskModel>(request);
+      if (response.success) {
+        task = response.data;
+        if (task?.StatusId === Constants.TaskStatus.InProcess) {
+          await Storage.LocalStorage.setItem(
+            Storage.StorageKeys.ACTIVE_TASK,
+            task
+          );
+
+          return task;
+        } else {
           await Storage.LocalStorage.deleteItem(
             Storage.StorageKeys.ACTIVE_TASK
           );
 
-          return response;
+          return;
         }
       }
 
@@ -107,7 +112,7 @@ export default class TaskService {
     return;
   };
 
-  static closeTask = async (): Promise<Api.HttpResponse<{}> | undefined> => {
+  static closeTask = async (): Promise<boolean> => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
@@ -122,23 +127,27 @@ export default class TaskService {
 
       const response = await Api.post<{}>(request);
       if (response.success) {
-        await Storage.LocalStorage.deleteItem(Storage.StorageKeys.ACTIVE_TASK);
+        Storage.LocalStorage.deleteItem(Storage.StorageKeys.ACTIVE_TASK).then(
+          () => {
+            return true;
+          }
+        );
       }
 
-      return response;
+      return false;
     }
 
-    return;
+    return false;
   };
 
   static difference = async (): Promise<
-    [Responses.ReceiptModel] | null | undefined
+    Responses.DifferencesModel | null | undefined
   > => {
     const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
       Storage.StorageKeys.ACTIVE_TASK
     );
 
-    let response: Api.HttpResponse<[Responses.ReceiptModel]> | undefined;
+    let response: Api.HttpResponse<Responses.DifferencesModel> | undefined;
     if (task) {
       const request: Api.HttpRequest = {
         Url: Constants.Endpoints.DIFFERENCE,
@@ -148,8 +157,7 @@ export default class TaskService {
         },
       };
 
-      response = await Api.post<[Responses.ReceiptModel]>(request);
-      console.log(response);
+      response = await Api.post<Responses.DifferencesModel>(request);
     }
 
     return response?.data;
@@ -168,22 +176,29 @@ export default class TaskService {
   };
 
   static upload = async (
-    files: FormDataValue[],
-    TaskId?: number
-  ): Promise<Api.HttpResponse<{}>> => {
-    const form = new FormData();
-    form.append("TaskId", TaskId);
+    files: FormDataValue[]
+  ): Promise<Api.HttpResponse<{}> | null | undefined> => {
+    const task = await Storage.LocalStorage.getItem<Responses.TaskModel>(
+      Storage.StorageKeys.ACTIVE_TASK
+    );
 
-    files.forEach((file, index) => {
-      form.append(`photo_${index}`, file);
-    });
+    if (task) {
+      const form = new FormData();
+      form.append("TaskId", task.Id);
 
-    const request: Api.HttpRequest = {
-      Url: Constants.Endpoints.UPLOAD_PHOTO,
-      FormData: form,
-    };
+      files.forEach((file, index) => {
+        form.append(`photo_${index}`, file);
+      });
 
-    const response = await Api.upload<{}>(request);
-    return response;
+      const request: Api.HttpRequest = {
+        Url: Constants.Endpoints.UPLOAD_PHOTO,
+        FormData: form,
+      };
+
+      const response = await Api.upload<{}>(request);
+      return response;
+    }
+
+    return;
   };
 }

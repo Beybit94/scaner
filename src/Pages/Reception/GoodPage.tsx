@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Component } from "react";
-import { Keyboard, View } from "react-native";
+import { Alert, Keyboard, View } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
 
@@ -21,6 +21,7 @@ export default class GoodPage extends Component<GoodPageProps> {
   state = {
     data: [],
     title: "Планирование:",
+    status: 0,
     searches: [],
     currentRow: 0,
     currentCount: 0,
@@ -31,8 +32,9 @@ export default class GoodPage extends Component<GoodPageProps> {
     isSearching: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { navigation } = this.props;
+    const menuItems = ["Отменить задачу", "Проверить", "Завершить"];
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row" }}>
@@ -42,10 +44,11 @@ export default class GoodPage extends Component<GoodPageProps> {
             name="search"
             onPress={this.toggleSearch}
           />
-          <PopupMenu actions={["Закрыть"]} onPress={this.onPopupEvent} />
+          <PopupMenu actions={menuItems} onPress={this.onPopupEvent} />
         </View>
       ),
     });
+
     navigation.addListener("focus", () => {
       Honeywell.onBarcodeReadSuccess((event: any) => {
         if (event) {
@@ -120,7 +123,12 @@ export default class GoodPage extends Component<GoodPageProps> {
   onRefresh = async () => {
     this.setState({ isLoading: true });
     await GoodService.getGoodByTask().then((goods) => {
-      this.setState({ data: goods, isLoading: false });
+      if (goods) {
+        this.setState({ data: goods });
+      } else {
+        this.setState({ data: [] });
+      }
+      this.setState({ isLoading: false });
     });
   };
 
@@ -147,22 +155,76 @@ export default class GoodPage extends Component<GoodPageProps> {
       return;
     }
     if (index === 0) {
-      this.closeTask();
+      Alert.alert(
+        "Внимание",
+        "Точно хотите отменить задачу?",
+        [
+          { text: "Закрыть", style: "cancel" },
+          { text: "OK", onPress: () => this.closeTask() },
+        ],
+        { cancelable: false }
+      );
+    }
+    if (index === 1) {
+      this.difference();
+    }
+    if (index === 2) {
+      Alert.alert(
+        "Внимание",
+        "Точно хотите завершить задачу?",
+        [
+          { text: "Закрыть", style: "cancel" },
+          { text: "OK", onPress: () => this.endTask() },
+        ],
+        { cancelable: false }
+      );
     }
   };
 
   closeTask = async () => {
     try {
       this.setState({ isLoading: true });
-      await TaskService.closeTask().then((response) => {
+      await TaskService.closeTask().then((status) => {
         this.setState({ isLoading: false });
-        if (response) {
+        if (status) {
           this.setState({
             isInitial: true,
             title: "Планирование:",
             data: [],
+            status: 0,
           });
         }
+      });
+    } finally {
+      //this.setState({ isLoading: false });
+    }
+  };
+
+  difference = async () => {
+    const { navigation } = this.props;
+    navigation.push("DifferencePage", {});
+  };
+
+  endTask = async () => {
+    try {
+      this.setState({ isLoading: true });
+      await TaskService.endTask().then(async (task) => {
+        this.setState({ isLoading: false });
+        if (task) {
+          this.setState({
+            title: `Планирование: ${task?.PlanNum}`,
+            status: task.StatusId,
+          });
+        } else {
+          this.setState({
+            isInitial: true,
+            title: "Планирование:",
+            data: [],
+            status: 0,
+          });
+        }
+
+        await this.onRefresh();
       });
     } finally {
       //this.setState({ isLoading: false });
@@ -196,15 +258,16 @@ export default class GoodPage extends Component<GoodPageProps> {
               this.setState({
                 isInitial: false,
                 title: `Планирование: ${task?.PlanNum}`,
+                status: task.StatusId,
               });
-            }
 
-            await this.onRefresh();
+              await this.onRefresh();
+            }
           });
         });
       }
     } finally {
-      //this.setState({ isLoading: false });
+      this.setState({ isLoading: false });
     }
   };
 
@@ -212,6 +275,7 @@ export default class GoodPage extends Component<GoodPageProps> {
     const {
       data,
       title,
+      status,
       searches,
       searchQuery,
       visible,
@@ -246,12 +310,12 @@ export default class GoodPage extends Component<GoodPageProps> {
       <GoodTemplate
         data={data}
         title={title}
+        status={status}
         visible={visible}
         isLoading={isLoading}
         scan={scan}
         defect={defect}
         itemEdit={itemEdit}
-        closeTask={closeTask}
         onRefresh={onRefresh}
         itemRemove={itemRemove}
         handleStateChange={handleStateChange}
