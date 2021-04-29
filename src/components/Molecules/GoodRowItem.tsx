@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Badge, Icon, ListItem } from "react-native-elements";
-import { Avatar } from "react-native-paper";
 
 import { Constants, Responses, TaskService } from "../../services";
 

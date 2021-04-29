@@ -1,6 +1,6 @@
 export enum Endpoints {
-  //BASE = "http://89.20.48.50:3365",
-  BASE = "http://89.20.48.50:3366",
+  BASE = "http://213.5.191.200:3365",
+  //BASE = "http://213.5.191.200 :3366",
   //BASE = "http://10.20.254.8:44341",
   //BASE = "http://192.168.8.104:44341",
   TEST = "/api/User/TEST",

@@ -51,6 +51,7 @@ export default class GoodPage extends Component<GoodPageProps> {
 
     navigation.addListener("focus", () => {
       Honeywell.onBarcodeReadSuccess((event: any) => {
+        console.log(event);
         if (event) {
           this.scan(event);
         }

@@ -43,7 +43,7 @@ public class HoneywellPackage implements ReactPackage {
     }
 
     private boolean isCompatible() {
-        String deviceName = this.getDeviceName().toLowerCase();
+        String deviceName = this.getDeviceName().toUpperCase();
         Log.d(TAG, deviceName);
         return deviceName.contains("SD");
     }
@@ -56,6 +56,7 @@ public class HoneywellPackage implements ReactPackage {
         }else {
             modules.add(new HoneywellModule(reactContext));
         }
+        //modules.add(new SpeedataModule(reactContext));
         return modules;
     }
 

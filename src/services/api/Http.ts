@@ -76,13 +76,13 @@ export namespace Api {
   async function http<T>(request: RequestInfo): Promise<HttpResponse<T>> {
     const timeout = 60000;
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
+    //const id = setTimeout(() => controller.abort(), timeout);
 
     const response: HttpResponse<T> = await fetch(request, {
       signal: controller.signal,
     });
     try {
-      clearTimeout(id);
+      //clearTimeout(id);
       await response
         .json()
         .then((r) => {
